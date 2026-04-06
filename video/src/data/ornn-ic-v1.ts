@@ -23,10 +23,12 @@ export const ornnIcV1 = {
       title: "Ornn",
       subtitle: "Preliminary IC memo",
       date: "April 6, 2026",
-      recommendation:
-        "Authorize phase-two diligence; do not approve an investment or term sheet yet.",
+      recommendation: "Continue diligence. No term sheet yet.",
       body:
-        "This is not a final invest or decline decision. The public record still fails to resolve the key underwriting questions that matter most.",
+        "This is not a final invest or decline decision. Authorize phase-two diligence while the public record still fails to resolve the underwriting questions that matter most.",
+      status: "Phase-two diligence",
+      gatingSummary:
+        "4 gating questions remain open: product and entity mapping, OCPI governance quality, counterparty structure, and real two-sided liquidity.",
       gatingIssues: [
         {
           label: "Issue 1",

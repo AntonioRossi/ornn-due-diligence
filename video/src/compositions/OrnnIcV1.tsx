@@ -31,107 +31,269 @@ const OpeningScene: React.FC<SceneProps> = ({startFrame}) => {
   const scene = ornnIcV1.scenes.opening;
   const progress = useSceneProgress(startFrame);
   const subtitleEntrance = fadeIn(frame, 0, 18);
-  const issuesEntrance = spring({
+  const heroEntrance = spring({
     fps,
-    frame: frame - 18,
+    frame: frame - 6,
     config: {
-      damping: 220,
-      mass: 0.75,
-      stiffness: 180,
+      damping: 200,
+      mass: 0.8,
+      stiffness: 160,
     },
-    durationInFrames: 28,
+    durationInFrames: 24,
+  });
+  const stripEntrance = spring({
+    fps,
+    frame: frame - 14,
+    config: {
+      damping: 210,
+      mass: 0.8,
+      stiffness: 165,
+    },
+    durationInFrames: 24,
   });
 
   return (
     <Frame
       sectionLabel={scene.sectionLabel}
       title={scene.title}
-      titleSize={120}
+      titleSize={110}
       titleMaxWidth={720}
+      transitionVariant="diagonal"
       progress={progress}
       footer={<CitationFooter items={sceneCitations.opening} />}
     >
-      <div style={{display: "flex", flexDirection: "column", gap: 30}}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 34,
+          height: "100%",
+          position: "relative",
+        }}
+      >
         <div
           style={{
-            color: theme.colors.muted,
+            background:
+              "radial-gradient(circle, rgba(200, 160, 107, 0.14) 0%, rgba(200, 160, 107, 0.05) 28%, transparent 70%)",
+            borderRadius: "50%",
+            height: 360,
+            opacity: interpolate(heroEntrance, [0, 1], [0, 1]),
+            pointerEvents: "none",
+            position: "absolute",
+            right: -70,
+            top: 20,
+            transform: `scale(${interpolate(heroEntrance, [0, 1], [0.92, 1])})`,
+            width: 360,
+          }}
+        />
+        <div
+          style={{
+            border: `1px solid rgba(200, 160, 107, 0.1)`,
+            borderRadius: "50%",
+            height: 270,
+            opacity: interpolate(heroEntrance, [0, 1], [0, 1]),
+            pointerEvents: "none",
+            position: "absolute",
+            right: 34,
+            top: 64,
+            width: 270,
+          }}
+        />
+        <div
+          style={{
+            alignItems: "center",
             display: "flex",
-            fontFamily: theme.fonts.mono,
-            fontSize: 22,
-            gap: 18,
-            letterSpacing: "0.1em",
-            opacity: subtitleEntrance,
-            textTransform: "uppercase",
-            transform: `translateY(${riseIn(frame, 0, 18)}px)`,
+            justifyContent: "space-between",
           }}
         >
-          <span>{scene.subtitle}</span>
-          <span style={{opacity: 0.4}}>/</span>
-          <span>{scene.date}</span>
+          <div
+            style={{
+              color: theme.colors.muted,
+              display: "flex",
+              fontFamily: theme.fonts.mono,
+              fontSize: 20,
+              gap: 16,
+              letterSpacing: "0.1em",
+              opacity: subtitleEntrance,
+              textTransform: "uppercase",
+              transform: `translateY(${riseIn(frame, 0, 18)}px)`,
+            }}
+          >
+            <span>{scene.subtitle}</span>
+            <span style={{opacity: 0.4}}>/</span>
+            <span>{scene.date}</span>
+          </div>
+          <div
+            style={{
+              alignItems: "center",
+              backgroundColor: theme.colors.accentSoft,
+              border: `1px solid ${theme.colors.borderSoft}`,
+              borderRadius: 999,
+              color: theme.colors.accent,
+              display: "flex",
+              fontFamily: theme.fonts.mono,
+              fontSize: 15,
+              letterSpacing: "0.12em",
+              minHeight: 40,
+              opacity: subtitleEntrance,
+              padding: "0 14px",
+              textTransform: "uppercase",
+              transform: `translateY(${riseIn(frame, 0, 18)}px)`,
+            }}
+          >
+            Public information only
+          </div>
         </div>
-        <ThesisCard headline={scene.recommendation} body={scene.body} />
         <div
           style={{
-            columnGap: 20,
+            alignItems: "stretch",
             display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            opacity: issuesEntrance,
-            rowGap: 20,
-            transform: `translateY(${interpolate(issuesEntrance, [0, 1], [18, 0])}px)`,
+            flex: 1,
+            gap: 32,
+            gridTemplateColumns: "minmax(0, 1fr) 320px",
+            minHeight: 0,
           }}
         >
-          {scene.gatingIssues.map((issue, index) => {
-            const issueEntrance = spring({
-              fps,
-              frame: frame - 22 - index * 4,
-              config: {
-                damping: 220,
-                mass: 0.8,
-                stiffness: 180,
-              },
-              durationInFrames: 24,
-            });
-
-            return (
-              <div
-                key={issue.label}
-                style={{
-                  backgroundColor: theme.colors.surface,
-                  border: `1px solid ${theme.colors.border}`,
-                  borderRadius: 22,
-                  boxShadow: "0 18px 50px rgba(0, 0, 0, 0.18)",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 12,
-                  minHeight: 160,
-                  opacity: issueEntrance,
-                  padding: 24,
-                  transform: `translateY(${interpolate(issueEntrance, [0, 1], [22, 0])}px)`,
-                }}
-              >
-                <div
-                  style={{
-                    color: theme.colors.accent,
-                    fontFamily: theme.fonts.mono,
-                    fontSize: 18,
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {issue.label}
-                </div>
-                <div
-                  style={{
-                    color: theme.colors.text,
-                    fontSize: 28,
-                    lineHeight: 1.24,
-                  }}
-                >
-                  {issue.body}
-                </div>
-              </div>
-            );
-          })}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              minHeight: 0,
+              opacity: heroEntrance,
+              transform: `translateY(${interpolate(heroEntrance, [0, 1], [18, 0])}px)`,
+            }}
+          >
+            <div
+              style={{
+                background: `linear-gradient(90deg, ${theme.colors.accent} 0%, transparent 100%)`,
+                height: 3,
+                marginBottom: 28,
+                opacity: 0.84,
+                width: 220,
+              }}
+            />
+            <div
+              style={{
+                color: theme.colors.text,
+                fontFamily: theme.fonts.display,
+                fontSize: 66,
+                lineHeight: 1.02,
+                maxWidth: 920,
+              }}
+            >
+              {scene.recommendation}
+            </div>
+            <div
+              style={{
+                color: theme.colors.muted,
+                fontSize: 30,
+                lineHeight: 1.28,
+                marginTop: 22,
+                maxWidth: 950,
+              }}
+            >
+              {scene.body}
+            </div>
+          </div>
+          <div
+            style={{
+              alignSelf: "center",
+              backgroundColor: theme.colors.surfaceStrong,
+              border: `1px solid ${theme.colors.border}`,
+              borderRadius: 28,
+              boxShadow: "0 24px 64px rgba(0, 0, 0, 0.18)",
+              display: "flex",
+              flexDirection: "column",
+              gap: 14,
+              justifyContent: "center",
+              minHeight: 280,
+              opacity: heroEntrance,
+              overflow: "hidden",
+              padding: 28,
+              position: "relative",
+              transform: `translateY(${interpolate(heroEntrance, [0, 1], [20, 0])}px)`,
+            }}
+          >
+            <div
+              style={{
+                background: `linear-gradient(180deg, rgba(200, 160, 107, 0.18) 0%, transparent 100%)`,
+                inset: 0,
+                pointerEvents: "none",
+                position: "absolute",
+              }}
+            />
+            <div
+              style={{
+                color: theme.colors.accent,
+                fontFamily: theme.fonts.mono,
+                fontSize: 17,
+                letterSpacing: "0.12em",
+                position: "relative",
+                textTransform: "uppercase",
+              }}
+            >
+              Current view
+            </div>
+            <div
+              style={{
+                color: theme.colors.text,
+                fontFamily: theme.fonts.display,
+                fontSize: 38,
+                lineHeight: 1.04,
+                position: "relative",
+              }}
+            >
+              {scene.status}
+            </div>
+            <div
+              style={{
+                color: theme.colors.muted,
+                fontSize: 21,
+                lineHeight: 1.28,
+                position: "relative",
+              }}
+            >
+              Continue diligence while legal, structural, and liquidity questions remain unresolved.
+            </div>
+          </div>
+        </div>
+        <div
+          style={{
+            alignItems: "center",
+            backgroundColor: theme.colors.surfaceStrong,
+            border: `1px solid ${theme.colors.border}`,
+            borderRadius: 22,
+            boxShadow: "0 18px 44px rgba(0, 0, 0, 0.16)",
+            display: "flex",
+            gap: 24,
+            opacity: stripEntrance,
+            padding: "18px 22px",
+            transform: `translateY(${interpolate(stripEntrance, [0, 1], [18, 0])}px)`,
+          }}
+        >
+          <div
+            style={{
+              color: theme.colors.accent,
+              flexShrink: 0,
+              fontFamily: theme.fonts.mono,
+              fontSize: 17,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+            }}
+          >
+            Underwriting remains gated by
+          </div>
+          <div
+            style={{
+              color: theme.colors.muted,
+              fontSize: 23,
+              lineHeight: 1.3,
+              minWidth: 0,
+            }}
+          >
+            {scene.gatingSummary}
+          </div>
         </div>
       </div>
     </Frame>
@@ -147,6 +309,7 @@ const WhyMattersScene: React.FC<SceneProps> = ({startFrame}) => {
       sectionLabel={scene.sectionLabel}
       title={scene.title}
       titleSize={78}
+      transitionVariant="shutter"
       progress={progress}
       footer={<CitationFooter items={sceneCitations.whyMatters} />}
     >
@@ -169,6 +332,7 @@ const TractionScene: React.FC<SceneProps> = ({startFrame}) => {
       sectionLabel={scene.sectionLabel}
       title={scene.title}
       titleSize={72}
+      transitionVariant="slide-up"
       progress={progress}
       footer={<CitationFooter items={sceneCitations.traction} />}
     >
@@ -186,6 +350,7 @@ const AttractiveScene: React.FC<SceneProps> = ({startFrame}) => {
       sectionLabel={scene.sectionLabel}
       title={scene.title}
       titleSize={72}
+      transitionVariant="diagonal"
       progress={progress}
       footer={<CitationFooter items={sceneCitations.attractive} />}
     >
@@ -207,6 +372,7 @@ const RiskLegalScene: React.FC<SceneProps> = ({startFrame}) => {
       sectionLabel={scene.sectionLabel}
       title={scene.title}
       titleSize={68}
+      transitionVariant="slide-right"
       progress={progress}
       footer={<CitationFooter items={sceneCitations.riskLegal} />}
     >
@@ -230,6 +396,7 @@ const RiskCounterpartyScene: React.FC<SceneProps> = ({startFrame}) => {
       sectionLabel={scene.sectionLabel}
       title={scene.title}
       titleSize={68}
+      transitionVariant="shutter"
       progress={progress}
       footer={<CitationFooter items={sceneCitations.riskCounterparty} />}
     >
@@ -253,6 +420,7 @@ const RiskGovernanceScene: React.FC<SceneProps> = ({startFrame}) => {
       sectionLabel={scene.sectionLabel}
       title={scene.title}
       titleSize={68}
+      transitionVariant="slide-up"
       progress={progress}
       footer={<CitationFooter items={sceneCitations.riskGovernance} />}
     >
@@ -288,6 +456,7 @@ const ClosingScene: React.FC<SceneProps> = ({startFrame}) => {
       sectionLabel={scene.sectionLabel}
       title={scene.title}
       titleSize={70}
+      transitionVariant="diagonal"
       progress={progress}
       footer={<CitationFooter items={sceneCitations.closing} />}
     >

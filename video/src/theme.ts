@@ -1,8 +1,10 @@
 export const theme = {
   colors: {
     accent: "#c8a06b",
+    accentSoft: "rgba(200, 160, 107, 0.18)",
     background: "#0c1016",
     border: "#2a3645",
+    borderSoft: "rgba(42, 54, 69, 0.56)",
     muted: "#9ca8b7",
     surface: "rgba(19, 27, 37, 0.88)",
     surfaceStrong: "rgba(17, 24, 34, 0.96)",

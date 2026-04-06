@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<llmWorkflowPrompt id="remotion-video-iteration" version="1.0">
+  <purpose>
+    Re-execute the repo's current workflow for producing the Ornn Remotion video whenever
+    the source research documents change. Follow the existing architecture, keep the work
+    deterministic, and make only the minimum necessary edits.
+  </purpose>
+
+  <role>
+    You are a coding assistant operating inside this repository. Your job is to read the
+    current source documents, update the existing Remotion implementation under
+    <path>video/</path>, run validation, and leave the repo in a reviewable state.
+  </role>
+
+  <repository>
+    <root>.</root>
+    <primarySources>
+      <file path="investment-committee-memo.md" role="primary narrative source" />
+      <file
+        path="management-diligence-request-list.md"
+        role="selective source for closing asks, gating questions, and management-call framing"
+      />
+    </primarySources>
+    <supportingDocs>
+      <file path="remotion-v1-build-plan.md" role="workflow and editorial plan" />
+      <file path="video/v1-review-notes.md" role="scope choices and review focus" />
+      <file path="video/README.md" role="project commands and layout" />
+    </supportingDocs>
+    <implementationRoot>video/</implementationRoot>
+    <mainComposition id="OrnnIcV1" />
+    <renderOutput>video/out/ornn-ic-v1.mp4</renderOutput>
+  </repository>
+
+  <coreWorkflow>
+    <principle>
+      Do not build or maintain a generic Markdown-to-slides system for this repo. The
+      workflow is manual editorial curation from prose into typed scene data.
+    </principle>
+    <principle>
+      Treat <path>video/src/data/ornn-ic-v1.ts</path> as the primary implementation of the
+      current narrative. Update that data first, then update composition/components only if
+      the new content requires it.
+    </principle>
+    <principle>
+      Keep the video institutional, restrained, high-signal, and deterministic. This is an
+      investor memo in motion, not a product promo.
+    </principle>
+    <principle>
+      Preserve the existing standalone Remotion app under <path>video/</path>. Update in
+      place; do not rebuild the app from scratch.
+    </principle>
+    <principle>
+      Keep v1 silent unless the user explicitly asks for audio. Do not add narration, music,
+      or sound design as part of this workflow.
+    </principle>
+  </coreWorkflow>
+
+  <idempotenceRules>
+    <rule>
+      Start by inspecting the current repo state, including uncommitted changes. Never
+      revert unrelated user edits.
+    </rule>
+    <rule>
+      Compare the latest source documents against the current scene data and update only the
+      scenes, citations, and layout details that are materially affected.
+    </rule>
+    <rule>
+      If the current implementation already reflects the source documents closely enough,
+      make no source edits. Report a no-op result rather than churning formatting or copy.
+    </rule>
+    <rule>
+      Keep stable file names, scene identifiers, component names, and composition IDs unless
+      a change is genuinely required by the updated narrative.
+    </rule>
+    <rule>
+      Prefer editing existing files over creating new abstractions. Add new files or
+      components only when the current structure cannot cleanly support the revised content.
+    </rule>
+    <rule>
+      Do not modify the source memo or diligence list unless the user explicitly asks you to
+      rewrite those documents.
+    </rule>
+    <rule>
+      Do not change the repo workflow itself unless required. Update
+      <path>video/README.md</path> or <path>video/v1-review-notes.md</path> only if the
+      workflow, scope choices, or review focus have actually changed.
+    </rule>
+  </idempotenceRules>
+
+  <sceneBackbone>
+    <scene id="opening">
+      <sources>
+        <source path="investment-committee-memo.md" section="Recommendation" />
+      </sources>
+      <purpose>Establish company, date, recommendation, and gating issues immediately.</purpose>
+      <preferredDataFields>
+        <field>sectionLabel</field>
+        <field>title</field>
+        <field>subtitle</field>
+        <field>date</field>
+        <field>recommendation</field>
+        <field>body</field>
+        <field>gatingIssues</field>
+      </preferredDataFields>
+    </scene>
+
+    <scene id="whyMatters">
+      <sources>
+        <source path="investment-committee-memo.md" section="Company snapshot" />
+        <source path="investment-committee-memo.md" section="Why this matters" />
+      </sources>
+      <purpose>Frame the market-structure thesis and why benchmark ownership matters.</purpose>
+    </scene>
+
+    <scene id="traction">
+      <sources>
+        <source path="investment-committee-memo.md" section="What appears real today" />
+      </sources>
+      <purpose>Show visible product, partner, and distribution signal.</purpose>
+    </scene>
+
+    <scene id="attractive">
+      <sources>
+        <source path="investment-committee-memo.md" section="What is attractive" />
+      </sources>
+      <purpose>Explain the reinforcing business-model layers.</purpose>
+    </scene>
+
+    <scene id="riskLegal">
+      <sources>
+        <source path="investment-committee-memo.md" section="Core risk #1: legal and regulatory ambiguity" />
+      </sources>
+      <purpose>Show the largest gating issue around legal structure and regulatory mapping.</purpose>
+    </scene>
+
+    <scene id="riskCounterparty">
+      <sources>
+        <source path="investment-committee-memo.md" section="Core risk #2: counterparty, collateral, and balance-sheet risk" />
+      </sources>
+      <purpose>Frame the business as principal-risk / market-infrastructure risk, not pure SaaS.</purpose>
+    </scene>
+
+    <scene id="riskGovernance">
+      <sources>
+        <source path="investment-committee-memo.md" section="Core risk #3: OCPI governance and liquidity proof" />
+      </sources>
+      <purpose>Show benchmark-governance and market-depth proof gaps.</purpose>
+    </scene>
+
+    <scene id="closing">
+      <sources>
+        <source path="investment-committee-memo.md" section="Bottom line" />
+        <source path="management-diligence-request-list.md" section="Management diligence request list" />
+      </sources>
+      <purpose>Close on the recommendation and present the highest-priority next-step asks.</purpose>
+    </scene>
+  </sceneBackbone>
+
+  <executionPlan>
+    <step order="1" name="Inspect current state">
+      Read the two source documents, the build plan, the review notes, and the existing
+      files under <path>video/src/</path>. Inspect git status before editing so you do not
+      overwrite unrelated work.
+    </step>
+
+    <step order="2" name="Compute the narrative delta">
+      Compare the latest memo and diligence list against the current implementation. Identify
+      which scene claims, dates, figures, questions, and citations changed. Do not assume
+      every scene needs rewriting.
+    </step>
+
+    <step order="3" name="Update typed scene data">
+      Edit <path>video/src/data/ornn-ic-v1.ts</path> first. Keep the narrative concise and
+      investor-facing. Preserve existing scene IDs where possible so downstream code stays
+      stable.
+    </step>
+
+    <step order="4" name="Update citations">
+      Edit <path>video/src/data/citations.ts</path> to keep each scene's citation footer
+      aligned with the revised claims and sources.
+    </step>
+
+    <step order="5" name="Adjust rendering only if needed">
+      Update <path>video/src/compositions/OrnnIcV1.tsx</path>,
+      <path>video/src/components/</path>, <path>video/src/theme.ts</path>, and
+      <path>video/src/utils/</path> only when the revised copy no longer fits, the visual
+      hierarchy needs to change, or the scene structure genuinely changed.
+    </step>
+
+    <step order="6" name="Protect the editorial shape">
+      Keep the video text-led and diagram-led. Do not introduce live data visualization,
+      generic slide generation, or unrelated product features. Continue using citations and
+      restrained motion.
+    </step>
+
+    <step order="7" name="Manage duration intentionally">
+      Target roughly 105 to 120 seconds at 30 fps. Prefer tightening copy before changing
+      scene durations. Change durations only when the updated narrative cannot fit cleanly,
+      and explain any timing changes.
+    </step>
+
+    <step order="8" name="Validate and render">
+      Run the project checks and render the main composition after edits. If a check fails,
+      fix the issue or report the blocker clearly.
+    </step>
+  </executionPlan>
+
+  <filePolicy>
+    <file path="video/src/data/ornn-ic-v1.ts" expectation="Primary typed scene content. Update first." />
+    <file path="video/src/data/citations.ts" expectation="Scene-level citation labels. Keep aligned with source claims." />
+    <file path="video/src/compositions/OrnnIcV1.tsx" expectation="Main composition sequencing and scene selection." />
+    <file path="video/src/components/" expectation="Reusable scene building blocks. Touch only if content/layout requires it." />
+    <file path="video/src/theme.ts" expectation="Visual system. Keep institutional tone and low churn." />
+    <file path="video/src/Root.tsx" expectation="Composition registration. Keep stable unless composition contract changes." />
+    <file path="video/README.md" expectation="Commands and workflow notes. Update only if workflow changes." />
+    <file path="video/v1-review-notes.md" expectation="Scope and review focus. Update only if those choices change." />
+  </filePolicy>
+
+  <qualityBar>
+    <item>Recommendation framing must remain clear in the opening and closing.</item>
+    <item>Claims, dates, figures, and partner references must match the latest source documents.</item>
+    <item>The three core risks must remain legible and ordered by investment importance.</item>
+    <item>The closing scene must reflect the most relevant diligence asks for the next management call.</item>
+    <item>The visual result must feel institutional and reviewable, not promotional.</item>
+    <item>The final code should stay simple, typed, and easy to revise on the next iteration.</item>
+  </qualityBar>
+
+  <commands>
+    <command workdir="video">pnpm install</command>
+    <command workdir="video">pnpm typecheck</command>
+    <command workdir="video">pnpm lint</command>
+    <command workdir="video">pnpm render</command>
+  </commands>
+
+  <finalResponseContract>
+    <item>Summarize the source changes you detected.</item>
+    <item>List the files you changed and why.</item>
+    <item>Report whether the run was a true update or an intentional no-op.</item>
+    <item>Report the validation commands you ran and their outcomes.</item>
+    <item>Call out any remaining review risks, especially around editorial judgment or timing.</item>
+  </finalResponseContract>
+</llmWorkflowPrompt>
