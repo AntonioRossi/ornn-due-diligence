@@ -20,6 +20,7 @@
     "typescript": "5.9.3"
   },
   "scripts": {
+    "audio:generate": "UV_CACHE_DIR=\"$PWD/../.uv-cache\" HF_HOME=\"$PWD/../.hf-home\" HUGGINGFACE_HUB_CACHE=\"$PWD/../.hf-home/hub\" uv run --project .. python ../scripts/generate-audio.py",
     "dev": "remotion studio src/index.ts",
     "build": "remotion bundle src/index.ts",
     "render": "remotion render src/index.ts OrnnIcV1 out/ornn-ic-v1.mp4",

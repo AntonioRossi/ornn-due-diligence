@@ -1,4 +1,12 @@
-import {interpolate, spring, Series, useCurrentFrame, useVideoConfig} from "remotion";
+import {
+  Audio,
+  interpolate,
+  Series,
+  spring,
+  staticFile,
+  useCurrentFrame,
+  useVideoConfig,
+} from "remotion";
 import {CitationFooter} from "../components/CitationFooter";
 import {DiligenceQuestions} from "../components/DiligenceQuestions";
 import {Frame} from "../components/Frame";
@@ -7,6 +15,7 @@ import {ThesisCard} from "../components/ThesisCard";
 import {ThreeLayerModel} from "../components/ThreeLayerModel";
 import {Timeline} from "../components/Timeline";
 import {sceneCitations} from "../data/citations";
+import {narrationByScene} from "../data/narration";
 import {
   ornnIcV1,
   sceneStartsInFrames,
@@ -19,6 +28,9 @@ import {theme} from "../theme";
 type SceneProps = {
   readonly startFrame: number;
 };
+
+const sceneAudio = (sceneId: keyof typeof narrationByScene) =>
+  staticFile(`audio/${narrationByScene[sceneId].sceneId}.wav`);
 
 const useSceneProgress = (startFrame: number) => {
   const frame = useCurrentFrame();
@@ -520,27 +532,35 @@ export const OrnnIcV1: React.FC = () => {
   return (
     <Series>
       <Series.Sequence durationInFrames={ornnIcV1.scenes.opening.durationInFrames}>
+        <Audio src={sceneAudio("opening")} />
         <OpeningScene startFrame={sceneStartsInFrames.opening} />
       </Series.Sequence>
       <Series.Sequence durationInFrames={ornnIcV1.scenes.whyMatters.durationInFrames}>
+        <Audio src={sceneAudio("whyMatters")} />
         <WhyMattersScene startFrame={sceneStartsInFrames.whyMatters} />
       </Series.Sequence>
       <Series.Sequence durationInFrames={ornnIcV1.scenes.traction.durationInFrames}>
+        <Audio src={sceneAudio("traction")} />
         <TractionScene startFrame={sceneStartsInFrames.traction} />
       </Series.Sequence>
       <Series.Sequence durationInFrames={ornnIcV1.scenes.attractive.durationInFrames}>
+        <Audio src={sceneAudio("attractive")} />
         <AttractiveScene startFrame={sceneStartsInFrames.attractive} />
       </Series.Sequence>
       <Series.Sequence durationInFrames={ornnIcV1.scenes.riskLegal.durationInFrames}>
+        <Audio src={sceneAudio("riskLegal")} />
         <RiskLegalScene startFrame={sceneStartsInFrames.riskLegal} />
       </Series.Sequence>
       <Series.Sequence durationInFrames={ornnIcV1.scenes.riskCounterparty.durationInFrames}>
+        <Audio src={sceneAudio("riskCounterparty")} />
         <RiskCounterpartyScene startFrame={sceneStartsInFrames.riskCounterparty} />
       </Series.Sequence>
       <Series.Sequence durationInFrames={ornnIcV1.scenes.riskGovernance.durationInFrames}>
+        <Audio src={sceneAudio("riskGovernance")} />
         <RiskGovernanceScene startFrame={sceneStartsInFrames.riskGovernance} />
       </Series.Sequence>
       <Series.Sequence durationInFrames={ornnIcV1.scenes.closing.durationInFrames}>
+        <Audio src={sceneAudio("closing")} />
         <ClosingScene startFrame={sceneStartsInFrames.closing} />
       </Series.Sequence>
     </Series>

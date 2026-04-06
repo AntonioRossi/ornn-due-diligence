@@ -36,6 +36,27 @@
     <renderOutput>video/out/ornn-ic-v1.mp4</renderOutput>
   </repository>
 
+  <sourceUpdateTrigger>
+    <rule>
+      Treat <path>investment-committee-memo.md</path> and
+      <path>management-diligence-request-list.md</path> as the two root inputs that govern
+      the entire derived artifact chain.
+    </rule>
+    <rule>
+      If either file changes materially, rerun the complete workflow end to end rather than
+      only patching isolated files.
+    </rule>
+    <derivedArtifacts>
+      <artifact path="video/src/data/ornn-ic-v1.ts" />
+      <artifact path="video/src/data/citations.ts" />
+      <artifact path="video/src/data/narration.json" />
+      <artifact path="video/src/data/narration.ts" />
+      <artifact path="video/src/compositions/OrnnIcV1.tsx" />
+      <artifact path="video/public/audio/" />
+      <artifact path="video/out/ornn-ic-v1.mp4" />
+    </derivedArtifacts>
+  </sourceUpdateTrigger>
+
   <coreWorkflow>
     <principle>
       Use <path>investment-committee-memo.md</path> and
@@ -102,6 +123,12 @@
       If either primary source document changed materially, regenerate the entire artifact
       chain after updating code: narration data, scene WAV files, and the final rendered MP4.
       Do not limit the run to partial asset refreshes in that case.
+    </rule>
+    <rule>
+      For source-driven reruns, completion requires all derived artifacts to be brought back
+      into sync with the updated sources. A source-driven run is not complete if it stops
+      after code edits, narration edits, or audio generation without producing a fresh final
+      render.
     </rule>
     <rule>
       If the primary source documents did not change materially but the audio artifacts or
@@ -191,7 +218,8 @@
       Compare the latest memo and diligence list against the current implementation. Identify
       which scene claims, dates, figures, questions, citations, narration lines, and output
       artifacts changed. Do not assume every scene needs rewriting, but do determine whether
-      a full artifact regeneration is required.
+      a full artifact regeneration is required. If either root source changed materially,
+      mark the run as a full workflow rerun.
     </step>
 
     <step order="3" name="Update typed scene data">
@@ -241,6 +269,12 @@
       Run the project checks and render the main composition after edits and audio
       regeneration. If a check fails, fix the issue or report the blocker clearly.
     </step>
+
+    <step order="11" name="Confirm artifact freshness">
+      For source-driven reruns, confirm that the updated source documents, typed scene data,
+      narration data, generated scene audio files, and final MP4 all correspond to the same
+      current repo state before concluding the task.
+    </step>
   </executionPlan>
 
   <filePolicy>
@@ -268,6 +302,7 @@
     <item>The visual result must feel institutional and reviewable, not promotional.</item>
     <item>The narration must track the current source documents, fit scene timing, and use af_bella consistently.</item>
     <item>The generated scene WAV files and the final MP4 must be refreshed when the primary sources change materially.</item>
+    <item>A material change to either root source file must trigger a complete workflow rerun from editorial data through final render.</item>
     <item>The final code should stay simple, typed, and easy to revise on the next iteration.</item>
   </qualityBar>
 
@@ -282,6 +317,7 @@
 
   <finalResponseContract>
     <item>Summarize the source changes you detected.</item>
+    <item>State explicitly whether either root source file changed materially and whether that triggered a full workflow rerun.</item>
     <item>List the files you changed and why.</item>
     <item>Report whether the run was a true update or an intentional no-op.</item>
     <item>Report whether you regenerated the full artifact chain or only refreshed missing or stale artifacts, and why.</item>

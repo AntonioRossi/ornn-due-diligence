@@ -1,0 +1,22 @@
+[project]
+name = "ornn-kokoro-tools"
+version = "0.1.0"
+description = "Audio generation tooling for the Ornn Remotion project"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+  "kokoro>=0.9.4",
+  "soundfile>=0.13.1",
+  "torch",
+  "torchaudio",
+  "torchvision",
+]
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu" }]
+torchaudio = [{ index = "pytorch-cpu" }]
+torchvision = [{ index = "pytorch-cpu" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true

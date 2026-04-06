@@ -236,6 +236,7 @@ pyrightconfig.json
 
 # Local MCP/browser session artifacts
 .playwright-mcp/
+.hf-home/
 
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
