@@ -25,15 +25,15 @@ export const Timeline: React.FC<{
     <div
       style={{
         display: "grid",
-        gap: 30,
-        gridTemplateColumns: "1.25fr 0.75fr",
+        gap: 24,
+        gridTemplateColumns: "1.38fr 0.62fr",
       }}
     >
-      <div style={{display: "flex", flexDirection: "column", gap: 22}}>
+      <div style={{display: "flex", flexDirection: "column", gap: 16}}>
         <div
           style={{
             color: theme.colors.muted,
-            fontSize: 28,
+            fontSize: 24,
             lineHeight: 1.32,
             maxWidth: 920,
           }}
@@ -44,7 +44,7 @@ export const Timeline: React.FC<{
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: 18,
+            gap: 12,
             paddingLeft: 52,
             position: "relative",
           }}
@@ -109,12 +109,12 @@ export const Timeline: React.FC<{
                   style={{
                     backgroundColor: theme.colors.surface,
                     border: `1px solid ${theme.colors.border}`,
-                    borderRadius: 24,
-                    boxShadow: "0 18px 50px rgba(0, 0, 0, 0.18)",
+                    borderRadius: 22,
+                    boxShadow: "0 14px 38px rgba(0, 0, 0, 0.16)",
                     display: "flex",
                     flexDirection: "column",
-                    gap: 12,
-                    padding: 24,
+                    gap: 6,
+                    padding: 16,
                     width: "100%",
                   }}
                 >
@@ -122,7 +122,7 @@ export const Timeline: React.FC<{
                     style={{
                       color: theme.colors.accent,
                       fontFamily: theme.fonts.mono,
-                      fontSize: 18,
+                      fontSize: 15,
                       letterSpacing: "0.12em",
                       textTransform: "uppercase",
                     }}
@@ -130,22 +130,22 @@ export const Timeline: React.FC<{
                     {event.date}
                   </div>
                   <div
-                  style={{
-                    color: theme.colors.text,
-                    fontFamily: theme.fonts.display,
-                    fontSize: 30,
-                    lineHeight: 1.08,
-                  }}
-                >
+                    style={{
+                      color: theme.colors.text,
+                      fontFamily: theme.fonts.display,
+                      fontSize: 25,
+                      lineHeight: 1.08,
+                    }}
+                  >
                     {event.title}
                   </div>
                   <div
-                  style={{
-                    color: theme.colors.muted,
-                    fontSize: 25,
-                    lineHeight: 1.3,
-                  }}
-                >
+                    style={{
+                      color: theme.colors.muted,
+                      fontSize: 19,
+                      lineHeight: 1.28,
+                    }}
+                  >
                     {event.body}
                   </div>
                 </div>
@@ -158,7 +158,7 @@ export const Timeline: React.FC<{
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: 18,
+          gap: 14,
         }}
       >
         {stats.map((stat, index) => {
@@ -179,13 +179,13 @@ export const Timeline: React.FC<{
               style={{
                 backgroundColor: theme.colors.surface,
                 border: `1px solid ${theme.colors.border}`,
-                borderRadius: 26,
+                borderRadius: 24,
                 display: "flex",
                 flexDirection: "column",
-                gap: 10,
-                minHeight: 190,
+                gap: 8,
+                minHeight: 154,
                 opacity: entrance,
-                padding: 26,
+                padding: 22,
                 transform: `translateY(${interpolate(entrance, [0, 1], [18, 0])}px)`,
               }}
             >
@@ -193,7 +193,7 @@ export const Timeline: React.FC<{
                 style={{
                   color: theme.colors.accent,
                   fontFamily: theme.fonts.mono,
-                  fontSize: 18,
+                  fontSize: 16,
                   letterSpacing: "0.12em",
                   textTransform: "uppercase",
                 }}
@@ -204,7 +204,7 @@ export const Timeline: React.FC<{
                 style={{
                   color: theme.colors.text,
                   fontFamily: theme.fonts.display,
-                  fontSize: 48,
+                  fontSize: 42,
                   lineHeight: 1,
                 }}
               >
@@ -213,7 +213,7 @@ export const Timeline: React.FC<{
               <div
                 style={{
                   color: theme.colors.muted,
-                  fontSize: 24,
+                  fontSize: 20,
                   lineHeight: 1.28,
                 }}
               >
