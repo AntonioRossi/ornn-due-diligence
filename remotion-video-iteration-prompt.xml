@@ -24,8 +24,6 @@
       />
     </primarySources>
     <supportingDocs>
-      <file path="remotion-v1-build-plan.md" role="workflow and editorial plan" />
-      <file path="kokoro-audio-implementation-plan.md" role="audio implementation and voice policy" />
       <file path="video/v1-review-notes.md" role="scope choices and review focus" />
       <file path="video/README.md" role="project commands and layout" />
     </supportingDocs>
@@ -78,13 +76,25 @@
       investor memo in motion, not a product promo.
     </principle>
     <principle>
+      Preserve the established visual direction: deep slate or warm off-black backgrounds,
+      muted gold or copper accents, restrained typography, and low-amplitude motion. Prefer
+      investor-research tone over startup-marketing tone.
+    </principle>
+    <principle>
       Preserve the existing standalone Remotion app under <path>video/</path>. Update in
       place; do not rebuild the app from scratch.
     </principle>
     <principle>
-      This workflow includes audio commentary. Follow
-      <path>kokoro-audio-implementation-plan.md</path>, use Kokoro on CPU, keep narration
-      scene-based, and use the mandated voice <code>af_bella</code>.
+      This workflow includes audio commentary. Use Kokoro on CPU, keep narration
+      scene-based, store narration inputs in <path>video/src/data/narration.json</path>,
+      generate one WAV per scene under <path>video/public/audio/</path>, and use the
+      mandated voice <code>af_bella</code>.
+    </principle>
+    <principle>
+      Use UV-managed Python tooling for narration generation. Keep the audio workflow rooted
+      in <path>pyproject.toml</path>, <path>uv.lock</path>, and
+      <path>scripts/generate-audio.py</path>. Use <code>uv sync</code> and the repo's
+      <code>pnpm audio:generate</code> command as the standard execution path.
     </principle>
   </coreWorkflow>
 
@@ -160,6 +170,7 @@
         <source path="investment-committee-memo.md" section="Why this matters" />
       </sources>
       <purpose>Frame the market-structure thesis and why benchmark ownership matters.</purpose>
+      <delivery>Text-led thesis framing with concise supporting points.</delivery>
     </scene>
 
     <scene id="traction">
@@ -167,6 +178,7 @@
         <source path="investment-committee-memo.md" section="What appears real today" />
       </sources>
       <purpose>Show visible product, partner, and distribution signal.</purpose>
+      <delivery>Timeline or milestone layout that emphasizes dated proof points.</delivery>
     </scene>
 
     <scene id="attractive">
@@ -174,6 +186,7 @@
         <source path="investment-committee-memo.md" section="What is attractive" />
       </sources>
       <purpose>Explain the reinforcing business-model layers.</purpose>
+      <delivery>Three-layer or structured model view with short explanatory captions.</delivery>
     </scene>
 
     <scene id="riskLegal">
@@ -181,6 +194,7 @@
         <source path="investment-committee-memo.md" section="Core risk #1: legal and regulatory ambiguity" />
       </sources>
       <purpose>Show the largest gating issue around legal structure and regulatory mapping.</purpose>
+      <delivery>Risk-panel treatment with highlighted contradictions and entity mapping.</delivery>
     </scene>
 
     <scene id="riskCounterparty">
@@ -188,6 +202,7 @@
         <source path="investment-committee-memo.md" section="Core risk #2: counterparty, collateral, and balance-sheet risk" />
       </sources>
       <purpose>Frame the business as principal-risk / market-infrastructure risk, not pure SaaS.</purpose>
+      <delivery>Risk-panel treatment with underwriting framing and controlled animation.</delivery>
     </scene>
 
     <scene id="riskGovernance">
@@ -195,6 +210,7 @@
         <source path="investment-committee-memo.md" section="Core risk #3: OCPI governance and liquidity proof" />
       </sources>
       <purpose>Show benchmark-governance and market-depth proof gaps.</purpose>
+      <delivery>Risk-panel treatment emphasizing missing proof and missing market metrics.</delivery>
     </scene>
 
     <scene id="closing">
@@ -203,6 +219,7 @@
         <source path="management-diligence-request-list.md" section="Management diligence request list" />
       </sources>
       <purpose>Close on the recommendation and present the highest-priority next-step asks.</purpose>
+      <delivery>Closing recommendation plus selective diligence asks for the next management call.</delivery>
     </scene>
   </sceneBackbone>
 
