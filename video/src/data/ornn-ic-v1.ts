@@ -18,17 +18,19 @@ export const ornnIcV1 = {
   },
   scenes: {
     opening: {
-      durationInFrames: 330,
+      durationInFrames: 405,
       sectionLabel: "Recommendation",
       title: "Ornn",
       subtitle: "Preliminary IC memo",
       date: "April 6, 2026",
-      recommendation: "Continue diligence. No term sheet yet.",
+      recommendation: "Authorize phase-two diligence only.",
       body:
-        "This is not a final invest or decline decision. Authorize phase-two diligence while the public record still fails to resolve the underwriting questions that matter most.",
-      status: "Phase-two diligence",
+        "The public record justifies deeper work, but not underwriting. Most of the positive evidence is still company-generated or partner-generated rather than independently validated.",
+      status: "No term sheet yet",
+      statusNote:
+        "Proceed only while the legal, liquidity, competitive, and control-function gaps remain open.",
       gatingSummary:
-        "4 gating questions remain open: product and entity mapping, OCPI governance quality, counterparty structure, and real two-sided liquidity.",
+        "6 gates remain open: product and entity mapping, OCPI governance and data rights, counterparty and capital adequacy, real liquidity, competitive position, and management-control sufficiency.",
       gatingIssues: [
         {
           label: "Issue 1",
@@ -36,7 +38,7 @@ export const ornnIcV1 = {
         },
         {
           label: "Issue 2",
-          body: "OCPI governance quality",
+          body: "OCPI governance and data rights",
         },
         {
           label: "Issue 3",
@@ -46,26 +48,34 @@ export const ornnIcV1 = {
           label: "Issue 4",
           body: "Real two-sided liquidity",
         },
+        {
+          label: "Issue 5",
+          body: "Competitive position",
+        },
+        {
+          label: "Issue 6",
+          body: "Management and control-function sufficiency",
+        },
       ],
     },
     whyMatters: {
-      durationInFrames: 420,
-      sectionLabel: "Why This Matters",
-      title: "Not another AI app. A market-structure bet.",
+      durationInFrames: 480,
+      sectionLabel: "Company Snapshot",
+      title: "A benchmark-led market-structure bet.",
       body:
-        "If compute becomes a financeable infrastructure input, the company that owns the benchmark, embeds it into institutional workflows, and helps form early liquidity could capture durable value.",
+        "If compute becomes a financeable infrastructure input, benchmark ownership and workflow penetration matter. Ornn is trying to pair OCPI with cash-settled products for compute providers, buyers, lenders, and traders.",
       points: [
         {
           label: "Benchmark",
-          body: "Own the reference price and the market speaks your language.",
+          body: "Own the reference price and shape how the market talks about compute.",
         },
         {
           label: "Workflow",
-          body: "Get compute pricing into investor, lender, and operator tooling.",
+          body: "Get compute pricing into investor, lender, operator, and lender workflows.",
         },
         {
-          label: "Risk need",
-          body: "Public materials frame hedging of price volatility and GPU depreciation as the pain point.",
+          label: "Use case",
+          body: "Public materials frame hedging of compute-price volatility and GPU depreciation as the need.",
         },
       ],
       accentBlock: {
@@ -76,11 +86,11 @@ export const ornnIcV1 = {
       },
     },
     traction: {
-      durationInFrames: 570,
+      durationInFrames: 660,
       sectionLabel: "What Appears Real Today",
-      title: "Visible product and distribution signal already exist.",
+      title: "Visible signal exists, but it is not the same as validation.",
       intro:
-        "The benchmark and data surface appear live, and the public record shows multiple distribution and partner signals across the last two quarters.",
+        "The public record shows productization and distribution progress, but it still does not prove durable liquidity, methodology validation, or full regulatory completeness.",
       events: [
         {
           date: "Oct 22, 2025",
@@ -104,14 +114,14 @@ export const ornnIcV1 = {
           date: "Apr 2, 2026",
           title: "Bloomberg Terminal inclusion",
           body:
-            "Ornn announced OCPI on Bloomberg Terminal and said more than 400 operators, investors, and AI companies were accessing the platform.",
+            "Ornn announced OCPI on Bloomberg Terminal and said more than 400 operators, investors, and AI companies access the platform.",
         },
       ],
       stats: [
         {
-          label: "Platform users",
+          label: "400+ access",
           value: "400+",
-          body: "Operators, investors, and AI companies reportedly on platform by Apr 2, 2026.",
+          body: "Self-reported by Ornn. 'Access' is undefined and not independently validated.",
         },
         {
           label: "Hydra footprint",
@@ -119,145 +129,147 @@ export const ornnIcV1 = {
           body: "GPUs under management referenced in Hydra partnership materials.",
         },
         {
-          label: "Institutional reach",
+          label: "Bloomberg",
           value: "Bloomberg",
-          body: "OCPI distribution now visible inside established institutional tooling.",
+          body: "Improves discoverability in institutional tooling, not methodology endorsement.",
         },
       ],
     },
     attractive: {
-      durationInFrames: 390,
-      sectionLabel: "Why It Could Work",
-      title: "Three reinforcing layers could create durable value.",
+      durationInFrames: 435,
+      sectionLabel: "Context",
+      title: "Competition is real, and market formation will be hard.",
       layers: [
         {
-          label: "Layer 1",
-          title: "Benchmark data",
+          label: "Competitive field",
+          title: "Silicon Data already has a live benchmark.",
           body:
-            "OCPI and the API surface create the reference language for compute pricing.",
+            "Silicon Data launched a daily H100 rental index in May 2025 and is backed by DRW and Jump Trading Group.",
         },
         {
-          label: "Layer 2",
-          title: "Risk-transfer products",
+          label: "Market operators",
+          title: "Compute Exchange and Auctionomics are credible rivals.",
           body:
-            "Cash-settled products turn reference pricing into hedging and underwriting utility.",
+            "Compute Exchange ties into the Silicon Data ecosystem, while Auctionomics and OneChronos publicized a GPU-compute market effort in August 2025.",
         },
         {
-          label: "Layer 3",
-          title: "Liquidity and distribution",
+          label: "Operating burden",
+          title: "Control-function depth is still unproven publicly.",
           body:
-            "Bloomberg, Hydra, Architect, and partner channels help distribution escape a single venue.",
+            "The public record does not yet show dedicated legal, compliance, treasury, risk, and surveillance leadership for a young principal-risk market operator.",
         },
       ],
       summary:
-        "Benchmark businesses can become embedded and recurring. Once a pricing convention sticks, it can support forward curves, underwriting, and structured products.",
+        "Ornn is not competing against an empty field. Better-capitalized and more market-structure-native entrants are already visible.",
       note:
-        "The strategic attraction is not one product. It is the possibility that each layer strengthens the next: better data supports products, products attract flow, and flow legitimizes the benchmark.",
+        "New futures categories often fail, and the most natural compute hedgers may be the weaker credits. That raises the burden of proof on adoption and execution.",
+      summaryLabel: "Underwriting read",
+      noteLabel: "Why it is harder",
     },
     riskLegal: {
       durationInFrames: 420,
       sectionLabel: "Risk 1",
-      title: "Legal and regulatory ambiguity is the largest gating issue.",
+      title: "Legal contradiction remains the largest gating issue.",
       summary:
-        "Public materials pull in different directions. They do not cleanly resolve which products are live, under which entity, or under which regulatory regime.",
+        "The public record still does not prove how Ornn's exchange-style positioning, bilateral swap activity, and partner-listed products reconcile across entities and regulators.",
       items: [
         {
           label: "Contradiction",
-          title: "Exchange-style positioning",
+          title: "Marketing sounds like a regulated exchange story",
           body:
-            "Homepage and search language emphasize a benchmark, exchange, standard, and regulated trust narrative.",
+            "Public-facing language emphasizes a benchmark, exchange, standard, and regulated trust narrative.",
         },
         {
           label: "Disclosure",
-          title: "Terms narrow the service",
+          title: "Legal terms narrow the service sharply",
           body:
             "Data terms say the services are informational and reference only, not exchange services, brokerage services, or transaction offers.",
         },
         {
           label: "Entity map",
-          title: "Multiple legal surfaces",
+          title: "ORNNX, Ornn Data, and de minimis posture",
           body:
-            "ORNNX LLC appears as direct counterparty for swaps, while Ornn Data LLC appears as index provider for partner-listed contracts pending approval.",
+            "ORNNX LLC appears as direct swap counterparty with no organized exchange, while Ornn Data LLC appears as partner-listed index provider pending approval.",
         },
       ],
       framingLabel: "Investment threshold",
       framingText:
-        "Before any term sheet: produce a product-by-product legal status matrix by entity, jurisdiction, regulator, and counterparty.",
+        "Assume the marketing narrative overstates present-day regulatory finality until management produces a clean entity-by-entity legal map.",
       askText:
         "Which products are actually live today, under which legal entity, in which jurisdictions, and under what regulatory basis?",
     },
     riskCounterparty: {
       durationInFrames: 420,
       sectionLabel: "Risk 2",
-      title: "Counterparty and collateral risk changes the underwriting.",
+      title: "Principal-risk exposure changes the underwriting.",
       summary:
-        "If Ornn is taking principal exposure, this should be underwritten more like OTC principal risk or market infrastructure than like pure software.",
+        "If Ornn is taking principal exposure, this should be underwritten more like early market infrastructure with balance-sheet risk than like software.",
       items: [
         {
           label: "Loss profile",
-          title: "Customers can lose more than posted collateral",
+          title: "Collateral alone may not cap losses",
           body:
-            "The public risk disclosure flags substantial loss risk beyond initial collateral during market stress.",
+            "Public risk disclosures contemplate losses beyond posted collateral, rapid margin calls, and liquidation during stress.",
         },
         {
-          label: "Control",
-          title: "Margin and liquidation discretion",
+          label: "Capital",
+          title: "Public financing scale is still limited",
           body:
-            "The disclosure contemplates immediate margin calls and liquidation without prior notice.",
+            "The only disclosed financing signal is a $5.7M seed round, so the burden of proof on capital adequacy is high.",
         },
         {
           label: "Proof gap",
-          title: "Segregation and capital are still opaque",
+          title: "Segregation, hedging, and default tools are opaque",
           body:
-            "Public materials do not yet prove collateral segregation, capital adequacy, risk limits, or a credible default-management framework.",
+            "Public materials do not yet prove collateral segregation, hedge counterparties, risk limits, or a credible default-management framework.",
         },
       ],
       framingLabel: "Underwrite it as",
       framingText:
-        "An early market-infrastructure business with balance-sheet, collateral, and re-hedging exposure, not just a data product.",
+        "An early market-infrastructure business with balance-sheet, custody, and re-hedging exposure, not just a data product.",
       askText:
         "What capital, re-hedging, segregation, and default waterfalls protect the business if a counterparty fails?",
     },
     riskGovernance: {
       durationInFrames: 420,
       sectionLabel: "Risk 3",
-      title: "OCPI visibility does not yet equal institutional underwritability.",
+      title: "Benchmark credibility and liquidity proof are still incomplete.",
       summary:
-        "The benchmark may be visible, but the public record still does not show enough methodology governance or market-depth proof for institutional confidence.",
+        "OCPI may be visible, but visibility is not institutional underwritability. Governance, data rights, and market-depth proof remain incomplete.",
       items: [
         {
           label: "Methodology",
-          title: "Proprietary and changeable",
+          title: "Proprietary and changeable by Ornn",
           body:
             "Risk disclosure says OCPI depends on proprietary methodology, third-party provider data, and can be changed by Ornn.",
         },
         {
-          label: "Data rights",
-          title: "Contributor quality remains opaque",
+          label: "Proof gap",
+          title: "Contributor quality and transaction depth remain opaque",
           body:
-            "Public materials do not disclose contributor concentration, raw data composition, or rights durability across the data supply chain.",
+            "Public materials do not disclose contributor concentration, restatement history, or the share of direct transaction prints versus normalized adjustments.",
         },
         {
-          label: "Market proof",
-          title: "Missing liquidity metrics",
+          label: "Standard risk",
+          title: "OCPI is not clearly the only benchmark in the field",
           body:
-            "Notional traded, open interest, spreads, active counterparties, and repeat hedging behavior remain absent from public evidence.",
+            "Competing GPU pricing benchmarks predate OCPI's Bloomberg visibility, so market standardization could still converge elsewhere.",
         },
       ],
       framingLabel: "Current read",
       framingText:
-        "Visible benchmark. Incomplete liquidity proof. Benchmark credibility and market proof still need separate diligence.",
+        "Visible benchmark. Incomplete governance proof. No public evidence yet that OCPI is the accepted market standard.",
       askText:
         "What share of OCPI comes from verifiable transaction prints, and what are the current live market metrics behind it?",
     },
     closing: {
       durationInFrames: 360,
       sectionLabel: "Bottom Line",
-      title: "Move forward to gated phase-two diligence, not final approval.",
+      title: "Proceed only with gated phase-two diligence.",
       summary:
-        "Real signal exists: a live benchmark, visible API, Bloomberg distribution, partner integrations, and a real pain point.",
+        "Real signal exists: benchmark visibility, an API surface, Bloomberg inclusion, and partner distribution through Hydra, Architect, and Kalshi-related verification.",
       conclusion:
-        "Advance only if management resolves the legal structure, proves OCPI governance, demonstrates real liquidity, and shows tight counterparty controls. Otherwise, pass.",
+        "Advance only if management resolves legal mapping, proves benchmark governance, demonstrates real liquidity, shows adequate control functions, and evidences capital discipline. Otherwise, pass.",
       questions: [
         {
           label: "Ask 1",
@@ -273,7 +285,7 @@ export const ornnIcV1 = {
         },
         {
           label: "Ask 4",
-          body: "What are current notional, active counterparties, and repeat metrics?",
+          body: "What share of OCPI comes from verifiable prints, and what live metrics support it?",
         },
       ],
       closingNote:

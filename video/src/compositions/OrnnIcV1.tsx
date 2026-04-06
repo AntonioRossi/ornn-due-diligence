@@ -266,7 +266,7 @@ const OpeningScene: React.FC<SceneProps> = ({startFrame}) => {
                 position: "relative",
               }}
             >
-              Continue diligence while legal, structural, and liquidity questions remain unresolved.
+              {scene.statusNote}
             </div>
           </div>
         </div>
@@ -370,6 +370,8 @@ const AttractiveScene: React.FC<SceneProps> = ({startFrame}) => {
         layers={scene.layers}
         summary={scene.summary}
         note={scene.note}
+        summaryLabel={scene.summaryLabel}
+        noteLabel={scene.noteLabel}
       />
     </Frame>
   );

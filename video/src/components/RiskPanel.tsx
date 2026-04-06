@@ -28,19 +28,19 @@ export const RiskPanel: React.FC<{
   });
 
   return (
-    <div style={{display: "flex", flexDirection: "column", gap: 32}}>
+    <div style={{display: "flex", flexDirection: "column", gap: 24}}>
       <div
         style={{
           backgroundColor: theme.colors.surfaceStrong,
           border: `1px solid ${theme.colors.warningBorder}`,
-          borderRadius: 28,
+          borderRadius: 26,
           boxShadow: "0 24px 64px rgba(0, 0, 0, 0.18)",
           color: theme.colors.text,
           fontFamily: theme.fonts.display,
-          fontSize: 40,
+          fontSize: 36,
           lineHeight: 1.12,
           opacity: summaryEntrance,
-          padding: 34,
+          padding: 28,
           transform: `translateY(${interpolate(summaryEntrance, [0, 1], [20, 0])}px)`,
         }}
       >
@@ -49,7 +49,7 @@ export const RiskPanel: React.FC<{
       <div
         style={{
           display: "grid",
-          gap: 22,
+          gap: 18,
           gridTemplateColumns: "repeat(3, 1fr)",
         }}
       >
@@ -71,14 +71,14 @@ export const RiskPanel: React.FC<{
               style={{
                 backgroundColor: theme.colors.surface,
                 border: `1px solid ${theme.colors.border}`,
-                borderRadius: 24,
+                borderRadius: 22,
                 boxShadow: "0 18px 48px rgba(0, 0, 0, 0.18)",
                 display: "flex",
                 flexDirection: "column",
-                gap: 16,
-                minHeight: 250,
+                gap: 12,
+                minHeight: 220,
                 opacity: entrance,
-                padding: 28,
+                padding: 22,
                 transform: `translateY(${interpolate(entrance, [0, 1], [30, 0])}px)`,
               }}
             >
@@ -86,7 +86,7 @@ export const RiskPanel: React.FC<{
                 style={{
                   color: theme.colors.warning,
                   fontFamily: theme.fonts.mono,
-                  fontSize: 20,
+                  fontSize: 18,
                   letterSpacing: "0.14em",
                   textTransform: "uppercase",
                 }}
@@ -97,7 +97,7 @@ export const RiskPanel: React.FC<{
                 style={{
                   color: theme.colors.text,
                   fontFamily: theme.fonts.display,
-                  fontSize: 30,
+                  fontSize: 28,
                   lineHeight: 1.1,
                 }}
               >
@@ -106,8 +106,8 @@ export const RiskPanel: React.FC<{
               <div
                 style={{
                   color: theme.colors.muted,
-                  fontSize: 25,
-                  lineHeight: 1.32,
+                  fontSize: 22,
+                  lineHeight: 1.28,
                 }}
               >
                 {item.body}
@@ -119,7 +119,7 @@ export const RiskPanel: React.FC<{
       <div
         style={{
           display: "grid",
-          gap: 22,
+          gap: 18,
           gridTemplateColumns: "1fr 1fr",
         }}
       >
@@ -127,18 +127,18 @@ export const RiskPanel: React.FC<{
           style={{
             backgroundColor: theme.colors.surface,
             border: `1px solid ${theme.colors.border}`,
-            borderRadius: 24,
+            borderRadius: 22,
             display: "flex",
             flexDirection: "column",
-            gap: 12,
-            padding: 24,
+            gap: 10,
+            padding: 20,
           }}
         >
           <div
             style={{
               color: theme.colors.accent,
               fontFamily: theme.fonts.mono,
-              fontSize: 20,
+              fontSize: 18,
               letterSpacing: "0.14em",
               textTransform: "uppercase",
             }}
@@ -148,7 +148,7 @@ export const RiskPanel: React.FC<{
           <div
             style={{
               color: theme.colors.text,
-              fontSize: 28,
+              fontSize: 25,
               lineHeight: 1.25,
             }}
           >
@@ -159,18 +159,18 @@ export const RiskPanel: React.FC<{
           style={{
             backgroundColor: theme.colors.surface,
             border: `1px solid ${theme.colors.border}`,
-            borderRadius: 24,
+            borderRadius: 22,
             display: "flex",
             flexDirection: "column",
-            gap: 12,
-            padding: 24,
+            gap: 10,
+            padding: 20,
           }}
         >
           <div
             style={{
               color: theme.colors.accent,
               fontFamily: theme.fonts.mono,
-              fontSize: 20,
+              fontSize: 18,
               letterSpacing: "0.14em",
               textTransform: "uppercase",
             }}
@@ -180,7 +180,7 @@ export const RiskPanel: React.FC<{
           <div
             style={{
               color: theme.colors.text,
-              fontSize: 28,
+              fontSize: 25,
               lineHeight: 1.25,
             }}
           >

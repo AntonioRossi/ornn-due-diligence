@@ -3,36 +3,38 @@ import type {SceneId} from "./ornn-ic-v1";
 export const sceneCitations: Record<SceneId, string[]> = {
   opening: [
     "Memo recommendation",
-    "Memo four gating issues",
+    "Memo six unresolved issues",
     "Public-information IC memo, Apr 6 2026",
   ],
   whyMatters: [
     "Memo company snapshot",
-    "Memo why this matters",
+    "Memo market-structure thesis",
     "Memo [2] seed financing",
   ],
   traction: [
-    "Memo [1] Bloomberg / 400+ users",
-    "Memo [3] Hydra, Architect, Kalshi",
+    "Memo visible-signal section",
+    "Memo [1] Bloomberg / 400+ self-reported access",
+    "Memo [3], [4], [5] Hydra, Architect, Kalshi",
   ],
   attractive: [
-    "Memo what is attractive",
-    "Memo [3] Bloomberg, Hydra, Architect",
+    "Memo competitive context",
+    "Memo team and operating-model risk",
   ],
   riskLegal: [
-    "Memo risk 1",
-    "Memo [4] homepage, terms, regulatory positioning",
+    "Memo core risk 1",
+    "Memo [6], [7], [15] marketing, terms, de minimis posture",
   ],
   riskCounterparty: [
-    "Memo risk 2",
-    "Memo [5] swap risk disclosure",
+    "Memo core risk 4",
+    "Memo [2], [7] seed scale and swap risk disclosure",
   ],
   riskGovernance: [
-    "Memo risk 3",
-    "Memo [6] OCPI methodology and disclosure gaps",
+    "Memo core risk 3",
+    "Memo [7], [8] OCPI disclosure gaps and benchmark competition",
   ],
   closing: [
     "Memo bottom line",
     "Diligence list first-call questions",
+    "Memo valuation caveat",
   ],
 };

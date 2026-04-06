@@ -11,7 +11,9 @@ export const ThreeLayerModel: React.FC<{
   readonly layers: readonly Layer[];
   readonly summary: string;
   readonly note: string;
-}> = ({layers, summary, note}) => {
+  readonly summaryLabel?: string;
+  readonly noteLabel?: string;
+}> = ({layers, summary, note, summaryLabel = "Strategic payoff", noteLabel = "Why it compounds"}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
 
@@ -19,11 +21,11 @@ export const ThreeLayerModel: React.FC<{
     <div
       style={{
         display: "grid",
-        gap: 32,
+        gap: 24,
         gridTemplateColumns: "1.25fr 0.75fr",
       }}
     >
-      <div style={{display: "flex", flexDirection: "column", gap: 18}}>
+      <div style={{display: "flex", flexDirection: "column", gap: 14}}>
         {layers.map((layer, index) => {
           const entrance = spring({
             fps,
@@ -48,9 +50,9 @@ export const ThreeLayerModel: React.FC<{
                 boxShadow: "0 20px 56px rgba(0, 0, 0, 0.18)",
                 display: "flex",
                 flexDirection: "column",
-                gap: 14,
+                gap: 10,
                 opacity: entrance,
-                padding: 28,
+                padding: 22,
                 transform: `translateY(${interpolate(entrance, [0, 1], [24, 0])}px)`,
                 width: widths[index],
               }}
@@ -70,7 +72,7 @@ export const ThreeLayerModel: React.FC<{
                 style={{
                   color: theme.colors.text,
                   fontFamily: theme.fonts.display,
-                  fontSize: 36,
+                  fontSize: 32,
                   lineHeight: 1.08,
                 }}
               >
@@ -79,8 +81,8 @@ export const ThreeLayerModel: React.FC<{
               <div
                 style={{
                   color: theme.colors.muted,
-                  fontSize: 26,
-                  lineHeight: 1.3,
+                  fontSize: 21,
+                  lineHeight: 1.26,
                   maxWidth: 720,
                 }}
               >
@@ -94,7 +96,7 @@ export const ThreeLayerModel: React.FC<{
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: 22,
+          gap: 18,
         }}
       >
         <div
@@ -104,9 +106,9 @@ export const ThreeLayerModel: React.FC<{
             borderRadius: 28,
             display: "flex",
             flexDirection: "column",
-            gap: 18,
-            minHeight: 300,
-            padding: 30,
+            gap: 14,
+            minHeight: 0,
+            padding: 24,
           }}
         >
           <div
@@ -118,13 +120,13 @@ export const ThreeLayerModel: React.FC<{
               textTransform: "uppercase",
             }}
           >
-            Strategic payoff
+            {summaryLabel}
           </div>
           <div
             style={{
               color: theme.colors.text,
-              fontSize: 31,
-              lineHeight: 1.2,
+              fontSize: 27,
+              lineHeight: 1.18,
             }}
           >
             {summary}
@@ -137,9 +139,9 @@ export const ThreeLayerModel: React.FC<{
             borderRadius: 28,
             display: "flex",
             flexDirection: "column",
-            gap: 18,
-            minHeight: 240,
-            padding: 30,
+            gap: 14,
+            minHeight: 0,
+            padding: 24,
           }}
         >
           <div
@@ -151,13 +153,13 @@ export const ThreeLayerModel: React.FC<{
               textTransform: "uppercase",
             }}
           >
-            Why it compounds
+            {noteLabel}
           </div>
           <div
             style={{
               color: theme.colors.muted,
-              fontSize: 26,
-              lineHeight: 1.3,
+              fontSize: 22,
+              lineHeight: 1.26,
             }}
           >
             {note}
