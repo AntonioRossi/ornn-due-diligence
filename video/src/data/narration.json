@@ -1,10 +1,10 @@
 [
   {
     "sceneId": "opening",
-    "text": "Authorize phase-two diligence only. No term sheet yet. Six issues remain unresolved: legal mapping, benchmark governance, counterparty and capital adequacy, real liquidity, competitive position, and management controls.",
+    "text": "Authorize gated phase-two diligence only. No term sheet yet. Gates are legal map, threshold and DCM path, OCPI governance, valuation controls, liquidity, operational integrity, management depth, and tax and IP structure.",
     "voice": "af_bella",
     "langCode": "a",
-    "speed": 1.26,
+    "speed": 1.32,
     "maxDurationFrames": 405
   },
   {
@@ -17,50 +17,50 @@
   },
   {
     "sceneId": "traction",
-    "text": "There is enough public evidence to treat Ornn as more than a concept. Hydra brings a thirty-thousand-plus GPU data signal. Architect adds a pending exchange-traded futures path. Kalshi shows verification visibility. Bloomberg improves discoverability, but neither Bloomberg inclusion nor Ornn's reported four-hundred-plus users should be mistaken for independent validation.",
+    "text": "There is enough public evidence to treat Ornn as more than a concept. Hydra brings a thirty-thousand-plus GPU data signal. Architect adds a pending exchange-traded futures path. Kalshi shows verification visibility. Bloomberg helps distribution, but none of that is proof of liquidity, valuation independence, or regulatory completion.",
     "voice": "af_bella",
     "langCode": "a",
-    "speed": 1.23,
-    "maxDurationFrames": 660
+    "speed": 1.24,
+    "maxDurationFrames": 630
   },
   {
     "sceneId": "attractive",
-    "text": "Competition is already visible. Silicon Data has a live benchmark backed by DRW and Jump. Compute Exchange and Auctionomics add serious rivals. Public records still do not show the control bench expected for a principal-risk operator.",
+    "text": "Competition is already visible, and this is still a four-person company. Silicon Data has a live benchmark backed by DRW and Jump. Compute Exchange and Auctionomics add credible rivals. Market formation, control depth, and key-person risk remain open.",
     "voice": "af_bella",
     "langCode": "a",
-    "speed": 1.31,
+    "speed": 1.33,
     "maxDurationFrames": 435
   },
   {
     "sceneId": "riskLegal",
-    "text": "Legal contradiction is still the biggest gate. Marketing sounds like a regulated exchange story, while Ornn's own terms and swap disclosures narrow that claim sharply. Management still needs to produce a clean entity-by-entity legal map.",
+    "text": "Legal contradiction is still the biggest gate. Marketing sounds like a regulated exchange story, while the disclosed structure narrows that claim sharply. Public materials still do not show de minimis utilization, DCM status, or the full entity-by-entity legal map.",
     "voice": "af_bella",
     "langCode": "a",
     "speed": 1.34,
-    "maxDurationFrames": 420
+    "maxDurationFrames": 410
   },
   {
     "sceneId": "riskCounterparty",
-    "text": "If Ornn takes principal exposure, underwrite it as market infrastructure, not software. Public materials still do not prove capital adequacy, segregation, hedge counterparties, or default management.",
+    "text": "If Ornn takes principal exposure, underwrite it as market infrastructure, not software. Public materials still do not prove capital adequacy, independent marks, hedge counterparties, or information-barrier controls.",
     "voice": "af_bella",
     "langCode": "a",
     "speed": 1.33,
-    "maxDurationFrames": 420
+    "maxDurationFrames": 400
   },
   {
     "sceneId": "riskGovernance",
-    "text": "OCPI may be visible, but visibility is not underwritability. Public materials still do not prove governance, transaction-print depth, or market adoption, and competing benchmarks mean OCPI is not yet the accepted standard.",
+    "text": "OCPI may be visible, but visibility is not institutional readiness. Public materials still do not prove IOSCO alignment, independent replication, chain of title, privacy posture, or the operational depth behind the benchmark.",
     "voice": "af_bella",
     "langCode": "a",
-    "speed": 1.33,
+    "speed": 1.32,
     "maxDurationFrames": 420
   },
   {
     "sceneId": "closing",
-    "text": "Proceed only with gated phase-two diligence. Advance only if management resolves legal mapping, proves benchmark governance, demonstrates liquidity, and shows capital and control discipline. Otherwise, pass.",
+    "text": "Proceed only with gated phase-two diligence. Advance only if management resolves the legal map, the de minimis and DCM path, OCPI governance, valuation independence, capital discipline, and key-person risk. Otherwise, pass.",
     "voice": "af_bella",
     "langCode": "a",
-    "speed": 1.33,
-    "maxDurationFrames": 360
+    "speed": 1.31,
+    "maxDurationFrames": 420
   }
 ]

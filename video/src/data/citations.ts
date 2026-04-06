@@ -3,7 +3,7 @@ import type {SceneId} from "./ornn-ic-v1";
 export const sceneCitations: Record<SceneId, string[]> = {
   opening: [
     "Memo recommendation",
-    "Memo six unresolved issues",
+    "Memo eight unresolved issues",
     "Public-information IC memo, Apr 6 2026",
   ],
   whyMatters: [
@@ -22,19 +22,19 @@ export const sceneCitations: Record<SceneId, string[]> = {
   ],
   riskLegal: [
     "Memo core risk 1",
-    "Memo [6], [7], [15] marketing, terms, de minimis posture",
+    "Memo [6], [7], [15] marketing, terms, threshold path",
   ],
   riskCounterparty: [
-    "Memo core risk 4",
-    "Memo [2], [7] seed scale and swap risk disclosure",
+    "Memo core risk 3",
+    "Memo [2], [7] seed scale, swap risk disclosure, conflicts gap",
   ],
   riskGovernance: [
-    "Memo core risk 3",
-    "Memo [7], [8] OCPI disclosure gaps and benchmark competition",
+    "Memo core risk 2",
+    "Memo [1], [7], [8] OCPI disclosure gaps, IOSCO gap, benchmark competition",
   ],
   closing: [
     "Memo bottom line",
-    "Diligence list first-call questions",
+    "Revised DDQ first-call questions",
     "Memo valuation caveat",
   ],
 };

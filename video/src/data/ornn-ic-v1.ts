@@ -23,14 +23,14 @@ export const ornnIcV1 = {
       title: "Ornn",
       subtitle: "Preliminary IC memo",
       date: "April 6, 2026",
-      recommendation: "Authorize phase-two diligence only.",
+      recommendation: "Authorize gated phase-two diligence only.",
       body:
-        "The public record justifies deeper work, but not underwriting. Most of the positive evidence is still company-generated or partner-generated rather than independently validated.",
+        "The public record justifies deeper work, but not underwriting. Most positive evidence is still company-generated or partner-generated rather than independently validated.",
       status: "No term sheet yet",
       statusNote:
-        "Proceed only while the legal, liquidity, competitive, and control-function gaps remain open.",
+        "Proceed only while the legal, threshold-path, valuation, and control-depth gaps remain open.",
       gatingSummary:
-        "6 gates remain open: product and entity mapping, OCPI governance and data rights, counterparty and capital adequacy, real liquidity, competitive position, and management-control sufficiency.",
+        "8 gates remain open: product and entity mapping, de minimis and DCM path, OCPI and IOSCO governance, counterparty and valuation controls, real liquidity, technology and privacy integrity, management and key-person depth, and tax and IP structure.",
       gatingIssues: [
         {
           label: "Issue 1",
@@ -38,23 +38,31 @@ export const ornnIcV1 = {
         },
         {
           label: "Issue 2",
-          body: "OCPI governance and data rights",
+          body: "De minimis monitoring and DCM path",
         },
         {
           label: "Issue 3",
-          body: "Counterparty, collateral, and capital adequacy",
+          body: "OCPI governance, IOSCO, and data rights",
         },
         {
           label: "Issue 4",
-          body: "Real two-sided liquidity",
+          body: "Counterparty, collateral, valuation, and capital adequacy",
         },
         {
           label: "Issue 5",
-          body: "Competitive position",
+          body: "Real two-sided liquidity",
         },
         {
           label: "Issue 6",
-          body: "Management and control-function sufficiency",
+          body: "Technology, privacy, and operational integrity",
+        },
+        {
+          label: "Issue 7",
+          body: "Management and key-person sufficiency",
+        },
+        {
+          label: "Issue 8",
+          body: "Tax, IP, and intercompany structure",
         },
       ],
     },
@@ -71,7 +79,7 @@ export const ornnIcV1 = {
         },
         {
           label: "Workflow",
-          body: "Get compute pricing into investor, lender, operator, and lender workflows.",
+          body: "Get compute pricing into investor, lender, operator, and treasury workflows.",
         },
         {
           label: "Use case",
@@ -86,11 +94,11 @@ export const ornnIcV1 = {
       },
     },
     traction: {
-      durationInFrames: 660,
+      durationInFrames: 630,
       sectionLabel: "What Appears Real Today",
       title: "Visible signal exists, but it is not the same as validation.",
       intro:
-        "The public record shows productization and distribution progress, but it still does not prove durable liquidity, methodology validation, or full regulatory completeness.",
+        "The public record shows productization and distribution progress, but it still does not prove durable liquidity, valuation independence, or full regulatory completeness.",
       events: [
         {
           date: "Oct 22, 2025",
@@ -138,7 +146,7 @@ export const ornnIcV1 = {
     attractive: {
       durationInFrames: 435,
       sectionLabel: "Context",
-      title: "Competition is real, and market formation will be hard.",
+      title: "Competition is real, and the company is still thinly staffed.",
       layers: [
         {
           label: "Competitive field",
@@ -154,24 +162,24 @@ export const ornnIcV1 = {
         },
         {
           label: "Operating burden",
-          title: "Control-function depth is still unproven publicly.",
+          title: "A four-person control bench is hard to underwrite.",
           body:
-            "The public record does not yet show dedicated legal, compliance, treasury, risk, and surveillance leadership for a young principal-risk market operator.",
+            "Public records still do not show dedicated legal, compliance, treasury, privacy, risk, and surveillance depth for a young principal-risk operator.",
         },
       ],
       summary:
-        "Ornn is not competing against an empty field. Better-capitalized and more market-structure-native entrants are already visible.",
+        "Ornn is not competing against an empty field, and execution still sits on a narrow team base.",
       note:
-        "New futures categories often fail, and the most natural compute hedgers may be the weaker credits. That raises the burden of proof on adoption and execution.",
+        "New futures categories often fail. Cash runway, key-person resilience, and control depth matter as much as product vision here.",
       summaryLabel: "Underwriting read",
       noteLabel: "Why it is harder",
     },
     riskLegal: {
-      durationInFrames: 420,
+      durationInFrames: 410,
       sectionLabel: "Risk 1",
-      title: "Legal contradiction remains the largest gating issue.",
+      title: "Legal contradiction and threshold path remain the largest gate.",
       summary:
-        "The public record still does not prove how Ornn's exchange-style positioning, bilateral swap activity, and partner-listed products reconcile across entities and regulators.",
+        "The public record still does not prove how Ornn's exchange-style positioning, bilateral swap activity, de minimis posture, and future DCM path reconcile across entities and regulators.",
       items: [
         {
           label: "Contradiction",
@@ -180,30 +188,30 @@ export const ornnIcV1 = {
             "Public-facing language emphasizes a benchmark, exchange, standard, and regulated trust narrative.",
         },
         {
-          label: "Disclosure",
-          title: "Legal terms narrow the service sharply",
+          label: "Threshold path",
+          title: "De minimis utilization and escalation are still opaque",
           body:
-            "Data terms say the services are informational and reference only, not exchange services, brokerage services, or transaction offers.",
+            "Public materials do not show current threshold usage, affiliate aggregation, breach triggers, or a swap-dealer registration contingency.",
         },
         {
-          label: "Entity map",
-          title: "ORNNX, Ornn Data, and de minimis posture",
+          label: "DCM path",
+          title: "No public DCM status, feedback, or fallback plan",
           body:
-            "ORNNX LLC appears as direct swap counterparty with no organized exchange, while Ornn Data LLC appears as partner-listed index provider pending approval.",
+            "The public record does not show the status of any DCM application, the scope of CFTC feedback, or the contingency if approval slips.",
         },
       ],
       framingLabel: "Investment threshold",
       framingText:
-        "Assume the marketing narrative overstates present-day regulatory finality until management produces a clean entity-by-entity legal map.",
+        "Assume the marketing narrative overstates present-day regulatory finality until management produces the legal map, threshold pack, and DCM contingency.",
       askText:
-        "Which products are actually live today, under which legal entity, in which jurisdictions, and under what regulatory basis?",
+        "What is live today, what counts toward the threshold, and what is the plan if the DCM path takes longer than expected?",
     },
     riskCounterparty: {
-      durationInFrames: 420,
+      durationInFrames: 400,
       sectionLabel: "Risk 2",
-      title: "Principal-risk exposure changes the underwriting.",
+      title: "Principal-risk exposure requires independent marks and hard controls.",
       summary:
-        "If Ornn is taking principal exposure, this should be underwritten more like early market infrastructure with balance-sheet risk than like software.",
+        "If Ornn is taking principal exposure, this should be underwritten like early market infrastructure with valuation, balance-sheet, and conflicts risk rather than like software.",
       items: [
         {
           label: "Loss profile",
@@ -212,64 +220,64 @@ export const ornnIcV1 = {
             "Public risk disclosures contemplate losses beyond posted collateral, rapid margin calls, and liquidation during stress.",
         },
         {
-          label: "Capital",
-          title: "Public financing scale is still limited",
+          label: "Valuation",
+          title: "Independent marking and model governance are not visible",
           body:
-            "The only disclosed financing signal is a $5.7M seed round, so the burden of proof on capital adequacy is high.",
+            "Public materials do not yet prove how open positions are marked, independently verified, or challenged if Ornn controls the benchmark.",
         },
         {
-          label: "Proof gap",
-          title: "Segregation, hedging, and default tools are opaque",
+          label: "Conflicts",
+          title: "Information barriers and own-account controls are not visible",
           body:
-            "Public materials do not yet prove collateral segregation, hedge counterparties, risk limits, or a credible default-management framework.",
+            "Public materials do not show formal controls for prop trading, personal trading, front-running, or benchmark-to-trading conflicts.",
         },
       ],
       framingLabel: "Underwrite it as",
       framingText:
-        "An early market-infrastructure business with balance-sheet, custody, and re-hedging exposure, not just a data product.",
+        "An early market-infrastructure business with balance-sheet, valuation, and conflicts exposure, not just a data product.",
       askText:
-        "What capital, re-hedging, segregation, and default waterfalls protect the business if a counterparty fails?",
+        "Who marks the book, how is the risk hedged, and what prevents benchmark production from leaking into trading decisions?",
     },
     riskGovernance: {
       durationInFrames: 420,
       sectionLabel: "Risk 3",
-      title: "Benchmark credibility and liquidity proof are still incomplete.",
+      title: "Benchmark, technology, and control depth are still incomplete.",
       summary:
-        "OCPI may be visible, but visibility is not institutional underwritability. Governance, data rights, and market-depth proof remain incomplete.",
+        "OCPI may be visible, but visibility is not institutional readiness. IOSCO, replication, IP, privacy, and operational depth remain incomplete in the public record.",
       items: [
         {
-          label: "Methodology",
-          title: "Proprietary and changeable by Ornn",
+          label: "Benchmark",
+          title: "IOSCO mapping and independent replication are missing",
           body:
-            "Risk disclosure says OCPI depends on proprietary methodology, third-party provider data, and can be changed by Ornn.",
+            "Public materials do not show explicit IOSCO benchmarking work, minimum publication thresholds, or an independent replication package.",
         },
         {
-          label: "Proof gap",
-          title: "Contributor quality and transaction depth remain opaque",
+          label: "Defensibility",
+          title: "IP chain of title and data rights are still unproven",
           body:
-            "Public materials do not disclose contributor concentration, restatement history, or the share of direct transaction prints versus normalized adjustments.",
+            "Public materials do not show founder assignments, third-party data rights, or a clear view on whether OCPI is defensible as proprietary infrastructure.",
         },
         {
-          label: "Standard risk",
-          title: "OCPI is not clearly the only benchmark in the field",
+          label: "Operational depth",
+          title: "Technology, privacy, and key-person controls are still thinly evidenced",
           body:
-            "Competing GPU pricing benchmarks predate OCPI's Bloomberg visibility, so market standardization could still converge elsewhere.",
+            "Public materials do not yet prove the calculation architecture, privacy posture, or bench depth behind a four-person operator running benchmark and risk workflows.",
         },
       ],
       framingLabel: "Current read",
       framingText:
-        "Visible benchmark. Incomplete governance proof. No public evidence yet that OCPI is the accepted market standard.",
+        "Visible benchmark. Incomplete governance proof. Too little evidence yet on operational integrity and defensibility.",
       askText:
-        "What share of OCPI comes from verifiable transaction prints, and what are the current live market metrics behind it?",
+        "When can management open the replication room and show the technology, privacy, IP, and key-person controls behind OCPI?",
     },
     closing: {
-      durationInFrames: 360,
+      durationInFrames: 420,
       sectionLabel: "Bottom Line",
       title: "Proceed only with gated phase-two diligence.",
       summary:
         "Real signal exists: benchmark visibility, an API surface, Bloomberg inclusion, and partner distribution through Hydra, Architect, and Kalshi-related verification.",
       conclusion:
-        "Advance only if management resolves legal mapping, proves benchmark governance, demonstrates real liquidity, shows adequate control functions, and evidences capital discipline. Otherwise, pass.",
+        "Advance only if management resolves the legal map, the de minimis and DCM path, OCPI and IOSCO governance, valuation independence, capital discipline, and key-person risk. Otherwise, pass.",
       questions: [
         {
           label: "Ask 1",
@@ -277,19 +285,27 @@ export const ornnIcV1 = {
         },
         {
           label: "Ask 2",
-          body: "Who is regulated for what, and where is the clearest legal memo?",
+          body: "What is current de minimis utilization, and what happens when it is crossed?",
         },
         {
           label: "Ask 3",
-          body: "Does Ornn take principal risk today, and where is it hedged?",
+          body: "What is the DCM status, and what is the fallback if approval slips?",
         },
         {
           label: "Ask 4",
-          body: "What share of OCPI comes from verifiable prints, and what live metrics support it?",
+          body: "Who provides the independent mark-to-market on open positions?",
+        },
+        {
+          label: "Ask 5",
+          body: "When can we start independent OCPI replication, and what share is verifiable prints?",
+        },
+        {
+          label: "Ask 6",
+          body: "What are the current runway and key-person contingency plans?",
         },
       ],
       closingNote:
-        "Next call test: ask for the clearest proof that Ornn is building a market, not just a dataset.",
+        "P0 first: replication, threshold pack, DCM status, independent marks, runway, and succession.",
     },
   },
 } as const;

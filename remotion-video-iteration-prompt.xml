@@ -152,7 +152,7 @@
       <sources>
         <source path="investment-committee-memo.md" section="Recommendation" />
       </sources>
-      <purpose>Establish company, date, recommendation, and gating issues immediately.</purpose>
+      <purpose>Establish company, date, recommendation, and the widened gating issues immediately.</purpose>
       <preferredDataFields>
         <field>sectionLabel</field>
         <field>title</field>
@@ -177,40 +177,41 @@
       <sources>
         <source path="investment-committee-memo.md" section="What appears real today" />
       </sources>
-      <purpose>Show visible product, partner, and distribution signal.</purpose>
+      <purpose>Show visible product, partner, and distribution signal without overstating validation.</purpose>
       <delivery>Timeline or milestone layout that emphasizes dated proof points.</delivery>
     </scene>
 
     <scene id="attractive">
       <sources>
-        <source path="investment-committee-memo.md" section="What is attractive" />
+        <source path="investment-committee-memo.md" section="Competitive context" />
+        <source path="investment-committee-memo.md" section="Team and operating-model risk" />
       </sources>
-      <purpose>Explain the reinforcing business-model layers.</purpose>
-      <delivery>Three-layer or structured model view with short explanatory captions.</delivery>
+      <purpose>Explain competitive pressure, market-formation difficulty, and team thinness.</purpose>
+      <delivery>Structured context view with short explanatory captions.</delivery>
     </scene>
 
     <scene id="riskLegal">
       <sources>
-        <source path="investment-committee-memo.md" section="Core risk #1: legal and regulatory ambiguity" />
+        <source path="investment-committee-memo.md" section="Core risk #1: legal, regulatory, and threshold-path ambiguity" />
       </sources>
-      <purpose>Show the largest gating issue around legal structure and regulatory mapping.</purpose>
-      <delivery>Risk-panel treatment with highlighted contradictions and entity mapping.</delivery>
+      <purpose>Show the largest gating issue around legal structure, de minimis posture, and DCM path.</purpose>
+      <delivery>Risk-panel treatment with highlighted contradictions, threshold-path gaps, and entity mapping.</delivery>
     </scene>
 
     <scene id="riskCounterparty">
       <sources>
-        <source path="investment-committee-memo.md" section="Core risk #2: counterparty, collateral, and balance-sheet risk" />
+        <source path="investment-committee-memo.md" section="Core risk #3: balance-sheet, technology, privacy, and conflicts risk" />
       </sources>
-      <purpose>Frame the business as principal-risk / market-infrastructure risk, not pure SaaS.</purpose>
-      <delivery>Risk-panel treatment with underwriting framing and controlled animation.</delivery>
+      <purpose>Frame the business as principal-risk / market-infrastructure risk with valuation and conflicts exposure, not pure SaaS.</purpose>
+      <delivery>Risk-panel treatment with underwriting framing, independent-mark questions, and controlled animation.</delivery>
     </scene>
 
     <scene id="riskGovernance">
       <sources>
-        <source path="investment-committee-memo.md" section="Core risk #3: OCPI governance and liquidity proof" />
+        <source path="investment-committee-memo.md" section="Core risk #2: benchmark governance, IOSCO readiness, IP, and valuation independence" />
       </sources>
-      <purpose>Show benchmark-governance and market-depth proof gaps.</purpose>
-      <delivery>Risk-panel treatment emphasizing missing proof and missing market metrics.</delivery>
+      <purpose>Show benchmark-governance, replication, defensibility, and operational-depth proof gaps.</purpose>
+      <delivery>Risk-panel treatment emphasizing missing proof, IOSCO gaps, and missing control evidence.</delivery>
     </scene>
 
     <scene id="closing">
@@ -218,8 +219,8 @@
         <source path="investment-committee-memo.md" section="Bottom line" />
         <source path="management-diligence-request-list.md" section="Management diligence request list" />
       </sources>
-      <purpose>Close on the recommendation and present the highest-priority next-step asks.</purpose>
-      <delivery>Closing recommendation plus selective diligence asks for the next management call.</delivery>
+      <purpose>Close on the recommendation and present the hardest next-step asks for management.</purpose>
+      <delivery>Closing recommendation plus selective diligence asks centered on threshold usage, DCM status, replication, independent marks, and contingency planning.</delivery>
     </scene>
   </sceneBackbone>
 
