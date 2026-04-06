@@ -46,7 +46,7 @@ const OpeningScene: React.FC<SceneProps> = ({startFrame}) => {
     <Frame
       sectionLabel={scene.sectionLabel}
       title={scene.title}
-      titleSize={136}
+      titleSize={120}
       titleMaxWidth={720}
       progress={progress}
       footer={<CitationFooter items={sceneCitations.opening} />}
@@ -146,7 +146,7 @@ const WhyMattersScene: React.FC<SceneProps> = ({startFrame}) => {
     <Frame
       sectionLabel={scene.sectionLabel}
       title={scene.title}
-      titleSize={86}
+      titleSize={78}
       progress={progress}
       footer={<CitationFooter items={sceneCitations.whyMatters} />}
     >
@@ -168,7 +168,7 @@ const TractionScene: React.FC<SceneProps> = ({startFrame}) => {
     <Frame
       sectionLabel={scene.sectionLabel}
       title={scene.title}
-      titleSize={76}
+      titleSize={72}
       progress={progress}
       footer={<CitationFooter items={sceneCitations.traction} />}
     >
@@ -185,7 +185,7 @@ const AttractiveScene: React.FC<SceneProps> = ({startFrame}) => {
     <Frame
       sectionLabel={scene.sectionLabel}
       title={scene.title}
-      titleSize={80}
+      titleSize={72}
       progress={progress}
       footer={<CitationFooter items={sceneCitations.attractive} />}
     >
@@ -206,7 +206,7 @@ const RiskLegalScene: React.FC<SceneProps> = ({startFrame}) => {
     <Frame
       sectionLabel={scene.sectionLabel}
       title={scene.title}
-      titleSize={74}
+      titleSize={68}
       progress={progress}
       footer={<CitationFooter items={sceneCitations.riskLegal} />}
     >
@@ -229,7 +229,7 @@ const RiskCounterpartyScene: React.FC<SceneProps> = ({startFrame}) => {
     <Frame
       sectionLabel={scene.sectionLabel}
       title={scene.title}
-      titleSize={74}
+      titleSize={68}
       progress={progress}
       footer={<CitationFooter items={sceneCitations.riskCounterparty} />}
     >
@@ -252,7 +252,7 @@ const RiskGovernanceScene: React.FC<SceneProps> = ({startFrame}) => {
     <Frame
       sectionLabel={scene.sectionLabel}
       title={scene.title}
-      titleSize={74}
+      titleSize={68}
       progress={progress}
       footer={<CitationFooter items={sceneCitations.riskGovernance} />}
     >
@@ -287,7 +287,7 @@ const ClosingScene: React.FC<SceneProps> = ({startFrame}) => {
     <Frame
       sectionLabel={scene.sectionLabel}
       title={scene.title}
-      titleSize={78}
+      titleSize={70}
       progress={progress}
       footer={<CitationFooter items={sceneCitations.closing} />}
     >

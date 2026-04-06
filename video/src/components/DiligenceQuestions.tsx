@@ -44,9 +44,9 @@ export const DiligenceQuestions: React.FC<{
               display: "flex",
               flexDirection: "column",
               gap: 14,
-              minHeight: 220,
+              minHeight: 188,
               opacity: entrance,
-              padding: 28,
+              padding: 24,
               transform: `translateY(${interpolate(entrance, [0, 1], [28, 0])}px)`,
             }}
           >
@@ -64,7 +64,7 @@ export const DiligenceQuestions: React.FC<{
             <div
               style={{
                 color: theme.colors.text,
-                fontSize: 30,
+                fontSize: 27,
                 lineHeight: 1.25,
               }}
             >

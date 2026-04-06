@@ -70,7 +70,7 @@ export const ThreeLayerModel: React.FC<{
                 style={{
                   color: theme.colors.text,
                   fontFamily: theme.fonts.display,
-                  fontSize: 38,
+                  fontSize: 36,
                   lineHeight: 1.08,
                 }}
               >
@@ -79,7 +79,7 @@ export const ThreeLayerModel: React.FC<{
               <div
                 style={{
                   color: theme.colors.muted,
-                  fontSize: 28,
+                  fontSize: 26,
                   lineHeight: 1.3,
                   maxWidth: 720,
                 }}
@@ -123,7 +123,7 @@ export const ThreeLayerModel: React.FC<{
           <div
             style={{
               color: theme.colors.text,
-              fontSize: 33,
+              fontSize: 31,
               lineHeight: 1.2,
             }}
           >
@@ -156,7 +156,7 @@ export const ThreeLayerModel: React.FC<{
           <div
             style={{
               color: theme.colors.muted,
-              fontSize: 28,
+              fontSize: 26,
               lineHeight: 1.3,
             }}
           >

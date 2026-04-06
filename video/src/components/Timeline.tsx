@@ -33,7 +33,7 @@ export const Timeline: React.FC<{
         <div
           style={{
             color: theme.colors.muted,
-            fontSize: 31,
+            fontSize: 28,
             lineHeight: 1.32,
             maxWidth: 920,
           }}
@@ -130,22 +130,22 @@ export const Timeline: React.FC<{
                     {event.date}
                   </div>
                   <div
-                    style={{
-                      color: theme.colors.text,
-                      fontFamily: theme.fonts.display,
-                      fontSize: 32,
-                      lineHeight: 1.08,
-                    }}
-                  >
+                  style={{
+                    color: theme.colors.text,
+                    fontFamily: theme.fonts.display,
+                    fontSize: 30,
+                    lineHeight: 1.08,
+                  }}
+                >
                     {event.title}
                   </div>
                   <div
-                    style={{
-                      color: theme.colors.muted,
-                      fontSize: 27,
-                      lineHeight: 1.3,
-                    }}
-                  >
+                  style={{
+                    color: theme.colors.muted,
+                    fontSize: 25,
+                    lineHeight: 1.3,
+                  }}
+                >
                     {event.body}
                   </div>
                 </div>
@@ -204,7 +204,7 @@ export const Timeline: React.FC<{
                 style={{
                   color: theme.colors.text,
                   fontFamily: theme.fonts.display,
-                  fontSize: 52,
+                  fontSize: 48,
                   lineHeight: 1,
                 }}
               >
@@ -213,7 +213,7 @@ export const Timeline: React.FC<{
               <div
                 style={{
                   color: theme.colors.muted,
-                  fontSize: 26,
+                  fontSize: 24,
                   lineHeight: 1.28,
                 }}
               >

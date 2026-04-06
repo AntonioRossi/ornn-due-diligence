@@ -57,7 +57,7 @@ export const ThesisCard: React.FC<{
           style={{
             color: theme.colors.text,
             fontFamily: theme.fonts.display,
-            fontSize: 54,
+            fontSize: 50,
             lineHeight: 1.05,
           }}
         >
@@ -66,7 +66,7 @@ export const ThesisCard: React.FC<{
         <div
           style={{
             color: theme.colors.muted,
-            fontSize: 30,
+            fontSize: 28,
             lineHeight: 1.34,
             maxWidth: 880,
           }}
@@ -124,7 +124,7 @@ export const ThesisCard: React.FC<{
                   <div
                     style={{
                       color: theme.colors.text,
-                      fontSize: 25,
+                      fontSize: 23,
                       lineHeight: 1.25,
                     }}
                   >
@@ -165,7 +165,7 @@ export const ThesisCard: React.FC<{
             style={{
               color: theme.colors.text,
               fontFamily: theme.fonts.display,
-              fontSize: 50,
+              fontSize: 46,
               lineHeight: 1,
             }}
           >
@@ -174,7 +174,7 @@ export const ThesisCard: React.FC<{
           <div
             style={{
               color: theme.colors.muted,
-              fontSize: 26,
+              fontSize: 24,
               lineHeight: 1.3,
             }}
           >

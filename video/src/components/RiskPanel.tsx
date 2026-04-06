@@ -37,7 +37,7 @@ export const RiskPanel: React.FC<{
           boxShadow: "0 24px 64px rgba(0, 0, 0, 0.18)",
           color: theme.colors.text,
           fontFamily: theme.fonts.display,
-          fontSize: 44,
+          fontSize: 40,
           lineHeight: 1.12,
           opacity: summaryEntrance,
           padding: 34,
@@ -76,7 +76,7 @@ export const RiskPanel: React.FC<{
                 display: "flex",
                 flexDirection: "column",
                 gap: 16,
-                minHeight: 280,
+                minHeight: 250,
                 opacity: entrance,
                 padding: 28,
                 transform: `translateY(${interpolate(entrance, [0, 1], [30, 0])}px)`,
@@ -97,7 +97,7 @@ export const RiskPanel: React.FC<{
                 style={{
                   color: theme.colors.text,
                   fontFamily: theme.fonts.display,
-                  fontSize: 32,
+                  fontSize: 30,
                   lineHeight: 1.1,
                 }}
               >
@@ -106,7 +106,7 @@ export const RiskPanel: React.FC<{
               <div
                 style={{
                   color: theme.colors.muted,
-                  fontSize: 27,
+                  fontSize: 25,
                   lineHeight: 1.32,
                 }}
               >
@@ -148,7 +148,7 @@ export const RiskPanel: React.FC<{
           <div
             style={{
               color: theme.colors.text,
-              fontSize: 30,
+              fontSize: 28,
               lineHeight: 1.25,
             }}
           >
@@ -180,7 +180,7 @@ export const RiskPanel: React.FC<{
           <div
             style={{
               color: theme.colors.text,
-              fontSize: 30,
+              fontSize: 28,
               lineHeight: 1.25,
             }}
           >

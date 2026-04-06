@@ -45,10 +45,11 @@ export const Frame: React.FC<FrameProps> = ({
       <div
         style={{
           display: "flex",
-          flex: 1,
           flexDirection: "column",
+          flex: 1,
+          gap: 32,
+          minHeight: 0,
           position: "relative",
-          justifyContent: "space-between",
         }}
       >
         <div style={{display: "flex", flexDirection: "column", gap: 28}}>
@@ -66,20 +67,27 @@ export const Frame: React.FC<FrameProps> = ({
             {title}
           </div>
         </div>
-        <div style={{display: "flex", flexDirection: "column", gap: 28}}>
-          <div>{children}</div>
-          <div
-            style={{
-              alignItems: "flex-end",
-              display: "flex",
-              gap: 24,
-              justifyContent: "space-between",
-            }}
-          >
-            <div style={{flex: 1}}>{footer}</div>
-            <div style={{minWidth: 360}}>
-              <ProgressBar progress={Math.max(0, Math.min(progress, 1))} />
-            </div>
+        <div
+          style={{
+            display: "flex",
+            flex: 1,
+            flexDirection: "column",
+            minHeight: 0,
+          }}
+        >
+          {children}
+        </div>
+        <div
+          style={{
+            alignItems: "flex-end",
+            display: "flex",
+            gap: 24,
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{flex: 1, minWidth: 0}}>{footer}</div>
+          <div style={{minWidth: 320}}>
+            <ProgressBar progress={Math.max(0, Math.min(progress, 1))} />
           </div>
         </div>
       </div>

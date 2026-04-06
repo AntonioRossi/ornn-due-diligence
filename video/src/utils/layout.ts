@@ -1,3 +1,3 @@
-export const shellPadding = 72;
-export const cardGap = 28;
+export const shellPadding = 60;
+export const cardGap = 24;
 export const cardWidth = 573;

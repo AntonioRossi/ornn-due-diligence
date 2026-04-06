@@ -253,9 +253,9 @@ export const ornnIcV1 = {
       sectionLabel: "Bottom Line",
       title: "Move forward to gated phase-two diligence, not final approval.",
       summary:
-        "There is real signal: a live benchmark, visible API surface, Bloomberg availability, partner integrations, and a plausible underlying pain point.",
+        "Real signal exists: a live benchmark, visible API, Bloomberg distribution, partner integrations, and a real pain point.",
       conclusion:
-        "If management can resolve the legal structure, prove robust OCPI governance, demonstrate real liquidity, and show tight counterparty controls, the opportunity remains differentiated. If not, the likely conclusion should be pass due to legal opacity and balance-sheet risk.",
+        "Advance only if management resolves the legal structure, proves OCPI governance, demonstrates real liquidity, and shows tight counterparty controls. Otherwise, pass.",
       questions: [
         {
           label: "Ask 1",
@@ -263,19 +263,19 @@ export const ornnIcV1 = {
         },
         {
           label: "Ask 2",
-          body: "Who is regulated for what, and where is the cleanest legal memo proving it?",
+          body: "Who is regulated for what, and where is the clearest legal memo?",
         },
         {
           label: "Ask 3",
-          body: "Does Ornn currently take principal risk, and if yes, where is it hedged?",
+          body: "Does Ornn take principal risk today, and where is it hedged?",
         },
         {
           label: "Ask 4",
-          body: "What are current notional traded, active counterparties, and repeat trading metrics?",
+          body: "What are current notional, active counterparties, and repeat metrics?",
         },
       ],
       closingNote:
-        "Next call standard: ask for the single strongest proof that Ornn is building a market, not just a dataset.",
+        "Next call test: ask for the clearest proof that Ornn is building a market, not just a dataset.",
     },
   },
 } as const;
