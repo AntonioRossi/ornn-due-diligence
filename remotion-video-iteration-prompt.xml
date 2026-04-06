@@ -3,13 +3,15 @@
   <purpose>
     Re-execute the repo's current workflow for producing the Ornn Remotion video whenever
     the source research documents change. Follow the existing architecture, keep the work
-    deterministic, and make only the minimum necessary edits.
+    deterministic, and regenerate the full Remotion artifact chain, including audio
+    commentary, when the authoritative source documents are updated.
   </purpose>
 
   <role>
     You are a coding assistant operating inside this repository. Your job is to read the
     current source documents, update the existing Remotion implementation under
-    <path>video/</path>, run validation, and leave the repo in a reviewable state.
+    <path>video/</path>, update or regenerate the narration assets, run validation, and
+    leave the repo in a reviewable state with a current rendered artifact.
   </role>
 
   <repository>
@@ -23,15 +25,24 @@
     </primarySources>
     <supportingDocs>
       <file path="remotion-v1-build-plan.md" role="workflow and editorial plan" />
+      <file path="kokoro-audio-implementation-plan.md" role="audio implementation and voice policy" />
       <file path="video/v1-review-notes.md" role="scope choices and review focus" />
       <file path="video/README.md" role="project commands and layout" />
     </supportingDocs>
     <implementationRoot>video/</implementationRoot>
     <mainComposition id="OrnnIcV1" />
+    <audioVoice>af_bella</audioVoice>
+    <audioArtifactRoot>video/public/audio/</audioArtifactRoot>
     <renderOutput>video/out/ornn-ic-v1.mp4</renderOutput>
   </repository>
 
   <coreWorkflow>
+    <principle>
+      Use <path>investment-committee-memo.md</path> and
+      <path>management-diligence-request-list.md</path> exactly as they exist in the repo at
+      the time of execution. Treat them as the authoritative inputs. Do not rewrite them or
+      supplement them with outside research unless the user explicitly asks.
+    </principle>
     <principle>
       Do not build or maintain a generic Markdown-to-slides system for this repo. The
       workflow is manual editorial curation from prose into typed scene data.
@@ -50,8 +61,9 @@
       place; do not rebuild the app from scratch.
     </principle>
     <principle>
-      Keep v1 silent unless the user explicitly asks for audio. Do not add narration, music,
-      or sound design as part of this workflow.
+      This workflow includes audio commentary. Follow
+      <path>kokoro-audio-implementation-plan.md</path>, use Kokoro on CPU, keep narration
+      scene-based, and use the mandated voice <code>af_bella</code>.
     </principle>
   </coreWorkflow>
 
@@ -65,8 +77,9 @@
       scenes, citations, and layout details that are materially affected.
     </rule>
     <rule>
-      If the current implementation already reflects the source documents closely enough,
-      make no source edits. Report a no-op result rather than churning formatting or copy.
+      If the current implementation already reflects the source documents closely enough and
+      the generated audio files plus final MP4 are current and present, make no source
+      edits. Report a no-op result rather than churning formatting, copy, audio, or renders.
     </rule>
     <rule>
       Keep stable file names, scene identifiers, component names, and composition IDs unless
@@ -84,6 +97,16 @@
       Do not change the repo workflow itself unless required. Update
       <path>video/README.md</path> or <path>video/v1-review-notes.md</path> only if the
       workflow, scope choices, or review focus have actually changed.
+    </rule>
+    <rule>
+      If either primary source document changed materially, regenerate the entire artifact
+      chain after updating code: narration data, scene WAV files, and the final rendered MP4.
+      Do not limit the run to partial asset refreshes in that case.
+    </rule>
+    <rule>
+      If the primary source documents did not change materially but the audio artifacts or
+      rendered MP4 are missing, stale, or inconsistent with the current implementation,
+      regenerate the missing or stale artifacts without unnecessary source edits.
     </rule>
   </idempotenceRules>
 
@@ -159,14 +182,16 @@
   <executionPlan>
     <step order="1" name="Inspect current state">
       Read the two source documents, the build plan, the review notes, and the existing
-      files under <path>video/src/</path>. Inspect git status before editing so you do not
-      overwrite unrelated work.
+      files under <path>video/src/</path>. Also inspect the audio plan, current audio
+      artifacts under <path>video/public/audio/</path>, and the current rendered output.
+      Inspect git status before editing so you do not overwrite unrelated work.
     </step>
 
     <step order="2" name="Compute the narrative delta">
       Compare the latest memo and diligence list against the current implementation. Identify
-      which scene claims, dates, figures, questions, and citations changed. Do not assume
-      every scene needs rewriting.
+      which scene claims, dates, figures, questions, citations, narration lines, and output
+      artifacts changed. Do not assume every scene needs rewriting, but do determine whether
+      a full artifact regeneration is required.
     </step>
 
     <step order="3" name="Update typed scene data">
@@ -180,38 +205,57 @@
       aligned with the revised claims and sources.
     </step>
 
-    <step order="5" name="Adjust rendering only if needed">
+    <step order="5" name="Update narration data">
+      Update the narration source and any typed narration wrapper so the audio commentary
+      matches the latest source documents, scene boundaries, and the mandated
+      <code>af_bella</code> voice policy.
+    </step>
+
+    <step order="6" name="Adjust rendering and audio wiring only if needed">
       Update <path>video/src/compositions/OrnnIcV1.tsx</path>,
-      <path>video/src/components/</path>, <path>video/src/theme.ts</path>, and
-      <path>video/src/utils/</path> only when the revised copy no longer fits, the visual
-      hierarchy needs to change, or the scene structure genuinely changed.
+      <path>video/src/components/</path>, <path>video/src/theme.ts</path>,
+      <path>video/src/utils/</path>, and the audio wiring only when the revised copy no
+      longer fits, the visual hierarchy needs to change, or the scene structure genuinely
+      changed.
     </step>
 
-    <step order="6" name="Protect the editorial shape">
+    <step order="7" name="Protect the editorial shape">
       Keep the video text-led and diagram-led. Do not introduce live data visualization,
-      generic slide generation, or unrelated product features. Continue using citations and
-      restrained motion.
+      generic slide generation, or unrelated product features. Continue using citations,
+      restrained motion, and one narration file per scene.
     </step>
 
-    <step order="7" name="Manage duration intentionally">
+    <step order="8" name="Manage duration intentionally">
       Target roughly 105 to 120 seconds at 30 fps. Prefer tightening copy before changing
-      scene durations. Change durations only when the updated narrative cannot fit cleanly,
-      and explain any timing changes.
+      scene durations. Change durations only when the updated narrative or narration cannot
+      fit cleanly, and explain any timing changes.
     </step>
 
-    <step order="8" name="Validate and render">
-      Run the project checks and render the main composition after edits. If a check fails,
-      fix the issue or report the blocker clearly.
+    <step order="9" name="Regenerate audio commentary">
+      Use the repo's UV-managed Python workflow to sync dependencies and regenerate the scene
+      narration WAV files under <path>video/public/audio/</path>. When the primary source
+      documents changed materially, regenerate all scene audio files, not just a subset.
+    </step>
+
+    <step order="10" name="Validate and render">
+      Run the project checks and render the main composition after edits and audio
+      regeneration. If a check fails, fix the issue or report the blocker clearly.
     </step>
   </executionPlan>
 
   <filePolicy>
     <file path="video/src/data/ornn-ic-v1.ts" expectation="Primary typed scene content. Update first." />
     <file path="video/src/data/citations.ts" expectation="Scene-level citation labels. Keep aligned with source claims." />
+    <file path="video/src/data/narration.json" expectation="Primary narration source. Keep aligned with current scenes and af_bella voice policy." />
+    <file path="video/src/data/narration.ts" expectation="Typed narration wrapper for Remotion. Keep aligned with current scene ids." />
     <file path="video/src/compositions/OrnnIcV1.tsx" expectation="Main composition sequencing and scene selection." />
     <file path="video/src/components/" expectation="Reusable scene building blocks. Touch only if content/layout requires it." />
     <file path="video/src/theme.ts" expectation="Visual system. Keep institutional tone and low churn." />
     <file path="video/src/Root.tsx" expectation="Composition registration. Keep stable unless composition contract changes." />
+    <file path="scripts/generate-audio.py" expectation="CPU Kokoro narration generator. Keep runnable through UV and default to af_bella." />
+    <file path="pyproject.toml" expectation="Repo-root Python dependency definition for the audio tooling." />
+    <file path="uv.lock" expectation="Committed Python lockfile for reproducible audio generation." />
+    <file path="video/public/audio/" expectation="Generated scene WAV artifacts. Regenerate when sources change materially." />
     <file path="video/README.md" expectation="Commands and workflow notes. Update only if workflow changes." />
     <file path="video/v1-review-notes.md" expectation="Scope and review focus. Update only if those choices change." />
   </filePolicy>
@@ -222,13 +266,17 @@
     <item>The three core risks must remain legible and ordered by investment importance.</item>
     <item>The closing scene must reflect the most relevant diligence asks for the next management call.</item>
     <item>The visual result must feel institutional and reviewable, not promotional.</item>
+    <item>The narration must track the current source documents, fit scene timing, and use af_bella consistently.</item>
+    <item>The generated scene WAV files and the final MP4 must be refreshed when the primary sources change materially.</item>
     <item>The final code should stay simple, typed, and easy to revise on the next iteration.</item>
   </qualityBar>
 
   <commands>
+    <command workdir=".">uv sync</command>
     <command workdir="video">pnpm install</command>
     <command workdir="video">pnpm typecheck</command>
     <command workdir="video">pnpm lint</command>
+    <command workdir="video">pnpm audio:generate</command>
     <command workdir="video">pnpm render</command>
   </commands>
 
@@ -236,6 +284,8 @@
     <item>Summarize the source changes you detected.</item>
     <item>List the files you changed and why.</item>
     <item>Report whether the run was a true update or an intentional no-op.</item>
+    <item>Report whether you regenerated the full artifact chain or only refreshed missing or stale artifacts, and why.</item>
+    <item>Report the narration and audio outputs you generated.</item>
     <item>Report the validation commands you ran and their outcomes.</item>
     <item>Call out any remaining review risks, especially around editorial judgment or timing.</item>
   </finalResponseContract>
