@@ -1,0 +1,4 @@
+node_modules/
+.pnpm-store/
+out/*
+!out/.gitkeep
