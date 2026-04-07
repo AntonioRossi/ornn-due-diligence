@@ -7,30 +7,30 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import {CitationFooter} from "../components/CitationFooter";
-import {DiligenceQuestions} from "../components/DiligenceQuestions";
-import {Frame} from "../components/Frame";
-import {RiskPanel} from "../components/RiskPanel";
-import {ThesisCard} from "../components/ThesisCard";
-import {ThreeLayerModel} from "../components/ThreeLayerModel";
-import {Timeline} from "../components/Timeline";
+import {CitationFooter} from "@shared/components/CitationFooter";
+import {DiligenceQuestions} from "@shared/components/DiligenceQuestions";
+import {Frame} from "@shared/components/Frame";
+import {RiskPanel} from "@shared/components/RiskPanel";
+import {ThesisCard} from "@shared/components/ThesisCard";
+import {ThreeLayerModel} from "@shared/components/ThreeLayerModel";
+import {Timeline} from "@shared/components/Timeline";
+import {theme} from "@shared/theme";
+import {cardGap, cardWidth} from "@shared/utils/layout";
+import {fadeIn, riseIn} from "@shared/utils/timing";
 import {sceneCitations} from "../data/citations";
 import {narrationByScene} from "../data/narration";
 import {
   ornnIcV1,
   sceneStartsInFrames,
   totalDurationInFrames,
-} from "../data/ornn-ic-v1";
-import {cardGap, cardWidth} from "../utils/layout";
-import {fadeIn, riseIn} from "../utils/timing";
-import {theme} from "../theme";
+} from "../data/scenes";
 
 type SceneProps = {
   readonly startFrame: number;
 };
 
 const sceneAudio = (sceneId: keyof typeof narrationByScene) =>
-  staticFile(`audio/${narrationByScene[sceneId].sceneId}.wav`);
+  staticFile(`audio/ornn/${narrationByScene[sceneId].sceneId}.wav`);
 
 const useSceneProgress = (startFrame: number) => {
   const frame = useCurrentFrame();

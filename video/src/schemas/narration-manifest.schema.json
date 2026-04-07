@@ -1,0 +1,40 @@
+{
+  "type": "array",
+  "item": {
+    "type": "object",
+    "required": {
+      "sceneId": {
+        "type": "string",
+        "minLength": 1
+      },
+      "text": {
+        "type": "string",
+        "minLength": 1
+      },
+      "maxDurationFrames": {
+        "type": "integer",
+        "minimum": 1
+      }
+    },
+    "optional": {
+      "voice": {
+        "type": "string",
+        "const": "af_bella"
+      },
+      "langCode": {
+        "type": "string",
+        "const": "a"
+      },
+      "speed": {
+        "type": "number",
+        "exclusiveMinimum": 0
+      }
+    },
+    "defaults": {
+      "voice": "af_bella",
+      "langCode": "a",
+      "speed": 1
+    },
+    "additionalProperties": false
+  }
+}

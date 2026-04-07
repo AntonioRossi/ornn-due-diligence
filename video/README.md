@@ -1,78 +1,92 @@
-# Ornn Remotion Project
+# Shared Remotion Video App
 
-This directory contains the standalone Remotion project for the Ornn investor video work.
+This directory contains the shared Remotion app for project-owned video code
+stored under `../projects/<slug>/video/`.
 
-The main composition is `OrnnIcV1`, a first-cut investor presentation based on:
+`projects/ornn/` is the only managed video project in this migration. `projects/silicon-data/`
+remains research-only until a second real video implementation is justified.
 
-- `../investment-committee-memo.md`
-- `../management-diligence-request-list.md`
+## Setup
 
-## Commands
-
-Sync the Python audio toolchain:
+Sync Python dependencies from the repo root:
 
 ```bash
 cd ..
 uv sync
 ```
 
-Install dependencies:
+Install Node dependencies:
 
 ```bash
+cd video
 pnpm install
 ```
 
-Generate narration audio:
+## Project Commands
+
+Run every workflow through the shared wrapper:
 
 ```bash
-pnpm audio:generate
+pnpm project:stage -- --project ornn
+pnpm project:audio -- --project ornn
+pnpm project:dev -- --project ornn
+pnpm project:render -- --project ornn
+pnpm project:smoke -- --project ornn
+pnpm project:verify -- --project ornn
 ```
 
-Start Remotion Studio:
-
-```bash
-pnpm dev
-```
-
-Render the current composition:
-
-```bash
-pnpm render
-```
-
-Run static checks:
+Static checks:
 
 ```bash
 pnpm typecheck
 pnpm lint
 ```
 
-## Audio Workflow
+`project:smoke` runs typecheck, lint, audio validation in `--check-only` mode,
+and a render to `projects/<slug>/video/out/smoke-<slug>.mp4`.
 
-The project now supports scene-based voice commentary generated locally with Kokoro on CPU.
+`project:verify` runs typecheck, lint, real audio generation, validates the
+canonical scene audio artifacts, and renders the project's default output from
+`project.config.json`.
 
-- Narration source: `src/data/narration.json`
-- Voice policy: `af_bella`
-- Generated assets: `public/audio/*.wav`
+## Audio Staging Model
 
-Typical workflow:
+Canonical project audio lives under `../projects/<slug>/video/public/audio/`.
+The shared Remotion app reads staged runtime audio from `public/audio/<slug>/`.
 
-1. Update `../investment-committee-memo.md` and `../management-diligence-request-list.md`.
-2. Update on-screen copy in `src/data/ornn-ic-v1.ts` if needed.
-3. Update narration copy in `src/data/narration.json`.
-4. Run `uv sync` from the repo root if Python dependencies changed or are not installed yet.
-5. Run `pnpm audio:generate` from `video/`.
-6. Run `pnpm dev` to review pacing and audio alignment.
-7. Run `pnpm render` for the final MP4.
+- `pnpm project:audio -- --project <slug>` validates or regenerates canonical audio and then stages it.
+- `pnpm project:dev -- --project <slug>` stages first, then starts Remotion Studio.
+- `pnpm project:render -- --project <slug>` stages first, then renders into the project-owned output directory.
 
-## Project Layout
+`project:dev` is a manual Studio workflow, not part of the automated smoke or
+verification checks.
+
+Do not treat `video/public/` as source of truth. It is derived runtime state for
+Studio and renders.
+
+## Runtime Asset Staging
+
+Projects may declare staged runtime asset directories in
+`../projects/<slug>/video/project.config.json`.
+
+- Canonical project-owned runtime assets live under `../projects/<slug>/video/public/<asset-kind>/`.
+- The shared app stages them into `video/public/<asset-kind>/<slug>/`.
+- `audio` is required when declared and stages only the canonical `.wav` and `.json` scene artifacts.
+- Other asset kinds stage as whole directories when present.
+
+`project:render` and `project:verify` use the default composition id and output
+name from the selected project's `project.config.json`.
+
+## Shared Layout
 
 ```text
 src/
   index.ts
   Root.tsx
-  compositions/
   components/
-  data/
+  theme.ts
+  types.ts
   utils/
 ```
+
+Project-owned code and editorial inputs live under `../projects/<slug>/video/`.

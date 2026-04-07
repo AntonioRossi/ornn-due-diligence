@@ -1,7 +1,7 @@
 [project]
-name = "ornn-kokoro-tools"
+name = "project-kokoro-tools"
 version = "0.1.0"
-description = "Audio generation tooling for the Ornn Remotion project"
+description = "Audio generation tooling for project video workflows"
 requires-python = ">=3.10,<3.13"
 dependencies = [
   "kokoro>=0.9.4",

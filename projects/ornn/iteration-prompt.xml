@@ -9,67 +9,69 @@
 
   <role>
     You are a coding assistant operating inside this repository. Your job is to read the
-    current source documents, update the existing Remotion implementation under
-    <path>video/</path>, update or regenerate the narration assets, run validation, and
-    leave the repo in a reviewable state with a current rendered artifact.
+    current source documents, update the Ornn project implementation under
+    <path>projects/ornn/video/</path> plus the shared Remotion app under
+    <path>video/</path> when needed, update or regenerate the narration assets, run
+    validation, and leave the repo in a reviewable state with a current rendered artifact.
   </role>
 
   <repository>
     <root>.</root>
     <primarySources>
-      <file path="investment-committee-memo.md" role="primary narrative source" />
+      <file path="projects/ornn/sources/investment-committee-memo.md" role="primary narrative source" />
       <file
-        path="management-diligence-request-list.md"
+        path="projects/ornn/sources/management-diligence-request-list.md"
         role="selective source for closing asks, gating questions, and management-call framing"
       />
     </primarySources>
     <supportingDocs>
-      <file path="video/v1-review-notes.md" role="scope choices and review focus" />
+      <file path="projects/ornn/v1-review-notes.md" role="scope choices and review focus" />
       <file path="video/README.md" role="project commands and layout" />
     </supportingDocs>
-    <implementationRoot>video/</implementationRoot>
+    <implementationRoot>projects/ornn/video/</implementationRoot>
     <mainComposition id="OrnnIcV1" />
     <audioVoice>af_bella</audioVoice>
-    <audioArtifactRoot>video/public/audio/</audioArtifactRoot>
-    <renderOutput>video/out/ornn-ic-v1.mp4</renderOutput>
+    <audioArtifactRoot>projects/ornn/video/public/audio/</audioArtifactRoot>
+    <renderOutput>projects/ornn/video/out/ornn-ic-v1.mp4</renderOutput>
   </repository>
 
   <sourceUpdateTrigger>
     <rule>
-      Treat <path>investment-committee-memo.md</path> and
-      <path>management-diligence-request-list.md</path> as the two root inputs that govern
-      the entire derived artifact chain.
+      Treat <path>projects/ornn/sources/investment-committee-memo.md</path> and
+      <path>projects/ornn/sources/management-diligence-request-list.md</path> as the two
+      root inputs that govern the entire derived artifact chain.
     </rule>
     <rule>
       If either file changes materially, rerun the complete workflow end to end rather than
       only patching isolated files.
     </rule>
     <derivedArtifacts>
-      <artifact path="video/src/data/ornn-ic-v1.ts" />
-      <artifact path="video/src/data/citations.ts" />
-      <artifact path="video/src/data/narration.json" />
-      <artifact path="video/src/data/narration.ts" />
-      <artifact path="video/src/compositions/OrnnIcV1.tsx" />
-      <artifact path="video/public/audio/" />
-      <artifact path="video/out/ornn-ic-v1.mp4" />
+      <artifact path="projects/ornn/video/data/scenes.ts" />
+      <artifact path="projects/ornn/video/data/citations.ts" />
+      <artifact path="projects/ornn/video/data/narration.json" />
+      <artifact path="projects/ornn/video/data/narration.ts" />
+      <artifact path="projects/ornn/video/compositions/OrnnIcV1.tsx" />
+      <artifact path="projects/ornn/video/public/audio/" />
+      <artifact path="projects/ornn/video/out/ornn-ic-v1.mp4" />
     </derivedArtifacts>
   </sourceUpdateTrigger>
 
   <coreWorkflow>
     <principle>
-      Use <path>investment-committee-memo.md</path> and
-      <path>management-diligence-request-list.md</path> exactly as they exist in the repo at
-      the time of execution. Treat them as the authoritative inputs. Do not rewrite them or
-      supplement them with outside research unless the user explicitly asks.
+      Use <path>projects/ornn/sources/investment-committee-memo.md</path> and
+      <path>projects/ornn/sources/management-diligence-request-list.md</path> exactly as
+      they exist in the repo at the time of execution. Treat them as the authoritative
+      inputs. Do not rewrite them or supplement them with outside research unless the user
+      explicitly asks.
     </principle>
     <principle>
       Do not build or maintain a generic Markdown-to-slides system for this repo. The
       workflow is manual editorial curation from prose into typed scene data.
     </principle>
     <principle>
-      Treat <path>video/src/data/ornn-ic-v1.ts</path> as the primary implementation of the
-      current narrative. Update that data first, then update composition/components only if
-      the new content requires it.
+      Treat <path>projects/ornn/video/data/scenes.ts</path> as the primary implementation
+      of the current narrative. Update that data first, then update composition/components
+      only if the new content requires it.
     </principle>
     <principle>
       Keep the video institutional, restrained, high-signal, and deterministic. This is an
@@ -81,20 +83,27 @@
       investor-research tone over startup-marketing tone.
     </principle>
     <principle>
-      Preserve the existing standalone Remotion app under <path>video/</path>. Update in
-      place; do not rebuild the app from scratch.
+      Preserve the shared Remotion app under <path>video/</path> and the Ornn project code
+      under <path>projects/ornn/video/</path>. Update in place; do not rebuild the app from
+      scratch.
     </principle>
     <principle>
       This workflow includes audio commentary. Use Kokoro on CPU, keep narration
-      scene-based, store narration inputs in <path>video/src/data/narration.json</path>,
-      generate one WAV per scene under <path>video/public/audio/</path>, and use the
-      mandated voice <code>af_bella</code>.
+      scene-based, store narration inputs in
+      <path>projects/ornn/video/data/narration.json</path>, generate one WAV per scene
+      under <path>projects/ornn/video/public/audio/</path>, and use the mandated voice
+      <code>af_bella</code>.
     </principle>
     <principle>
       Use UV-managed Python tooling for narration generation. Keep the audio workflow rooted
       in <path>pyproject.toml</path>, <path>uv.lock</path>, and
       <path>scripts/generate-audio.py</path>. Use <code>uv sync</code> and the repo's
-      <code>pnpm audio:generate</code> command as the standard execution path.
+      <code>pnpm project:audio -- --project ornn</code>,
+      <code>pnpm project:dev -- --project ornn</code>,
+      <code>pnpm project:render -- --project ornn</code>, and
+      <code>pnpm project:smoke -- --project ornn</code> commands as the standard
+      Ornn execution path. Project render defaults and staged runtime asset kinds are defined in
+      <path>projects/ornn/video/project.config.json</path>.
     </principle>
   </coreWorkflow>
 
@@ -126,8 +135,8 @@
     </rule>
     <rule>
       Do not change the repo workflow itself unless required. Update
-      <path>video/README.md</path> or <path>video/v1-review-notes.md</path> only if the
-      workflow, scope choices, or review focus have actually changed.
+      <path>video/README.md</path> or <path>projects/ornn/v1-review-notes.md</path> only
+      if the workflow, scope choices, or review focus have actually changed.
     </rule>
     <rule>
       If either primary source document changed materially, regenerate the entire artifact
@@ -150,7 +159,7 @@
   <sceneBackbone>
     <scene id="opening">
       <sources>
-        <source path="investment-committee-memo.md" section="Recommendation" />
+        <source path="projects/ornn/sources/investment-committee-memo.md" section="Recommendation" />
       </sources>
       <purpose>Establish company, date, recommendation, and the widened gating issues immediately.</purpose>
       <preferredDataFields>
@@ -166,8 +175,8 @@
 
     <scene id="whyMatters">
       <sources>
-        <source path="investment-committee-memo.md" section="Company snapshot" />
-        <source path="investment-committee-memo.md" section="Why this matters" />
+        <source path="projects/ornn/sources/investment-committee-memo.md" section="Company snapshot" />
+        <source path="projects/ornn/sources/investment-committee-memo.md" section="Why this matters" />
       </sources>
       <purpose>Frame the market-structure thesis and why benchmark ownership matters.</purpose>
       <delivery>Text-led thesis framing with concise supporting points.</delivery>
@@ -175,7 +184,7 @@
 
     <scene id="traction">
       <sources>
-        <source path="investment-committee-memo.md" section="What appears real today" />
+        <source path="projects/ornn/sources/investment-committee-memo.md" section="What appears real today" />
       </sources>
       <purpose>Show visible product, partner, and distribution signal without overstating validation.</purpose>
       <delivery>Timeline or milestone layout that emphasizes dated proof points.</delivery>
@@ -183,8 +192,8 @@
 
     <scene id="attractive">
       <sources>
-        <source path="investment-committee-memo.md" section="Competitive context" />
-        <source path="investment-committee-memo.md" section="Team and operating-model risk" />
+        <source path="projects/ornn/sources/investment-committee-memo.md" section="Competitive context" />
+        <source path="projects/ornn/sources/investment-committee-memo.md" section="Team and operating-model risk" />
       </sources>
       <purpose>Explain competitive pressure, market-formation difficulty, and team thinness.</purpose>
       <delivery>Structured context view with short explanatory captions.</delivery>
@@ -192,7 +201,7 @@
 
     <scene id="riskLegal">
       <sources>
-        <source path="investment-committee-memo.md" section="Core risk #1: legal, regulatory, and threshold-path ambiguity" />
+        <source path="projects/ornn/sources/investment-committee-memo.md" section="Core risk #1: legal, regulatory, and threshold-path ambiguity" />
       </sources>
       <purpose>Show the largest gating issue around legal structure, de minimis posture, and DCM path.</purpose>
       <delivery>Risk-panel treatment with highlighted contradictions, threshold-path gaps, and entity mapping.</delivery>
@@ -200,7 +209,7 @@
 
     <scene id="riskCounterparty">
       <sources>
-        <source path="investment-committee-memo.md" section="Core risk #3: balance-sheet, technology, privacy, and conflicts risk" />
+        <source path="projects/ornn/sources/investment-committee-memo.md" section="Core risk #3: balance-sheet, technology, privacy, and conflicts risk" />
       </sources>
       <purpose>Frame the business as principal-risk / market-infrastructure risk with valuation and conflicts exposure, not pure SaaS.</purpose>
       <delivery>Risk-panel treatment with underwriting framing, independent-mark questions, and controlled animation.</delivery>
@@ -208,7 +217,7 @@
 
     <scene id="riskGovernance">
       <sources>
-        <source path="investment-committee-memo.md" section="Core risk #2: benchmark governance, IOSCO readiness, IP, and valuation independence" />
+        <source path="projects/ornn/sources/investment-committee-memo.md" section="Core risk #2: benchmark governance, IOSCO readiness, IP, and valuation independence" />
       </sources>
       <purpose>Show benchmark-governance, replication, defensibility, and operational-depth proof gaps.</purpose>
       <delivery>Risk-panel treatment emphasizing missing proof, IOSCO gaps, and missing control evidence.</delivery>
@@ -216,8 +225,8 @@
 
     <scene id="closing">
       <sources>
-        <source path="investment-committee-memo.md" section="Bottom line" />
-        <source path="management-diligence-request-list.md" section="Management diligence request list" />
+        <source path="projects/ornn/sources/investment-committee-memo.md" section="Bottom line" />
+        <source path="projects/ornn/sources/management-diligence-request-list.md" section="Management diligence request list" />
       </sources>
       <purpose>Close on the recommendation and present the hardest next-step asks for management.</purpose>
       <delivery>Closing recommendation plus selective diligence asks centered on threshold usage, DCM status, replication, independent marks, and contingency planning.</delivery>
@@ -227,9 +236,11 @@
   <executionPlan>
     <step order="1" name="Inspect current state">
       Read the two source documents, the build plan, the review notes, and the existing
-      files under <path>video/src/</path>. Also inspect the audio plan, current audio
-      artifacts under <path>video/public/audio/</path>, and the current rendered output.
-      Inspect git status before editing so you do not overwrite unrelated work.
+      files under <path>projects/ornn/video/</path> plus shared files under
+      <path>video/src/</path>. Also inspect the audio plan, canonical audio artifacts under
+      <path>projects/ornn/video/public/audio/</path>, staged audio under
+      <path>video/public/audio/ornn/</path>, and the current rendered output. Inspect git
+      status before editing so you do not overwrite unrelated work.
     </step>
 
     <step order="2" name="Compute the narrative delta">
@@ -241,14 +252,14 @@
     </step>
 
     <step order="3" name="Update typed scene data">
-      Edit <path>video/src/data/ornn-ic-v1.ts</path> first. Keep the narrative concise and
-      investor-facing. Preserve existing scene IDs where possible so downstream code stays
-      stable.
+      Edit <path>projects/ornn/video/data/scenes.ts</path> first. Keep the narrative
+      concise and investor-facing. Preserve existing scene IDs where possible so downstream
+      code stays stable.
     </step>
 
     <step order="4" name="Update citations">
-      Edit <path>video/src/data/citations.ts</path> to keep each scene's citation footer
-      aligned with the revised claims and sources.
+      Edit <path>projects/ornn/video/data/citations.ts</path> to keep each scene's citation
+      footer aligned with the revised claims and sources.
     </step>
 
     <step order="5" name="Update narration data">
@@ -258,7 +269,7 @@
     </step>
 
     <step order="6" name="Adjust rendering and audio wiring only if needed">
-      Update <path>video/src/compositions/OrnnIcV1.tsx</path>,
+      Update <path>projects/ornn/video/compositions/OrnnIcV1.tsx</path>,
       <path>video/src/components/</path>, <path>video/src/theme.ts</path>,
       <path>video/src/utils/</path>, and the audio wiring only when the revised copy no
       longer fits, the visual hierarchy needs to change, or the scene structure genuinely
@@ -279,8 +290,10 @@
 
     <step order="9" name="Regenerate audio commentary">
       Use the repo's UV-managed Python workflow to sync dependencies and regenerate the scene
-      narration WAV files under <path>video/public/audio/</path>. When the primary source
-      documents changed materially, regenerate all scene audio files, not just a subset.
+      narration WAV files under <path>projects/ornn/video/public/audio/</path>. The shared
+      wrapper should then restage those assets into <path>video/public/audio/ornn/</path>.
+      When the primary source documents changed materially, regenerate all scene audio
+      files, not just a subset.
     </step>
 
     <step order="10" name="Validate and render">
@@ -296,20 +309,21 @@
   </executionPlan>
 
   <filePolicy>
-    <file path="video/src/data/ornn-ic-v1.ts" expectation="Primary typed scene content. Update first." />
-    <file path="video/src/data/citations.ts" expectation="Scene-level citation labels. Keep aligned with source claims." />
-    <file path="video/src/data/narration.json" expectation="Primary narration source. Keep aligned with current scenes and af_bella voice policy." />
-    <file path="video/src/data/narration.ts" expectation="Typed narration wrapper for Remotion. Keep aligned with current scene ids." />
-    <file path="video/src/compositions/OrnnIcV1.tsx" expectation="Main composition sequencing and scene selection." />
+    <file path="projects/ornn/video/data/scenes.ts" expectation="Primary typed scene content. Update first." />
+    <file path="projects/ornn/video/data/citations.ts" expectation="Scene-level citation labels. Keep aligned with source claims." />
+    <file path="projects/ornn/video/data/narration.json" expectation="Primary narration source. Keep aligned with current scenes and af_bella voice policy." />
+    <file path="projects/ornn/video/data/narration.ts" expectation="Typed narration wrapper for Remotion. Keep aligned with current scene ids." />
+    <file path="projects/ornn/video/compositions/OrnnIcV1.tsx" expectation="Main composition sequencing and scene selection." />
     <file path="video/src/components/" expectation="Reusable scene building blocks. Touch only if content/layout requires it." />
     <file path="video/src/theme.ts" expectation="Visual system. Keep institutional tone and low churn." />
     <file path="video/src/Root.tsx" expectation="Composition registration. Keep stable unless composition contract changes." />
     <file path="scripts/generate-audio.py" expectation="CPU Kokoro narration generator. Keep runnable through UV and default to af_bella." />
     <file path="pyproject.toml" expectation="Repo-root Python dependency definition for the audio tooling." />
     <file path="uv.lock" expectation="Committed Python lockfile for reproducible audio generation." />
-    <file path="video/public/audio/" expectation="Generated scene WAV artifacts. Regenerate when sources change materially." />
+    <file path="projects/ornn/video/public/audio/" expectation="Canonical generated scene WAV artifacts. Regenerate when sources change materially." />
+    <file path="video/public/audio/ornn/" expectation="Derived staged audio for Remotion runtime. Rebuild through the shared wrapper." />
     <file path="video/README.md" expectation="Commands and workflow notes. Update only if workflow changes." />
-    <file path="video/v1-review-notes.md" expectation="Scope and review focus. Update only if those choices change." />
+    <file path="projects/ornn/v1-review-notes.md" expectation="Scope and review focus. Update only if those choices change." />
   </filePolicy>
 
   <qualityBar>
@@ -329,8 +343,10 @@
     <command workdir="video">pnpm install</command>
     <command workdir="video">pnpm typecheck</command>
     <command workdir="video">pnpm lint</command>
-    <command workdir="video">pnpm audio:generate</command>
-    <command workdir="video">pnpm render</command>
+    <command workdir="video">pnpm project:audio -- --project ornn</command>
+    <command workdir="video">pnpm project:dev -- --project ornn</command>
+    <command workdir="video">pnpm project:render -- --project ornn</command>
+    <command workdir="video">pnpm project:smoke -- --project ornn</command>
   </commands>
 
   <finalResponseContract>

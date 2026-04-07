@@ -1,7 +1,14 @@
 node_modules/
 .pnpm-store/
-public/audio/*.json
-public/audio/*.wav
+public/audio/**
+!public/audio/
 !public/audio/.gitkeep
-out/*
+public/fonts/**
+!public/fonts/
+!public/fonts/.gitkeep
+public/marks/**
+!public/marks/
+!public/marks/.gitkeep
+out/**
+!out/
 !out/.gitkeep

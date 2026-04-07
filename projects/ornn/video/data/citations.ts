@@ -1,6 +1,7 @@
-import type {SceneId} from "./ornn-ic-v1";
+import type {CitationMap} from "@shared/types";
+import type {SceneId} from "./scenes";
 
-export const sceneCitations: Record<SceneId, string[]> = {
+export const sceneCitations: CitationMap<SceneId> = {
   opening: [
     "Memo recommendation",
     "Memo eight unresolved issues",

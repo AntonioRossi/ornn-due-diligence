@@ -16,19 +16,40 @@ from kokoro import KPipeline
 
 
 ROOT = Path(__file__).resolve().parent.parent
-VIDEO_DIR = ROOT / "video"
-NARRATION_PATH = VIDEO_DIR / "src" / "data" / "narration.json"
-AUDIO_DIR = VIDEO_DIR / "public" / "audio"
+PROJECTS_DIR = ROOT / "projects"
 HF_HOME_DIR = ROOT / ".hf-home"
+NARRATION_SCHEMA_PATH = ROOT / "video" / "src" / "schemas" / "narration-manifest.schema.json"
 DEFAULT_SAMPLE_RATE = 24_000
-DEFAULT_SPEED = 1.0
-DEFAULT_VOICE = "af_bella"
-DEFAULT_LANG_CODE = "a"
+
+
+def load_narration_schema() -> dict[str, Any]:
+    if not NARRATION_SCHEMA_PATH.exists():
+        raise SystemExit(f"Missing narration schema: {NARRATION_SCHEMA_PATH}")
+
+    schema = json.loads(NARRATION_SCHEMA_PATH.read_text())
+    if not isinstance(schema, dict):
+        raise SystemExit("Narration schema must be a JSON object.")
+    return schema
+
+
+NARRATION_SCHEMA = load_narration_schema()
+ENTRY_SCHEMA = NARRATION_SCHEMA.get("item", {})
+ENTRY_REQUIRED_FIELDS = ENTRY_SCHEMA.get("required", {})
+ENTRY_OPTIONAL_FIELDS = ENTRY_SCHEMA.get("optional", {})
+ENTRY_DEFAULTS = ENTRY_SCHEMA.get("defaults", {})
+DEFAULT_SPEED = float(ENTRY_DEFAULTS.get("speed", 1.0))
+DEFAULT_VOICE = str(ENTRY_DEFAULTS.get("voice", "af_bella"))
+DEFAULT_LANG_CODE = str(ENTRY_DEFAULTS.get("langCode", "a"))
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Generate scene-based narration WAV files for the Ornn Remotion project.",
+        description="Generate scene-based narration WAV files for a project video.",
+    )
+    parser.add_argument(
+        "--project",
+        required=True,
+        help="Project slug under projects/<slug>.",
     )
     parser.add_argument(
         "--scene",
@@ -49,49 +70,138 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def load_manifest() -> list[dict[str, Any]]:
-    if not NARRATION_PATH.exists():
-        raise SystemExit(f"Missing narration manifest: {NARRATION_PATH}")
+def resolve_project_paths(project: str) -> tuple[Path, Path, Path]:
+    project_dir = PROJECTS_DIR / project
+    if not project_dir.is_dir():
+        raise SystemExit(f"Unknown project: {project_dir}")
 
-    data = json.loads(NARRATION_PATH.read_text())
+    narration_path = project_dir / "video" / "data" / "narration.json"
+    audio_dir = project_dir / "video" / "public" / "audio"
+    scene_order_path = project_dir / "video" / "data" / "scene-order.json"
+    return narration_path, audio_dir, scene_order_path
+
+
+def load_scene_order(scene_order_path: Path) -> list[str]:
+    if not scene_order_path.exists():
+        raise SystemExit(f"Missing scene-order manifest: {scene_order_path}")
+
+    data = json.loads(scene_order_path.read_text())
+    if not isinstance(data, list):
+        raise SystemExit("Scene-order manifest must be a JSON array.")
+
+    scene_ids: list[str] = []
+    seen_scene_ids: set[str] = set()
+
+    for value in data:
+        if not isinstance(value, str) or not value.strip():
+            raise SystemExit("Scene-order entries must be non-empty strings.")
+
+        scene_id = value.strip()
+        if scene_id in seen_scene_ids:
+            raise SystemExit(f"Duplicate scene-order entry: {scene_id}")
+
+        seen_scene_ids.add(scene_id)
+        scene_ids.append(scene_id)
+
+    if not scene_ids:
+        raise SystemExit("Scene-order manifest must not be empty.")
+
+    return scene_ids
+
+
+def load_manifest(narration_path: Path) -> list[dict[str, Any]]:
+    if not narration_path.exists():
+        raise SystemExit(f"Missing narration manifest: {narration_path}")
+
+    data = json.loads(narration_path.read_text())
     if not isinstance(data, list):
         raise SystemExit("Narration manifest must be a JSON array.")
     return data
 
 
-def validate_entries(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def validate_field(
+    field_name: str,
+    value: Any,
+    field_schema: dict[str, Any],
+    scene_id_hint: str,
+) -> Any:
+    expected_type = field_schema.get("type")
+
+    if expected_type == "string":
+        if not isinstance(value, str):
+            raise SystemExit(f"Scene {scene_id_hint} field {field_name} must be a string.")
+        min_length = field_schema.get("minLength")
+        if isinstance(min_length, int) and len(value.strip()) < min_length:
+            raise SystemExit(f"Scene {scene_id_hint} field {field_name} must be at least {min_length} characters.")
+    elif expected_type == "integer":
+        if isinstance(value, bool) or not isinstance(value, int):
+            raise SystemExit(f"Scene {scene_id_hint} field {field_name} must be an integer.")
+    elif expected_type == "number":
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise SystemExit(f"Scene {scene_id_hint} field {field_name} must be a number.")
+
+    minimum = field_schema.get("minimum")
+    if isinstance(minimum, (int, float)) and value < minimum:
+        raise SystemExit(f"Scene {scene_id_hint} field {field_name} must be at least {minimum}.")
+
+    exclusive_minimum = field_schema.get("exclusiveMinimum")
+    if isinstance(exclusive_minimum, (int, float)) and value <= exclusive_minimum:
+        raise SystemExit(f"Scene {scene_id_hint} field {field_name} must be greater than {exclusive_minimum}.")
+
+    const_value = field_schema.get("const")
+    if const_value is not None and value != const_value:
+        raise SystemExit(f"Scene {scene_id_hint} field {field_name} must equal {const_value!r}.")
+
+    return value
+
+
+def validate_entries(entries: list[dict[str, Any]], expected_scene_ids: list[str]) -> list[dict[str, Any]]:
     seen_scene_ids: set[str] = set()
     validated: list[dict[str, Any]] = []
+    known_fields = set(ENTRY_REQUIRED_FIELDS) | set(ENTRY_OPTIONAL_FIELDS)
+    additional_properties = ENTRY_SCHEMA.get("additionalProperties", True)
 
     for entry in entries:
         if not isinstance(entry, dict):
             raise SystemExit("Each narration entry must be a JSON object.")
 
-        scene_id = entry.get("sceneId")
-        text = entry.get("text")
-        max_duration_frames = entry.get("maxDurationFrames")
-        speed = entry.get("speed", DEFAULT_SPEED)
-        voice = entry.get("voice", DEFAULT_VOICE)
-        lang_code = entry.get("langCode", DEFAULT_LANG_CODE)
+        scene_id_hint = str(entry.get("sceneId", "<unknown>"))
+
+        if not additional_properties:
+            unexpected_fields = sorted(set(entry) - known_fields)
+            if unexpected_fields:
+                raise SystemExit(
+                    f"Scene {scene_id_hint} has unknown narration fields: {', '.join(unexpected_fields)}",
+                )
+
+        normalized: dict[str, Any] = {}
+
+        for field_name, field_schema in ENTRY_REQUIRED_FIELDS.items():
+            if field_name not in entry:
+                raise SystemExit(f"Scene {scene_id_hint} is missing required field {field_name}.")
+            value = validate_field(field_name, entry[field_name], field_schema, scene_id_hint)
+            normalized[field_name] = value.strip() if isinstance(value, str) else value
+
+        for field_name, field_schema in ENTRY_OPTIONAL_FIELDS.items():
+            value = entry.get(field_name, ENTRY_DEFAULTS.get(field_name))
+            if value is None:
+                continue
+            validated_value = validate_field(field_name, value, field_schema, scene_id_hint)
+            normalized[field_name] = validated_value.strip() if isinstance(validated_value, str) else validated_value
+
+        scene_id = normalized["sceneId"]
+        text = normalized["text"]
+        max_duration_frames = normalized["maxDurationFrames"]
+        speed = normalized.get("speed", DEFAULT_SPEED)
+        voice = normalized.get("voice", DEFAULT_VOICE)
+        lang_code = normalized.get("langCode", DEFAULT_LANG_CODE)
 
         if not isinstance(scene_id, str) or not scene_id:
             raise SystemExit("Each narration entry requires a non-empty string sceneId.")
         if scene_id in seen_scene_ids:
             raise SystemExit(f"Duplicate narration sceneId: {scene_id}")
-        if not isinstance(text, str) or not text.strip():
+        if not isinstance(text, str) or not text:
             raise SystemExit(f"Scene {scene_id} requires non-empty text.")
-        if not isinstance(max_duration_frames, int) or max_duration_frames <= 0:
-            raise SystemExit(f"Scene {scene_id} requires a positive integer maxDurationFrames.")
-        if not isinstance(speed, (float, int)) or speed <= 0:
-            raise SystemExit(f"Scene {scene_id} requires a positive speed value.")
-        if voice != DEFAULT_VOICE:
-            raise SystemExit(
-                f"Scene {scene_id} uses voice {voice!r}. This workflow mandates {DEFAULT_VOICE!r}.",
-            )
-        if lang_code != DEFAULT_LANG_CODE:
-            raise SystemExit(
-                f"Scene {scene_id} uses langCode {lang_code!r}. This workflow mandates {DEFAULT_LANG_CODE!r}.",
-            )
 
         seen_scene_ids.add(scene_id)
         validated.append(
@@ -104,6 +214,18 @@ def validate_entries(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "langCode": lang_code,
             },
         )
+
+    if len(validated) != len(expected_scene_ids):
+        raise SystemExit(
+            f"Narration manifest has {len(validated)} entries, expected {len(expected_scene_ids)}.",
+        )
+
+    for index, expected_scene_id in enumerate(expected_scene_ids):
+        actual_scene_id = validated[index]["sceneId"]
+        if actual_scene_id != expected_scene_id:
+            raise SystemExit(
+                f"Narration entry {index + 1} must use sceneId {expected_scene_id!r}, got {actual_scene_id!r}.",
+            )
 
     return validated
 
@@ -137,16 +259,16 @@ def compute_text_hash(entry: dict[str, Any]) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
-def metadata_path(scene_id: str) -> Path:
-    return AUDIO_DIR / f"{scene_id}.json"
+def metadata_path(audio_dir: Path, scene_id: str) -> Path:
+    return audio_dir / f"{scene_id}.json"
 
 
-def audio_path(scene_id: str) -> Path:
-    return AUDIO_DIR / f"{scene_id}.wav"
+def audio_path(audio_dir: Path, scene_id: str) -> Path:
+    return audio_dir / f"{scene_id}.wav"
 
 
-def read_metadata(scene_id: str) -> dict[str, Any] | None:
-    path = metadata_path(scene_id)
+def read_metadata(audio_dir: Path, scene_id: str) -> dict[str, Any] | None:
+    path = metadata_path(audio_dir, scene_id)
     if not path.exists():
         return None
     return json.loads(path.read_text())
@@ -196,9 +318,9 @@ def generate_audio(entry: dict[str, Any], pipeline: KPipeline) -> tuple[list[flo
     return flattened, sample_rate
 
 
-def write_outputs(entry: dict[str, Any], audio_samples: list[float], sample_rate: int) -> None:
-    AUDIO_DIR.mkdir(parents=True, exist_ok=True)
-    wav_path = audio_path(entry["sceneId"])
+def write_outputs(audio_dir: Path, entry: dict[str, Any], audio_samples: list[float], sample_rate: int) -> None:
+    audio_dir.mkdir(parents=True, exist_ok=True)
+    wav_path = audio_path(audio_dir, entry["sceneId"])
     sf.write(wav_path, audio_samples, sample_rate)
 
     duration_seconds = calculate_duration_seconds(len(audio_samples), sample_rate)
@@ -212,14 +334,14 @@ def write_outputs(entry: dict[str, Any], audio_samples: list[float], sample_rate
         "maxDurationFrames": entry["maxDurationFrames"],
         "textHash": compute_text_hash(entry),
     }
-    metadata_path(entry["sceneId"]).write_text(f"{json.dumps(metadata, indent=2)}\n")
+    metadata_path(audio_dir, entry["sceneId"]).write_text(f"{json.dumps(metadata, indent=2)}\n")
 
 
-def should_skip(entry: dict[str, Any], force: bool) -> bool:
+def should_skip(audio_dir: Path, entry: dict[str, Any], force: bool) -> bool:
     if force:
         return False
-    wav_path = audio_path(entry["sceneId"])
-    metadata = read_metadata(entry["sceneId"])
+    wav_path = audio_path(audio_dir, entry["sceneId"])
+    metadata = read_metadata(audio_dir, entry["sceneId"])
     return bool(
         wav_path.exists()
         and metadata
@@ -227,13 +349,15 @@ def should_skip(entry: dict[str, Any], force: bool) -> bool:
     )
 
 
-def verify_existing(entry: dict[str, Any]) -> None:
-    wav_path = audio_path(entry["sceneId"])
-    metadata = read_metadata(entry["sceneId"])
+def verify_existing(audio_dir: Path, entry: dict[str, Any]) -> None:
+    wav_path = audio_path(audio_dir, entry["sceneId"])
+    metadata = read_metadata(audio_dir, entry["sceneId"])
     if not wav_path.exists():
         raise SystemExit(f"Missing audio file for scene {entry['sceneId']}: {wav_path}")
     if metadata is None:
-        raise SystemExit(f"Missing metadata file for scene {entry['sceneId']}: {metadata_path(entry['sceneId'])}")
+        raise SystemExit(
+            f"Missing metadata file for scene {entry['sceneId']}: {metadata_path(audio_dir, entry['sceneId'])}",
+        )
     if metadata.get("textHash") != compute_text_hash(entry):
         raise SystemExit(
             f"Audio metadata for scene {entry['sceneId']} does not match the current narration input.",
@@ -248,19 +372,21 @@ def main() -> int:
     os.environ.setdefault("HUGGINGFACE_HUB_CACHE", str(HF_HOME_DIR / "hub"))
 
     args = parse_args()
-    entries = validate_entries(load_manifest())
+    narration_path, audio_dir, scene_order_path = resolve_project_paths(args.project)
+    expected_scene_ids = load_scene_order(scene_order_path)
+    entries = validate_entries(load_manifest(narration_path), expected_scene_ids)
     selected_entries = select_entries(entries, args.scene_ids)
 
     if args.check_only:
         for entry in selected_entries:
-            verify_existing(entry)
+            verify_existing(audio_dir, entry)
         return 0
 
     pipeline: KPipeline | None = None
 
     for entry in selected_entries:
-        if should_skip(entry, args.force):
-            verify_existing(entry)
+        if should_skip(audio_dir, entry, args.force):
+            verify_existing(audio_dir, entry)
             print(f"skipped {entry['sceneId']}: existing audio is current")
             continue
 
@@ -273,8 +399,10 @@ def main() -> int:
         audio_samples, sample_rate = generate_audio(entry, pipeline)
         duration_seconds = calculate_duration_seconds(len(audio_samples), sample_rate)
         assert_duration(entry, duration_seconds)
-        write_outputs(entry, audio_samples, sample_rate)
-        print(f"generated {entry['sceneId']}: {audio_path(entry['sceneId'])} ({duration_seconds:.2f}s)")
+        write_outputs(audio_dir, entry, audio_samples, sample_rate)
+        print(
+            f"generated {entry['sceneId']}: {audio_path(audio_dir, entry['sceneId'])} ({duration_seconds:.2f}s)",
+        )
 
     return 0
 

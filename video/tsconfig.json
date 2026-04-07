@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "commonjs",
+    "moduleResolution": "node",
     "jsx": "react-jsx",
     "strict": true,
     "noEmit": true,
@@ -10,7 +11,26 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": ["src/*"],
+      "@projects/*": ["../projects/*"],
+      "react": ["node_modules/react"],
+      "react/*": ["node_modules/react/*"],
+      "react/jsx-runtime": ["node_modules/@types/react/jsx-runtime.d.ts"],
+      "react/jsx-dev-runtime": ["node_modules/@types/react/jsx-dev-runtime.d.ts"],
+      "react-dom": ["node_modules/react-dom"],
+      "react-dom/*": ["node_modules/react-dom/*"],
+      "remotion": ["node_modules/remotion"],
+      "remotion/*": ["node_modules/remotion/*"]
+    }
   },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "../projects/*/video/**/*.ts",
+    "../projects/*/video/**/*.tsx"
+  ],
   "exclude": ["remotion.config.ts"]
 }

@@ -1,7 +1,7 @@
 import {interpolate, spring, useCurrentFrame, useVideoConfig} from "remotion";
 import {theme} from "../theme";
 
-export const CitationFooter: React.FC<{items: string[]}> = ({items}) => {
+export const CitationFooter: React.FC<{items: readonly string[]}> = ({items}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const entrance = spring({

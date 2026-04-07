@@ -238,6 +238,12 @@ pyrightconfig.json
 .playwright-mcp/
 .hf-home/
 
+# Project-owned generated artifacts
+projects/*/video/public/audio/**
+!projects/*/video/public/audio/.gitkeep
+projects/*/video/out/**
+!projects/*/video/out/.gitkeep
+
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history

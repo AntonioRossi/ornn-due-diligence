@@ -1,0 +1,6 @@
+{
+  "slug": "ornn",
+  "defaultCompositionId": "OrnnIcV1",
+  "defaultOutputName": "ornn-ic-v1.mp4",
+  "runtimeAssetKinds": ["audio"]
+}

@@ -1,15 +1,4 @@
-export const sceneOrder = [
-  "opening",
-  "whyMatters",
-  "traction",
-  "attractive",
-  "riskLegal",
-  "riskCounterparty",
-  "riskGovernance",
-  "closing",
-] as const;
-
-export type SceneId = (typeof sceneOrder)[number];
+import sceneOrderJson from "./scene-order.json";
 
 export const ornnIcV1 = {
   meta: {
@@ -309,6 +298,42 @@ export const ornnIcV1 = {
     },
   },
 } as const;
+
+export type SceneId = keyof typeof ornnIcV1.scenes;
+
+const validateSceneOrder = (): readonly SceneId[] => {
+  if (!Array.isArray(sceneOrderJson)) {
+    throw new Error("scene-order.json must be an array.");
+  }
+
+  const knownSceneIds = Object.keys(ornnIcV1.scenes) as SceneId[];
+  const knownSceneIdSet = new Set(knownSceneIds);
+  const seenSceneIds = new Set<SceneId>();
+  const orderedSceneIds = sceneOrderJson.map((sceneId) => {
+    if (typeof sceneId !== "string" || sceneId.length === 0) {
+      throw new Error("scene-order.json entries must be non-empty strings.");
+    }
+    if (!knownSceneIdSet.has(sceneId as SceneId)) {
+      throw new Error(`scene-order.json references unknown scene id: ${sceneId}`);
+    }
+    if (seenSceneIds.has(sceneId as SceneId)) {
+      throw new Error(`scene-order.json contains duplicate scene id: ${sceneId}`);
+    }
+
+    seenSceneIds.add(sceneId as SceneId);
+    return sceneId as SceneId;
+  });
+
+  if (orderedSceneIds.length !== knownSceneIds.length) {
+    throw new Error(
+      `scene-order.json has ${orderedSceneIds.length} scene ids, expected ${knownSceneIds.length}.`,
+    );
+  }
+
+  return orderedSceneIds;
+};
+
+export const sceneOrder = validateSceneOrder();
 
 export const sceneStartsInFrames = {} as Record<SceneId, number>;
 

@@ -412,18 +412,18 @@ developer convenience, not as a correctness requirement.
 
 ### 4.3 Update `video/package.json` scripts and lint coverage
 
-Keep ergonomic shortcuts for the current Ornn project, but make the generic
-project-aware commands first-class:
+Keep the package commands generic and project-aware. Do not add project-specific
+shortcuts that would reintroduce a default-project bias:
 
 ```jsonc
 {
   "scripts": {
+    "project:stage": "node ../scripts/project.mjs stage",
     "project:audio": "node ../scripts/project.mjs audio",
     "project:dev": "node ../scripts/project.mjs dev",
     "project:render": "node ../scripts/project.mjs render",
-    "audio:generate": "node ../scripts/project.mjs audio --project ornn",
-    "dev": "node ../scripts/project.mjs dev --project ornn",
-    "render": "node ../scripts/project.mjs render --project ornn --composition OrnnIcV1 --output-name ornn-ic-v1.mp4",
+    "project:smoke": "node ../scripts/smoke-test.mjs --mode smoke",
+    "project:verify": "node ../scripts/smoke-test.mjs --mode verify",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"src/**/*.ts\" \"src/**/*.tsx\" \"../projects/**/*.ts\" \"../projects/**/*.tsx\""
   }
@@ -519,20 +519,24 @@ From `video/`:
 ```bash
 pnpm typecheck
 pnpm lint
-pnpm project:audio -- --project ornn
-pnpm project:dev -- --project ornn
-pnpm project:render -- --project ornn --composition OrnnIcV1 --output-name ornn-ic-v1.mp4
+pnpm project:smoke -- --project ornn
+pnpm project:verify -- --project ornn
 ```
 
 Verify:
 
-- Remotion Studio still opens
-- Studio opened via `project:dev` after automatic staging, without a separate
-  manual copy step
 - the Ornn composition is registered from `projects/ornn/video/project.ts`
 - staged audio exists under `video/public/audio/ornn/`
 - canonical generated audio exists under `projects/ornn/video/public/audio/`
 - the rendered MP4 lands under `projects/ornn/video/out/`
+- `project:smoke` remains a fast validation path that uses `--check-only`
+  audio validation rather than real regeneration
+- `project:verify` performs real audio generation and refreshes the project's
+  default rendered output
+
+`project:dev` remains a manual Studio check. If used, it must still stage audio
+before Studio opens, but that behavior does not need to be automated as part of
+the verification suite.
 
 ### 7.2 Git ignore updates
 
@@ -597,7 +601,7 @@ Execute these steps in order:
 13. [ ] Extract only minimal shared types into `video/src/types.ts`.
 14. [ ] Rewrite `video/README.md` and `projects/ornn/iteration-prompt.xml` for the new layout and the stage-before-dev/render workflow.
 15. [ ] Update gitignore rules for canonical and staged generated artifacts.
-16. [ ] Run typecheck, lint, project audio generation, Studio smoke test, and project render for Ornn.
+16. [ ] Run typecheck, lint, `project:smoke`, and `project:verify` for Ornn, with `project:dev` kept as an optional manual Studio check.
 17. [ ] Confirm `projects/silicon-data/` remains untouched as a research/source-only project during this migration.
 
 ## What this plan does not do

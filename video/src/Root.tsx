@@ -1,16 +1,22 @@
 import {Composition} from "remotion";
-import {OrnnIcV1} from "./compositions/OrnnIcV1";
-import {ornnIcV1, totalDurationInFrames} from "./data/ornn-ic-v1";
+import {ornnProject} from "@projects/ornn/video/project";
+
+const projects = [ornnProject];
 
 export const RemotionRoot: React.FC = () => {
   return (
-    <Composition
-      id="OrnnIcV1"
-      component={OrnnIcV1}
-      durationInFrames={totalDurationInFrames}
-      fps={ornnIcV1.meta.fps}
-      width={1920}
-      height={1080}
-    />
+    <>
+      {projects.map((project) => (
+        <Composition
+          key={project.compositionId}
+          id={project.compositionId}
+          component={project.component}
+          durationInFrames={project.durationInFrames}
+          fps={project.fps}
+          width={project.width}
+          height={project.height}
+        />
+      ))}
+    </>
   );
 };
