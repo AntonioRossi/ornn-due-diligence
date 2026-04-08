@@ -1,6 +1,6 @@
 # Silicon Data — Research Brief
 
-**Status:** Drafted — provenance cleanup required before Phase 2
+**Status:** Completed Phase 1 brief; Silicon Data has since been promoted into a managed video project
 **Created:** April 7, 2026
 **Purpose:** Govern the acquisition of baseline source documents for Silicon Data
 as the second project case, producing project-owned artifacts that can enter
@@ -111,10 +111,11 @@ begins in `sources/`. Drafting directly from conversation context without
 persisting the raw material first is not permitted — if a session is
 interrupted, the research must survive.
 
-**Note:** The `projects/ornn/` directory does not exist yet — that happens in
-Phase 2. Only `projects/silicon-data/` is created now. The rest of the
-Silicon Data project structure (`video/`, `iteration-prompt.xml`) is also
-Phase 2 work.
+**Note:** This brief was written during Phase 1. Silicon Data has since been
+promoted, so `projects/silicon-data/video/` and
+`projects/silicon-data/iteration-prompt.xml` now exist. Keep this document as
+the historical research brief rather than as the current implementation
+contract.
 
 ---
 

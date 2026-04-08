@@ -1,4 +1,5 @@
 import sceneOrderJson from "./scene-order.json";
+import {buildSceneTimeline} from "@shared/utils/sceneOrder";
 
 export const ornnIcV1 = {
   meta: {
@@ -300,48 +301,8 @@ export const ornnIcV1 = {
 } as const;
 
 export type SceneId = keyof typeof ornnIcV1.scenes;
+const sceneTimeline = buildSceneTimeline(ornnIcV1.scenes, sceneOrderJson);
 
-const validateSceneOrder = (): readonly SceneId[] => {
-  if (!Array.isArray(sceneOrderJson)) {
-    throw new Error("scene-order.json must be an array.");
-  }
-
-  const knownSceneIds = Object.keys(ornnIcV1.scenes) as SceneId[];
-  const knownSceneIdSet = new Set(knownSceneIds);
-  const seenSceneIds = new Set<SceneId>();
-  const orderedSceneIds = sceneOrderJson.map((sceneId) => {
-    if (typeof sceneId !== "string" || sceneId.length === 0) {
-      throw new Error("scene-order.json entries must be non-empty strings.");
-    }
-    if (!knownSceneIdSet.has(sceneId as SceneId)) {
-      throw new Error(`scene-order.json references unknown scene id: ${sceneId}`);
-    }
-    if (seenSceneIds.has(sceneId as SceneId)) {
-      throw new Error(`scene-order.json contains duplicate scene id: ${sceneId}`);
-    }
-
-    seenSceneIds.add(sceneId as SceneId);
-    return sceneId as SceneId;
-  });
-
-  if (orderedSceneIds.length !== knownSceneIds.length) {
-    throw new Error(
-      `scene-order.json has ${orderedSceneIds.length} scene ids, expected ${knownSceneIds.length}.`,
-    );
-  }
-
-  return orderedSceneIds;
-};
-
-export const sceneOrder = validateSceneOrder();
-
-export const sceneStartsInFrames = {} as Record<SceneId, number>;
-
-let frameCursor = 0;
-
-for (const sceneId of sceneOrder) {
-  sceneStartsInFrames[sceneId] = frameCursor;
-  frameCursor += ornnIcV1.scenes[sceneId].durationInFrames;
-}
-
-export const totalDurationInFrames = frameCursor;
+export const sceneOrder = sceneTimeline.sceneOrder;
+export const sceneStartsInFrames = sceneTimeline.sceneStartsInFrames;
+export const totalDurationInFrames = sceneTimeline.totalDurationInFrames;

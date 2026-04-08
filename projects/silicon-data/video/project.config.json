@@ -1,0 +1,6 @@
+{
+  "slug": "silicon-data",
+  "defaultCompositionId": "SiliconDataIcV1",
+  "defaultOutputName": "silicon-data-ic-v1.mp4",
+  "runtimeAssetKinds": ["audio"]
+}

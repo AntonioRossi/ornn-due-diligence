@@ -1,0 +1,66 @@
+[
+  {
+    "sceneId": "opening",
+    "text": "Authorize gated phase-two diligence only. No term sheet yet. The core gates are entity and regulatory mapping, benchmark governance, DRW and Jump conflict controls, real marketplace traction, and cash runway.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.31,
+    "maxDurationFrames": 390
+  },
+  {
+    "sceneId": "whyMatters",
+    "text": "This is a benchmark plus marketplace bet on compute becoming financeable infrastructure. If GPU capacity becomes a traded asset class, benchmark trust, distribution, and transaction data can reinforce each other. Bloomberg and Refinitiv matter because they put the benchmark inside institutional workflow.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.27,
+    "maxDurationFrames": 555
+  },
+  {
+    "sceneId": "traction",
+    "text": "There is enough public evidence to treat Silicon Data and Compute Exchange as real. The launch and seed round were public. IEEE Spectrum and WatersTechnology covered the thesis. Bloomberg and Refinitiv distribution are visible. A portal and API footprint exist. What is still missing is proof of benchmark independence, completed trades, and regulatory completeness.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.23,
+    "maxDurationFrames": 645
+  },
+  {
+    "sceneId": "attractive",
+    "text": "The strategic logic is real, but the company is still early and exposed. A benchmark plus marketplace model could create a useful data loop. But market formation, operating depth, and adoption are still the real underwriting questions.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.29,
+    "maxDurationFrames": 405
+  },
+  {
+    "sceneId": "riskLegal",
+    "text": "The first gating issue is still the legal map. Silicon Data, Silicon Derivatives, and Compute Exchange are not reconciled cleanly in the public record. The marketplace says it has no regulatory license, even as public positioning points toward swaps and futures.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.35,
+    "maxDurationFrames": 390
+  },
+  {
+    "sceneId": "riskCounterparty",
+    "text": "The DRW and Jump backer set adds credibility, but it also creates a real conflict stack. The public record still does not show methodology independence, information barriers, or governance controls strong enough for benchmark-linked trading activity.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskGovernance",
+    "text": "The benchmark still needs replication, IOSCO mapping, and hard operating proof. Public materials describe principles, not enough mechanics for independent recalculation. There is still no public proof of completed trades, active counterparties, or runway.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.34,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "closing",
+    "text": "Proceed only if management closes the structural proof gaps. Advance only if the company resolves the legal map, methodology proof, conflict governance, marketplace traction, and cash runway. Otherwise, pass.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.35,
+    "maxDurationFrames": 360
+  }
+]

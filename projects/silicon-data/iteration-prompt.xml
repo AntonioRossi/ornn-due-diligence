@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<llmWorkflowPrompt id="remotion-video-iteration" version="1.0">
+  <purpose>
+    Re-execute the repo's current workflow for producing the Silicon Data
+    Remotion video whenever the source research documents change. Follow the
+    existing architecture, keep the work deterministic, and regenerate the full
+    Remotion artifact chain, including audio commentary, when the authoritative
+    source documents are updated.
+  </purpose>
+
+  <role>
+    You are a coding assistant operating inside this repository. Your job is to
+    read the current source documents, update the Silicon Data project
+    implementation under <path>projects/silicon-data/video/</path> plus the
+    shared Remotion app under <path>video/</path> when needed, update or
+    regenerate the narration assets, run validation, and leave the repo in a
+    reviewable state with a current rendered artifact.
+  </role>
+
+  <repository>
+    <root>.</root>
+    <primarySources>
+      <file path="projects/silicon-data/sources/investment-committee-memo.md" role="primary narrative source" />
+      <file
+        path="projects/silicon-data/sources/management-diligence-request-list.md"
+        role="selective source for closing asks, gating questions, and management-call framing"
+      />
+    </primarySources>
+    <supportingDocs>
+      <file path="projects/silicon-data/v1-review-notes.md" role="scope choices and review focus" />
+      <file path="video/README.md" role="project commands and layout" />
+    </supportingDocs>
+    <implementationRoot>projects/silicon-data/video/</implementationRoot>
+    <mainComposition id="SiliconDataIcV1" />
+    <audioVoice>af_bella</audioVoice>
+    <audioArtifactRoot>projects/silicon-data/video/public/audio/</audioArtifactRoot>
+    <renderOutput>projects/silicon-data/video/out/silicon-data-ic-v1.mp4</renderOutput>
+  </repository>
+
+  <sourceUpdateTrigger>
+    <rule>
+      Treat <path>projects/silicon-data/sources/investment-committee-memo.md</path>
+      and <path>projects/silicon-data/sources/management-diligence-request-list.md</path>
+      as the two root inputs that govern the entire derived artifact chain.
+    </rule>
+    <rule>
+      If either file changes materially, rerun the complete workflow end to end
+      rather than only patching isolated files.
+    </rule>
+    <derivedArtifacts>
+      <artifact path="projects/silicon-data/video/data/scenes.ts" />
+      <artifact path="projects/silicon-data/video/data/citations.ts" />
+      <artifact path="projects/silicon-data/video/data/narration.json" />
+      <artifact path="projects/silicon-data/video/data/narration.ts" />
+      <artifact path="projects/silicon-data/video/compositions/SiliconDataIcV1.tsx" />
+      <artifact path="projects/silicon-data/video/public/audio/" />
+      <artifact path="projects/silicon-data/video/out/silicon-data-ic-v1.mp4" />
+    </derivedArtifacts>
+  </sourceUpdateTrigger>
+
+  <coreWorkflow>
+    <principle>
+      Use <path>projects/silicon-data/sources/investment-committee-memo.md</path>
+      and <path>projects/silicon-data/sources/management-diligence-request-list.md</path>
+      exactly as they exist in the repo at the time of execution. Treat them as
+      the authoritative inputs. Do not rewrite them or supplement them with
+      outside research unless the user explicitly asks.
+    </principle>
+    <principle>
+      Do not build or maintain a generic Markdown-to-slides system for this
+      repo. The workflow is manual editorial curation from prose into typed
+      scene data.
+    </principle>
+    <principle>
+      Treat <path>projects/silicon-data/video/data/scenes.ts</path> as the
+      primary implementation of the current narrative. Update that data first,
+      then update composition and shared components only if the new content
+      requires it.
+    </principle>
+    <principle>
+      Keep the video institutional, restrained, high-signal, and deterministic.
+      This is an investor memo in motion, not a product promo.
+    </principle>
+    <principle>
+      Preserve the established visual direction: deep slate or warm off-black
+      backgrounds, muted gold or copper accents, restrained typography, and
+      low-amplitude motion. Prefer investor-research tone over startup-marketing
+      tone.
+    </principle>
+    <principle>
+      Preserve the shared Remotion app under <path>video/</path> and the Silicon
+      Data project code under <path>projects/silicon-data/video/</path>. Update
+      in place; do not rebuild the app from scratch.
+    </principle>
+    <principle>
+      This workflow includes audio commentary. Use Kokoro on CPU, keep narration
+      scene-based, store narration inputs in
+      <path>projects/silicon-data/video/data/narration.json</path>, generate one
+      WAV per scene under <path>projects/silicon-data/video/public/audio/</path>,
+      and use the mandated voice <code>af_bella</code>.
+    </principle>
+    <principle>
+      Use UV-managed Python tooling for narration generation. Keep the audio
+      workflow rooted in <path>pyproject.toml</path>, <path>uv.lock</path>, and
+      <path>scripts/generate-audio.py</path>. Use <code>uv sync</code> and the
+      repo's <code>pnpm project:audio -- --project silicon-data</code>,
+      <code>pnpm project:dev -- --project silicon-data</code>,
+      <code>pnpm project:render -- --project silicon-data</code>, and
+      <code>pnpm project:smoke -- --project silicon-data</code> commands as the
+      standard Silicon Data execution path. Project render defaults and staged
+      runtime asset kinds are defined in
+      <path>projects/silicon-data/video/project.config.json</path>.
+    </principle>
+  </coreWorkflow>
+
+  <idempotenceRules>
+    <rule>
+      Start by inspecting the current repo state, including uncommitted changes.
+      Never revert unrelated user edits.
+    </rule>
+    <rule>
+      Compare the latest source documents against the current scene data and
+      update only the scenes, citations, and layout details that are materially
+      affected.
+    </rule>
+    <rule>
+      If the current implementation already reflects the source documents
+      closely enough and the generated audio files plus final MP4 are current
+      and present, make no source edits. Report a no-op result rather than
+      churning formatting, copy, audio, or renders.
+    </rule>
+    <rule>
+      Keep stable file names, scene identifiers, component names, and
+      composition IDs unless a change is genuinely required by the updated
+      narrative.
+    </rule>
+    <rule>
+      Prefer editing existing files over creating new abstractions. Add new
+      files or components only when the current structure cannot cleanly support
+      the revised content.
+    </rule>
+    <rule>
+      Do not modify the source memo or diligence list unless the user explicitly
+      asks you to rewrite those documents.
+    </rule>
+    <rule>
+      Do not change the repo workflow itself unless required. Update
+      <path>video/README.md</path> or
+      <path>projects/silicon-data/v1-review-notes.md</path> only if the
+      workflow, scope choices, or review focus have actually changed.
+    </rule>
+    <rule>
+      If either primary source document changed materially, regenerate the
+      entire artifact chain after updating code: narration data, scene WAV
+      files, and the final rendered MP4. Do not limit the run to partial asset
+      refreshes in that case.
+    </rule>
+    <rule>
+      For source-driven reruns, completion requires all derived artifacts to be
+      brought back into sync with the updated sources. A source-driven run is
+      not complete if it stops after code edits, narration edits, or audio
+      generation without producing a fresh final render.
+    </rule>
+    <rule>
+      If the primary source documents did not change materially but the audio
+      artifacts or rendered MP4 are missing, stale, or inconsistent with the
+      current implementation, regenerate the missing or stale artifacts without
+      unnecessary source edits.
+    </rule>
+  </idempotenceRules>
+
+  <sceneBackbone>
+    <scene id="opening">
+      <sources>
+        <source path="projects/silicon-data/sources/investment-committee-memo.md" section="Recommendation" />
+      </sources>
+      <purpose>Establish company, date, recommendation, and the gating issues immediately.</purpose>
+      <preferredDataFields>
+        <field>sectionLabel</field>
+        <field>title</field>
+        <field>subtitle</field>
+        <field>date</field>
+        <field>recommendation</field>
+        <field>body</field>
+        <field>gatingIssues</field>
+      </preferredDataFields>
+    </scene>
+
+    <scene id="whyMatters">
+      <sources>
+        <source path="projects/silicon-data/sources/investment-committee-memo.md" section="Company snapshot" />
+      </sources>
+      <purpose>Frame the benchmark-plus-marketplace thesis and why institutional distribution matters.</purpose>
+      <delivery>Text-led thesis framing with concise supporting points.</delivery>
+    </scene>
+
+    <scene id="traction">
+      <sources>
+        <source path="projects/silicon-data/sources/investment-committee-memo.md" section="What appears real today" />
+      </sources>
+      <purpose>Show visible product, distribution, and press signal without overstating validation.</purpose>
+      <delivery>Timeline or milestone layout that emphasizes dated proof points.</delivery>
+    </scene>
+
+    <scene id="attractive">
+      <sources>
+        <source path="projects/silicon-data/sources/investment-committee-memo.md" section="Competitive context" />
+        <source path="projects/silicon-data/sources/investment-committee-memo.md" section="Team and operating-model risk" />
+      </sources>
+      <purpose>Explain the strategic logic, competitive field, and operating thinness.</purpose>
+      <delivery>Structured context view with short explanatory captions.</delivery>
+    </scene>
+
+    <scene id="riskLegal">
+      <sources>
+        <source path="projects/silicon-data/sources/investment-committee-memo.md" section="Core risk #1: entity structure, regulatory ambiguity, and forward-contract/derivatives positioning" />
+      </sources>
+      <purpose>Show the largest gating issue around entity structure, exemptions, and the path to regulated products.</purpose>
+      <delivery>Risk-panel treatment with highlighted contradictions, legal-map gaps, and roadmap questions.</delivery>
+    </scene>
+
+    <scene id="riskCounterparty">
+      <sources>
+        <source path="projects/silicon-data/sources/investment-committee-memo.md" section="Core risk #3: conflicts from proprietary-trading-firm parentage" />
+      </sources>
+      <purpose>Frame the DRW and Jump conflict stack as a governance and counterparty issue, not just a branding detail.</purpose>
+      <delivery>Risk-panel treatment with information-barrier framing, control questions, and controlled animation.</delivery>
+    </scene>
+
+    <scene id="riskGovernance">
+      <sources>
+        <source path="projects/silicon-data/sources/investment-committee-memo.md" section="Core risk #2: index methodology governance, IOSCO readiness, and benchmark independence" />
+        <source path="projects/silicon-data/sources/investment-committee-memo.md" section="Core risk #4: market formation, competitive durability, and runway" />
+      </sources>
+      <purpose>Show benchmark-governance proof gaps, replication needs, and the market-formation burden.</purpose>
+      <delivery>Risk-panel treatment emphasizing missing proof, validator gaps, and durability evidence.</delivery>
+    </scene>
+
+    <scene id="closing">
+      <sources>
+        <source path="projects/silicon-data/sources/investment-committee-memo.md" section="Bottom line" />
+        <source path="projects/silicon-data/sources/management-diligence-request-list.md" section="Management diligence request list" />
+      </sources>
+      <purpose>Close on the recommendation and present the hardest next-step asks for management.</purpose>
+      <delivery>Closing recommendation plus selective diligence asks centered on legal mapping, replication, conflict governance, traction, and runway.</delivery>
+    </scene>
+  </sceneBackbone>
+
+  <executionPlan>
+    <step order="1" name="Inspect current state">
+      Read the two source documents, the build plan, the review notes, and the
+      existing files under <path>projects/silicon-data/video/</path> plus
+      shared files under <path>video/src/</path>. Also inspect the audio plan,
+      canonical audio artifacts under
+      <path>projects/silicon-data/video/public/audio/</path>, staged audio under
+      <path>video/public/audio/silicon-data/</path>, and the current rendered
+      output. Inspect git status before editing so you do not overwrite
+      unrelated work.
+    </step>
+
+    <step order="2" name="Compute the narrative delta">
+      Compare the latest memo and diligence list against the current
+      implementation. Identify which scene claims, dates, figures, questions,
+      citations, narration lines, and output artifacts changed. Do not assume
+      every scene needs rewriting, but do determine whether a full artifact
+      regeneration is required. If either root source changed materially, mark
+      the run as a full workflow rerun.
+    </step>
+
+    <step order="3" name="Update typed scene data">
+      Edit <path>projects/silicon-data/video/data/scenes.ts</path> first. Keep
+      the narrative concise and investor-facing. Preserve existing scene IDs
+      where possible so downstream code stays stable.
+    </step>
+
+    <step order="4" name="Update citations">
+      Edit <path>projects/silicon-data/video/data/citations.ts</path> to keep
+      each scene's citation footer aligned with the revised claims and sources.
+    </step>
+
+    <step order="5" name="Update narration data">
+      Update the narration source and any typed narration wrapper so the audio
+      commentary matches the latest source documents, scene boundaries, and the
+      mandated <code>af_bella</code> voice policy.
+    </step>
+
+    <step order="6" name="Adjust rendering and audio wiring only if needed">
+      Update <path>projects/silicon-data/video/compositions/SiliconDataIcV1.tsx</path>,
+      <path>video/src/components/</path>, <path>video/src/theme.ts</path>,
+      <path>video/src/utils/</path>, and the audio wiring only when the revised
+      copy no longer fits, the visual hierarchy needs to change, or the scene
+      structure genuinely changed.
+    </step>
+
+    <step order="7" name="Protect the editorial shape">
+      Keep the video text-led and diagram-led. Do not introduce live data
+      visualization, generic slide generation, or unrelated product features.
+      Continue using citations, restrained motion, and one narration file per
+      scene.
+    </step>
+
+    <step order="8" name="Manage duration intentionally">
+      Target roughly 105 to 120 seconds at 30 fps. Prefer tightening copy before
+      changing scene durations. Change durations only when the updated narrative
+      or narration cannot fit cleanly, and explain any timing changes.
+    </step>
+
+    <step order="9" name="Regenerate audio commentary">
+      Use the repo's UV-managed Python workflow to sync dependencies and
+      regenerate the scene narration WAV files under
+      <path>projects/silicon-data/video/public/audio/</path>. The shared wrapper
+      should then restage those assets into
+      <path>video/public/audio/silicon-data/</path>. When the primary source
+      documents changed materially, regenerate all scene audio files, not just a
+      subset.
+    </step>
+
+    <step order="10" name="Validate and render">
+      Run the project checks and render the main composition after edits and
+      audio regeneration. If a check fails, fix the issue or report the blocker
+      clearly.
+    </step>
+
+    <step order="11" name="Confirm artifact freshness">
+      For source-driven reruns, confirm that the updated source documents, typed
+      scene data, narration data, generated scene audio files, and final MP4
+      all correspond to the same current repo state before concluding the task.
+    </step>
+  </executionPlan>
+
+  <filePolicy>
+    <file path="projects/silicon-data/video/data/scenes.ts" expectation="Primary typed scene content. Update first." />
+    <file path="projects/silicon-data/video/data/citations.ts" expectation="Scene-level citation labels. Keep aligned with source claims." />
+    <file path="projects/silicon-data/video/data/narration.json" expectation="Primary narration source. Keep aligned with current scenes and af_bella voice policy." />
+    <file path="projects/silicon-data/video/data/narration.ts" expectation="Typed narration wrapper for Remotion. Keep aligned with current scene ids." />
+    <file path="projects/silicon-data/video/compositions/SiliconDataIcV1.tsx" expectation="Main composition sequencing and scene selection." />
+    <file path="video/src/components/" expectation="Reusable scene building blocks. Touch only if content or layout requires it." />
+    <file path="video/src/theme.ts" expectation="Visual system. Keep institutional tone and low churn." />
+    <file path="video/src/Root.tsx" expectation="Composition registration. Keep stable unless composition contract changes." />
+    <file path="scripts/generate-audio.py" expectation="CPU Kokoro narration generator. Keep runnable through UV and default to af_bella." />
+    <file path="pyproject.toml" expectation="Repo-root Python dependency definition for the audio tooling." />
+    <file path="uv.lock" expectation="Committed Python lockfile for reproducible audio generation." />
+    <file path="projects/silicon-data/video/public/audio/" expectation="Canonical generated scene WAV artifacts. Regenerate when sources change materially." />
+    <file path="video/public/audio/silicon-data/" expectation="Derived staged audio for Remotion runtime. Rebuild through the shared wrapper." />
+    <file path="video/README.md" expectation="Commands and workflow notes. Update only if workflow changes." />
+    <file path="projects/silicon-data/v1-review-notes.md" expectation="Scope and review focus. Update only if those choices change." />
+  </filePolicy>
+
+  <qualityBar>
+    <item>Recommendation framing must remain clear in the opening and closing.</item>
+    <item>Claims, dates, figures, and partner references must match the latest source documents.</item>
+    <item>The legal-map, governance, and conflict questions must remain legible and ordered by investment importance.</item>
+    <item>The closing scene must reflect the most relevant diligence asks for the next management call.</item>
+    <item>The visual result must feel institutional and reviewable, not promotional.</item>
+    <item>The narration must track the current source documents, fit scene timing, and use af_bella consistently.</item>
+    <item>The generated scene WAV files and the final MP4 must be refreshed when the primary sources change materially.</item>
+    <item>A material change to either root source file must trigger a complete workflow rerun from editorial data through final render.</item>
+    <item>The final code should stay simple, typed, and easy to revise on the next iteration.</item>
+  </qualityBar>
+
+  <commands>
+    <command workdir=".">uv sync</command>
+    <command workdir="video">pnpm install</command>
+    <command workdir="video">pnpm typecheck</command>
+    <command workdir="video">pnpm lint</command>
+    <command workdir="video">pnpm project:audio -- --project silicon-data</command>
+    <command workdir="video">pnpm project:dev -- --project silicon-data</command>
+    <command workdir="video">pnpm project:render -- --project silicon-data</command>
+    <command workdir="video">pnpm project:smoke -- --project silicon-data</command>
+  </commands>
+
+  <finalResponseContract>
+    <item>Summarize the source changes you detected.</item>
+    <item>State explicitly whether either root source file changed materially and whether that triggered a full workflow rerun.</item>
+    <item>List the files you changed and why.</item>
+    <item>Report whether the run was a true update or an intentional no-op.</item>
+    <item>Report whether you regenerated the full artifact chain or only refreshed missing or stale artifacts, and why.</item>
+    <item>Report the narration and audio outputs you generated.</item>
+    <item>Report the validation commands you ran and their outcomes.</item>
+    <item>Call out any remaining review risks, especially around editorial judgment or timing.</item>
+  </finalResponseContract>
+</llmWorkflowPrompt>

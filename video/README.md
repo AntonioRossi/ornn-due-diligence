@@ -3,8 +3,10 @@
 This directory contains the shared Remotion app for project-owned video code
 stored under `../projects/<slug>/video/`.
 
-`projects/ornn/` is the only managed video project in this migration. `projects/silicon-data/`
-remains research-only until a second real video implementation is justified.
+Managed video projects today:
+
+- `projects/ornn/`
+- `projects/silicon-data/`
 
 ## Setup
 
@@ -27,12 +29,12 @@ pnpm install
 Run every workflow through the shared wrapper:
 
 ```bash
-pnpm project:stage -- --project ornn
-pnpm project:audio -- --project ornn
-pnpm project:dev -- --project ornn
-pnpm project:render -- --project ornn
-pnpm project:smoke -- --project ornn
-pnpm project:verify -- --project ornn
+pnpm project:stage -- --project <slug>
+pnpm project:audio -- --project <slug>
+pnpm project:dev -- --project <slug>
+pnpm project:render -- --project <slug>
+pnpm project:smoke -- --project <slug>
+pnpm project:verify -- --project <slug>
 ```
 
 Static checks:

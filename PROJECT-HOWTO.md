@@ -15,13 +15,13 @@ Projects in this repo live in one of two states:
 1. Research-only project
    - The project has collected evidence and source material.
    - It is not yet wired into the shared Remotion/audio pipeline.
-   - Example today: `projects/silicon-data/`
+   - No committed example today.
 2. Managed video project
    - The project owns typed scene data, narration, composition code, audio
      artifacts, and render outputs.
    - It is registered in the shared Remotion app and can be rendered with the
      shared commands.
-   - Example today: `projects/ornn/`
+   - Examples today: `projects/ornn/`, `projects/silicon-data/`
 
 ## Repo Layout
 
@@ -388,6 +388,59 @@ If the primary source documents changed materially, rerun the full chain:
 5. smoke test
 6. final render
 
+## Iteration Workflow Contract
+
+This section defines the generic re-execution contract for any managed video
+project in this repo.
+
+Project-specific prompts may add editorial detail, project tone, scene
+backbones, output names, or reporting expectations, but they should not weaken
+these repo-level rules.
+
+Core rules:
+
+- Treat the project's canonical source documents under `projects/<slug>/sources/`
+  as the authoritative editorial inputs.
+- Do not rewrite source documents during normal implementation work unless the
+  user explicitly asks for source-document edits.
+- Do not supplement the project's source documents with outside research by
+  default.
+- Treat iteration as manual editorial curation from source prose into typed
+  scene data. Do not build or rely on a generic markdown-to-slides pipeline.
+- Start by inspecting current repo state, including uncommitted changes, so you
+  do not overwrite unrelated work.
+- Compare current source documents against the existing implementation before
+  editing. Do not assume every iteration requires broad rewrites.
+- Treat `projects/<slug>/video/data/scenes.ts` as the primary implementation of
+  the narrative. Update it first, then update citations, narration, and
+  composition/layout code only where the editorial delta requires it.
+- Keep stable scene ids, composition ids, filenames, and component structure
+  unless a real editorial or structural change requires otherwise.
+- Prefer no-op outcomes over churn. If the current implementation already
+  matches the source documents and the generated artifacts are current, report a
+  no-op rather than rewriting code or regenerating outputs unnecessarily.
+- If a canonical source document changes materially, rerun the full derived
+  artifact chain: scene data, citations, narration inputs, canonical audio, and
+  final render.
+- If source documents did not change materially but canonical audio artifacts or
+  the final render are missing or stale, regenerate only the missing or stale
+  artifacts without unnecessary source edits.
+- A source-driven rerun is not complete until the final rendered artifact is
+  refreshed and consistent with the current source documents and typed data.
+- Treat `projects/<slug>/video/public/` and `projects/<slug>/video/out/` as the
+  canonical generated artifact locations. Treat `video/public/<asset-kind>/<slug>/`
+  as derived staging for runtime use only.
+- Use the shared project wrapper commands for audio generation, staging, Studio,
+  smoke checks, verification, and render. Do not create project-specific
+  ad hoc execution paths unless the repo workflow itself is changing.
+
+Reference example:
+
+- `projects/ornn/iteration-prompt.xml` is the current fully worked example of a
+  project-specific iteration prompt in this repo.
+- Use it as a model for the level of detail expected in a project prompt, while
+  keeping repo-wide workflow rules centralized in this HOWTO.
+
 ## Artifact Policy
 
 Generated artifacts are intentionally split into canonical and derived locations.
@@ -432,21 +485,25 @@ If any of these are missing, the project is not fully managed yet.
 
 ## Silicon Data Status
 
-`projects/silicon-data/` remains a research-only project in this migration.
-Keep its notes and sources under `projects/silicon-data/`, but do not onboard it
-into the shared Remotion/audio pipeline until a second real managed video
-project is justified.
+`projects/silicon-data/` is now the second managed video project in this repo.
+Its source documents remain under `projects/silicon-data/sources/`, and its
+managed video implementation lives under `projects/silicon-data/video/`.
 
 ## Practical Defaults
 
-When creating a first managed project, start by copying the Ornn shape and then
-replacing only project-owned data and composition details.
+When creating a new managed project, start by copying an existing managed
+project shape and then replacing only project-owned data and composition
+details.
 
-Use Ornn as the structural reference for:
+Use Ornn or Silicon Data as the structural reference for:
 
 - `projects/ornn/video/project.config.json`
 - `projects/ornn/video/project.ts`
 - `projects/ornn/video/data/`
 - `projects/ornn/video/compositions/`
+- `projects/silicon-data/video/project.config.json`
+- `projects/silicon-data/video/project.ts`
+- `projects/silicon-data/video/data/`
+- `projects/silicon-data/video/compositions/`
 
 Reuse the shared app. Do not create a second Remotion app per project.

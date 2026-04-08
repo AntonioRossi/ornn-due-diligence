@@ -1,7 +1,8 @@
 import {Composition} from "remotion";
 import {ornnProject} from "@projects/ornn/video/project";
+import {siliconDataProject} from "@projects/silicon-data/video/project";
 
-const projects = [ornnProject];
+const projects = [ornnProject, siliconDataProject];
 
 export const RemotionRoot: React.FC = () => {
   return (
