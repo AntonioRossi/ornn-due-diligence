@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<llmWorkflowPrompt id="remotion-video-iteration" version="1.0">
+  <purpose>
+    Re-execute the repo's current workflow for producing the Auctionomics Remotion video whenever
+    the source research documents change. Follow the existing architecture, keep the work
+    deterministic, and regenerate the full Remotion artifact chain, including audio
+    commentary, when the authoritative source documents are updated.
+  </purpose>
+
+  <role>
+    You are a coding assistant operating inside this repository. Your job is to read the
+    current source documents, update the Auctionomics project implementation under
+    <path>projects/auctionomics/video/</path> plus the shared Remotion app under
+    <path>video/</path> when needed, update or regenerate the narration assets, run
+    validation, and leave the repo in a reviewable state with a current rendered artifact.
+  </role>
+
+  <repository>
+    <root>.</root>
+    <primarySources>
+      <file path="projects/auctionomics/sources/investment-committee-memo.md" role="primary narrative source" />
+      <file
+        path="projects/auctionomics/sources/management-diligence-request-list.md"
+        role="selective source for closing asks, gating questions, and management-call framing"
+      />
+    </primarySources>
+    <supportingDocs>
+      <file path="video/README.md" role="project commands and layout" />
+    </supportingDocs>
+    <implementationRoot>projects/auctionomics/video/</implementationRoot>
+    <mainComposition id="AuctionomicsIcV1" />
+    <audioVoice>af_bella</audioVoice>
+    <audioArtifactRoot>projects/auctionomics/video/public/audio/</audioArtifactRoot>
+    <renderOutput>projects/auctionomics/video/out/auctionomics-ic-v1.mp4</renderOutput>
+  </repository>
+
+  <sourceUpdateTrigger>
+    <rule>
+      Treat <path>projects/auctionomics/sources/investment-committee-memo.md</path> and
+      <path>projects/auctionomics/sources/management-diligence-request-list.md</path> as the two
+      root inputs that govern the entire derived artifact chain.
+    </rule>
+    <rule>
+      If either file changes materially, rerun the complete workflow end to end rather than
+      only patching isolated files.
+    </rule>
+    <derivedArtifacts>
+      <artifact path="projects/auctionomics/video/data/scenes.ts" />
+      <artifact path="projects/auctionomics/video/data/citations.ts" />
+      <artifact path="projects/auctionomics/video/data/narration.json" />
+      <artifact path="projects/auctionomics/video/data/narration.ts" />
+      <artifact path="projects/auctionomics/video/compositions/AuctionomicsIcV1.tsx" />
+      <artifact path="projects/auctionomics/video/public/audio/" />
+      <artifact path="projects/auctionomics/video/out/auctionomics-ic-v1.mp4" />
+    </derivedArtifacts>
+  </sourceUpdateTrigger>
+
+  <coreWorkflow>
+    <principle>
+      Use <path>projects/auctionomics/sources/investment-committee-memo.md</path> and
+      <path>projects/auctionomics/sources/management-diligence-request-list.md</path> exactly as
+      they exist in the repo at the time of execution. Treat them as the authoritative
+      inputs. Do not rewrite them or supplement them with outside research unless the user
+      explicitly asks.
+    </principle>
+    <principle>
+      Do not build or maintain a generic Markdown-to-slides system for this repo. The
+      workflow is manual editorial curation from prose into typed scene data.
+    </principle>
+    <principle>
+      Treat <path>projects/auctionomics/video/data/scenes.ts</path> as the primary implementation
+      of the current narrative. Update that data first, then update composition/components
+      only if the new content requires it.
+    </principle>
+    <principle>
+      Keep the video institutional, restrained, high-signal, and deterministic. This is an
+      investor memo in motion, not a product promo.
+    </principle>
+    <principle>
+      Preserve the established visual direction: deep slate or warm off-black backgrounds,
+      muted gold or copper accents, restrained typography, and low-amplitude motion. Prefer
+      investor-research tone over startup-marketing tone.
+    </principle>
+    <principle>
+      Preserve the shared Remotion app under <path>video/</path> and the Auctionomics project code
+      under <path>projects/auctionomics/video/</path>. Update in place; do not rebuild the app from
+      scratch.
+    </principle>
+    <principle>
+      This workflow includes audio commentary. Use Kokoro on CPU, keep narration
+      scene-based, store narration inputs in
+      <path>projects/auctionomics/video/data/narration.json</path>, generate one WAV per scene
+      under <path>projects/auctionomics/video/public/audio/</path>, and use the mandated voice
+      <code>af_bella</code>.
+    </principle>
+    <principle>
+      Use UV-managed Python tooling for narration generation. Use <code>uv sync</code> and the repo's
+      <code>pnpm test:shared</code>,
+      <code>pnpm project:audio -- --project auctionomics</code>,
+      <code>pnpm project:dev -- --project auctionomics</code>,
+      <code>pnpm project:render -- --project auctionomics</code>, and
+      <code>pnpm project:verify -- --project auctionomics</code> commands as the standard
+      execution path. Run <code>pnpm test:shared</code> first for fast shared
+      regression coverage and treat <code>pnpm project:verify -- --project auctionomics</code>
+      as the final real-project acceptance gate.
+    </principle>
+  </coreWorkflow>
+
+  <idempotenceRules>
+    <rule>
+      Start by inspecting the current repo state, including uncommitted changes. Never
+      revert unrelated user edits.
+    </rule>
+    <rule>
+      Compare the latest source documents against the current scene data and update only the
+      scenes, citations, and layout details that are materially affected.
+    </rule>
+    <rule>
+      If the current implementation already reflects the source documents closely enough and
+      the generated audio files plus final MP4 are current and present, make no source
+      edits. Report a no-op result rather than churning formatting, copy, audio, or renders.
+    </rule>
+    <rule>
+      Keep stable file names, scene identifiers, component names, and composition IDs unless
+      a change is genuinely required by the updated narrative.
+    </rule>
+    <rule>
+      Prefer editing existing files over creating new abstractions. Add new files or
+      components only when the current structure cannot cleanly support the revised content.
+    </rule>
+    <rule>
+      Do not modify the source memo or diligence list unless the user explicitly asks you to
+      rewrite those documents.
+    </rule>
+    <rule>
+      If either primary source document changed materially, regenerate the entire artifact
+      chain after updating code: narration data, scene WAV files, and the final rendered MP4.
+    </rule>
+    <rule>
+      For source-driven reruns, completion requires all derived artifacts to be brought back
+      into sync with the updated sources.
+    </rule>
+  </idempotenceRules>
+
+  <sceneBackbone>
+    <scene id="opening">
+      <sources>
+        <source path="projects/auctionomics/sources/investment-committee-memo.md" section="Recommendation" />
+      </sources>
+      <purpose>Establish partnership, date, recommendation, and the gating issues immediately.</purpose>
+      <preferredDataFields>
+        <field>sectionLabel</field>
+        <field>title</field>
+        <field>subtitle</field>
+        <field>date</field>
+        <field>recommendation</field>
+        <field>body</field>
+        <field>gatingIssues</field>
+      </preferredDataFields>
+    </scene>
+
+    <scene id="whyMatters">
+      <sources>
+        <source path="projects/auctionomics/sources/investment-committee-memo.md" section="Company snapshot" />
+      </sources>
+      <purpose>Frame the market-design thesis and why the combination of Auctionomics and OneChronos matters.</purpose>
+      <delivery>Text-led thesis framing with concise supporting points on each entity and the product.</delivery>
+    </scene>
+
+    <scene id="traction">
+      <sources>
+        <source path="projects/auctionomics/sources/investment-committee-memo.md" section="What appears real today" />
+      </sources>
+      <purpose>Show visible platform, team, and funding signal while making clear the compute market is still an announcement.</purpose>
+      <delivery>Timeline or milestone layout that emphasizes dated proof points and the traction gap.</delivery>
+    </scene>
+
+    <scene id="attractive">
+      <sources>
+        <source path="projects/auctionomics/sources/investment-committee-memo.md" section="Competitive context" />
+        <source path="projects/auctionomics/sources/investment-committee-memo.md" section="Team and operating-model risk" />
+      </sources>
+      <purpose>Explain the competitive field, the structural-edge argument, and the timing risk.</purpose>
+      <delivery>Structured context view with short explanatory captions.</delivery>
+    </scene>
+
+    <scene id="riskLegal">
+      <sources>
+        <source path="projects/auctionomics/sources/investment-committee-memo.md" section="Core risk #1: partnership structure, governance, and durability" />
+      </sources>
+      <purpose>Show the partnership-governance gating issue: legal form, IP ownership, and Milgrom's commitment.</purpose>
+      <delivery>Risk-panel treatment with highlighted unknowns and partnership-durability questions.</delivery>
+    </scene>
+
+    <scene id="riskCounterparty">
+      <sources>
+        <source path="projects/auctionomics/sources/investment-committee-memo.md" section="Core risk #2: product regulatory pathway" />
+      </sources>
+      <purpose>Show the regulatory-pathway gating issue: forward classification, ATS scope, and competitor contrast.</purpose>
+      <delivery>Risk-panel treatment with regulatory-gap framing.</delivery>
+    </scene>
+
+    <scene id="riskGovernance">
+      <sources>
+        <source path="projects/auctionomics/sources/investment-committee-memo.md" section="Core risk #3: market-design feasibility for compute" />
+        <source path="projects/auctionomics/sources/investment-committee-memo.md" section="Core risk #4: market formation, competitive timing, and traction" />
+      </sources>
+      <purpose>Show market-design feasibility and traction gaps: untested auction, no participants, chicken-and-egg problem.</purpose>
+      <delivery>Risk-panel treatment emphasizing missing proof and the execution gap.</delivery>
+    </scene>
+
+    <scene id="closing">
+      <sources>
+        <source path="projects/auctionomics/sources/investment-committee-memo.md" section="Bottom line" />
+        <source path="projects/auctionomics/sources/management-diligence-request-list.md" section="First-call questions for management" />
+      </sources>
+      <purpose>Close on the recommendation and present the hardest next-step asks for management.</purpose>
+      <delivery>Closing recommendation plus selective diligence asks.</delivery>
+    </scene>
+  </sceneBackbone>
+
+  <commands>
+    <command workdir=".">uv sync</command>
+    <command workdir="video">pnpm install</command>
+    <command workdir="video">pnpm typecheck</command>
+    <command workdir="video">pnpm lint</command>
+    <command workdir="video">pnpm test:shared</command>
+    <command workdir="video">pnpm project:audio -- --project auctionomics</command>
+    <command workdir="video">pnpm project:dev -- --project auctionomics</command>
+    <command workdir="video">pnpm project:render -- --project auctionomics</command>
+    <command workdir="video">pnpm project:verify -- --project auctionomics</command>
+  </commands>
+
+  <finalResponseContract>
+    <item>Summarize the source changes you detected.</item>
+    <item>State explicitly whether either root source file changed materially and whether that triggered a full workflow rerun.</item>
+    <item>List the files you changed and why.</item>
+    <item>Report whether the run was a true update or an intentional no-op.</item>
+    <item>Report whether you regenerated the full artifact chain or only refreshed missing or stale artifacts, and why.</item>
+    <item>Report the narration and audio outputs you generated.</item>
+    <item>Report the validation commands you ran and their outcomes.</item>
+    <item>Call out any remaining review risks, especially around editorial judgment or timing.</item>
+  </finalResponseContract>
+</llmWorkflowPrompt>

@@ -1,0 +1,66 @@
+[
+  {
+    "sceneId": "opening",
+    "text": "Authorize gated phase-two diligence only. No term sheet yet. The core gates are partnership structure, regulatory pathway, market-design feasibility, traction, and resource allocation.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.31,
+    "maxDurationFrames": 390
+  },
+  {
+    "sceneId": "whyMatters",
+    "text": "This is a partnership between Nobel-caliber market design and proven trading infrastructure. Auctionomics designed the FCC spectrum auction. OneChronos runs an equities ATS with ten billion dollars in daily volume. Together they are building a combinatorial auction marketplace for GPU compute capacity.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.27,
+    "maxDurationFrames": 555
+  },
+  {
+    "sceneId": "traction",
+    "text": "The equities platform is real and proven at institutional scale. Two trillion dollars in securities transactions since 2022. FINRA's top ten. Eighty million in venture funding. Douglas Peterson from S&P Global as Executive Chairman. But the compute market is still an announcement. No product, no participants, no transactions.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.25,
+    "maxDurationFrames": 600
+  },
+  {
+    "sceneId": "attractive",
+    "text": "The strategic logic is real. Combinatorial auctions can optimize across multiple compute dimensions simultaneously. But Ornn and Silicon Data are further along, and the best design loses if it arrives after standards are set.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.29,
+    "maxDurationFrames": 405
+  },
+  {
+    "sceneId": "riskLegal",
+    "text": "The first gating issue is the partnership itself. The legal form, governance, IP ownership, and termination provisions are all undisclosed. If this is informal, it can dissolve when priorities diverge. Milgrom's contractual time commitment is not defined.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.35,
+    "maxDurationFrames": 390
+  },
+  {
+    "sceneId": "riskCounterparty",
+    "text": "The regulatory pathway is entirely open. Compute forwards could be exempt or could require CFTC registration. No outside counsel analysis has been disclosed. Ornn has a stated regulatory pathway; this partnership has none.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskGovernance",
+    "text": "The auction design is untested in compute and the market has no participants. Combinatorial auctions need diverse participants to produce efficient outcomes. No simulation, no pilot, no named institutions. The chicken-and-egg problem is unresolved.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.34,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "closing",
+    "text": "Proceed only if the initiative moves from announcement to operating proof. The partnership must be formalized, the product specified, regulatory counsel engaged, and participants committed. Otherwise, pass.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.35,
+    "maxDurationFrames": 360
+  }
+]

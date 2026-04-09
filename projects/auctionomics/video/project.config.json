@@ -1,0 +1,6 @@
+{
+  "slug": "auctionomics",
+  "defaultCompositionId": "AuctionomicsIcV1",
+  "defaultOutputName": "auctionomics-ic-v1.mp4",
+  "runtimeAssetKinds": ["audio"]
+}
