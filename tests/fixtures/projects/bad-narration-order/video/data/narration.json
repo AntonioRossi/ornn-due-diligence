@@ -1,0 +1,12 @@
+[
+  {
+    "sceneId": "closing",
+    "text": "Out of order",
+    "maxDurationFrames": 90
+  },
+  {
+    "sceneId": "opening",
+    "text": "Still out of order",
+    "maxDurationFrames": 90
+  }
+]

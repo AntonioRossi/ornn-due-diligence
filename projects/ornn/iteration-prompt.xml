@@ -98,12 +98,15 @@
       Use UV-managed Python tooling for narration generation. Keep the audio workflow rooted
       in <path>pyproject.toml</path>, <path>uv.lock</path>, and
       <path>scripts/generate-audio.py</path>. Use <code>uv sync</code> and the repo's
+      <code>pnpm test:shared</code>,
       <code>pnpm project:audio -- --project ornn</code>,
       <code>pnpm project:dev -- --project ornn</code>,
       <code>pnpm project:render -- --project ornn</code>, and
-      <code>pnpm project:smoke -- --project ornn</code> commands as the standard
-      Ornn execution path. Project render defaults and staged runtime asset kinds are defined in
-      <path>projects/ornn/video/project.config.json</path>.
+      <code>pnpm project:verify -- --project ornn</code> commands as the standard
+      Ornn execution path. Run <code>pnpm test:shared</code> first for fast shared
+      regression coverage and treat <code>pnpm project:verify -- --project ornn</code>
+      as the final real-project acceptance gate. Project render defaults and staged
+      runtime asset kinds are defined in <path>projects/ornn/video/project.config.json</path>.
     </principle>
   </coreWorkflow>
 
@@ -343,10 +346,11 @@
     <command workdir="video">pnpm install</command>
     <command workdir="video">pnpm typecheck</command>
     <command workdir="video">pnpm lint</command>
+    <command workdir="video">pnpm test:shared</command>
     <command workdir="video">pnpm project:audio -- --project ornn</command>
     <command workdir="video">pnpm project:dev -- --project ornn</command>
     <command workdir="video">pnpm project:render -- --project ornn</command>
-    <command workdir="video">pnpm project:smoke -- --project ornn</command>
+    <command workdir="video">pnpm project:verify -- --project ornn</command>
   </commands>
 
   <finalResponseContract>

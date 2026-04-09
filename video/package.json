@@ -13,21 +13,28 @@
   },
   "devDependencies": {
     "@remotion/eslint-config-flat": "4.0.446",
+    "@types/node": "24.10.1",
     "@types/react": "19.2.7",
     "@types/web": "0.0.166",
     "eslint": "9.19.0",
     "prettier": "3.8.1",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "4.0.7"
   },
   "scripts": {
     "project:stage": "node ../scripts/project.mjs stage",
     "project:audio": "node ../scripts/project.mjs audio",
     "project:dev": "node ../scripts/project.mjs dev",
     "project:render": "node ../scripts/project.mjs render",
-    "project:smoke": "node ../scripts/smoke-test.mjs --mode smoke",
-    "project:verify": "node ../scripts/smoke-test.mjs --mode verify",
+    "project:verify": "node ../scripts/project-verify.mjs",
     "build": "remotion bundle src/index.ts",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:watch": "vitest --watch",
+    "test:shared": "node ../scripts/test-shared.mjs",
+    "acceptance": "node ../scripts/acceptance.mjs",
     "typecheck": "tsc --noEmit",
+    "typecheck:test": "tsc --noEmit --project tsconfig.test.json",
     "upgrade": "remotion upgrade",
     "lint": "node ../scripts/lint.mjs"
   }

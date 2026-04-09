@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "types": ["node", "react", "vitest/globals"]
+  },
+  "include": [
+    "../scripts/**/*.mjs",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.test.ts",
+    "tests/**/*.ts",
+    "vitest.config.ts",
+    "../projects/*/video/**/*.ts",
+    "../projects/*/video/**/*.tsx"
+  ],
+  "exclude": ["remotion.config.ts"]
+}

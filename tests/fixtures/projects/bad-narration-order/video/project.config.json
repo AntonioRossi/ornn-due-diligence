@@ -1,0 +1,6 @@
+{
+  "slug": "bad-narration-order",
+  "defaultCompositionId": "BadNarrationOrderComposition",
+  "defaultOutputName": "bad-narration-order.mp4",
+  "runtimeAssetKinds": ["audio"]
+}

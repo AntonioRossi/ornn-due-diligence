@@ -1,0 +1,6 @@
+{
+  "slug": "minimal-valid",
+  "defaultCompositionId": "MinimalFixtureComposition",
+  "defaultOutputName": "minimal-valid.mp4",
+  "runtimeAssetKinds": ["audio"]
+}

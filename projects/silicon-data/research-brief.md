@@ -4,19 +4,19 @@
 **Created:** April 7, 2026
 **Purpose:** Govern the acquisition of baseline source documents for Silicon Data
 as the second project case, producing project-owned artifacts that can enter
-Phase 2 of `MULTI_PROJECT_PLAN.md` once provenance cleanup is complete.
+the now-completed multi-project video workflow once provenance cleanup is complete.
 
 ---
 
-## 1. Relationship to MULTI_PROJECT_PLAN.md
+## 1. Relationship to the multi-project migration
 
 This brief is **Phase 1** of the two-phase approach:
 
 - **Phase 1 (this brief):** Research, draft, and stabilize the Silicon Data
   source documents. Place them directly in the Phase 2 directory structure so
   they never need to move.
-- **Phase 2 (`MULTI_PROJECT_PLAN.md`):** Restructure the repo for multi-project
-  support, migrating Ornn into `projects/ornn/` and wiring both projects to the
+- **Phase 2 (completed):** Restructure the repo for multi-project support,
+  migrate Ornn into `projects/ornn/`, and wire both managed projects to the
   shared Remotion infrastructure.
 
 Phase 2 should not begin until every target document in this brief reaches

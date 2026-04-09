@@ -3,16 +3,19 @@
 from __future__ import annotations
 
 import argparse
+from functools import lru_cache
 import hashlib
 import json
 import os
 import struct
 import sys
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import soundfile as sf
-from kokoro import KPipeline
+
+if TYPE_CHECKING:
+    from kokoro import KPipeline
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -22,6 +25,7 @@ NARRATION_SCHEMA_PATH = ROOT / "video" / "src" / "schemas" / "narration-manifest
 DEFAULT_SAMPLE_RATE = 24_000
 
 
+@lru_cache(maxsize=1)
 def load_narration_schema() -> dict[str, Any]:
     if not NARRATION_SCHEMA_PATH.exists():
         raise SystemExit(f"Missing narration schema: {NARRATION_SCHEMA_PATH}")
@@ -32,14 +36,20 @@ def load_narration_schema() -> dict[str, Any]:
     return schema
 
 
-NARRATION_SCHEMA = load_narration_schema()
-ENTRY_SCHEMA = NARRATION_SCHEMA.get("item", {})
-ENTRY_REQUIRED_FIELDS = ENTRY_SCHEMA.get("required", {})
-ENTRY_OPTIONAL_FIELDS = ENTRY_SCHEMA.get("optional", {})
-ENTRY_DEFAULTS = ENTRY_SCHEMA.get("defaults", {})
-DEFAULT_SPEED = float(ENTRY_DEFAULTS.get("speed", 1.0))
-DEFAULT_VOICE = str(ENTRY_DEFAULTS.get("voice", "af_bella"))
-DEFAULT_LANG_CODE = str(ENTRY_DEFAULTS.get("langCode", "a"))
+@lru_cache(maxsize=1)
+def load_narration_contract() -> dict[str, Any]:
+    schema = load_narration_schema()
+    entry_schema = schema.get("item", {})
+    entry_defaults = entry_schema.get("defaults", {})
+    return {
+        "entry_schema": entry_schema,
+        "required_fields": entry_schema.get("required", {}),
+        "optional_fields": entry_schema.get("optional", {}),
+        "defaults": entry_defaults,
+        "default_speed": float(entry_defaults.get("speed", 1.0)),
+        "default_voice": str(entry_defaults.get("voice", "af_bella")),
+        "default_lang_code": str(entry_defaults.get("langCode", "a")),
+    }
 
 
 def parse_args() -> argparse.Namespace:
@@ -156,10 +166,18 @@ def validate_field(
 
 
 def validate_entries(entries: list[dict[str, Any]], expected_scene_ids: list[str]) -> list[dict[str, Any]]:
+    contract = load_narration_contract()
+    entry_schema = contract["entry_schema"]
+    required_fields = contract["required_fields"]
+    optional_fields = contract["optional_fields"]
+    entry_defaults = contract["defaults"]
+    default_speed = contract["default_speed"]
+    default_voice = contract["default_voice"]
+    default_lang_code = contract["default_lang_code"]
     seen_scene_ids: set[str] = set()
     validated: list[dict[str, Any]] = []
-    known_fields = set(ENTRY_REQUIRED_FIELDS) | set(ENTRY_OPTIONAL_FIELDS)
-    additional_properties = ENTRY_SCHEMA.get("additionalProperties", True)
+    known_fields = set(required_fields) | set(optional_fields)
+    additional_properties = entry_schema.get("additionalProperties", True)
 
     for entry in entries:
         if not isinstance(entry, dict):
@@ -176,14 +194,14 @@ def validate_entries(entries: list[dict[str, Any]], expected_scene_ids: list[str
 
         normalized: dict[str, Any] = {}
 
-        for field_name, field_schema in ENTRY_REQUIRED_FIELDS.items():
+        for field_name, field_schema in required_fields.items():
             if field_name not in entry:
                 raise SystemExit(f"Scene {scene_id_hint} is missing required field {field_name}.")
             value = validate_field(field_name, entry[field_name], field_schema, scene_id_hint)
             normalized[field_name] = value.strip() if isinstance(value, str) else value
 
-        for field_name, field_schema in ENTRY_OPTIONAL_FIELDS.items():
-            value = entry.get(field_name, ENTRY_DEFAULTS.get(field_name))
+        for field_name, field_schema in optional_fields.items():
+            value = entry.get(field_name, entry_defaults.get(field_name))
             if value is None:
                 continue
             validated_value = validate_field(field_name, value, field_schema, scene_id_hint)
@@ -192,9 +210,9 @@ def validate_entries(entries: list[dict[str, Any]], expected_scene_ids: list[str
         scene_id = normalized["sceneId"]
         text = normalized["text"]
         max_duration_frames = normalized["maxDurationFrames"]
-        speed = normalized.get("speed", DEFAULT_SPEED)
-        voice = normalized.get("voice", DEFAULT_VOICE)
-        lang_code = normalized.get("langCode", DEFAULT_LANG_CODE)
+        speed = normalized.get("speed", default_speed)
+        voice = normalized.get("voice", default_voice)
+        lang_code = normalized.get("langCode", default_lang_code)
 
         if not isinstance(scene_id, str) or not scene_id:
             raise SystemExit("Each narration entry requires a non-empty string sceneId.")
@@ -300,7 +318,7 @@ def wave_duration_seconds(path: Path) -> float:
         return data_size / byte_rate
 
 
-def generate_audio(entry: dict[str, Any], pipeline: KPipeline) -> tuple[list[float], int]:
+def generate_audio(entry: dict[str, Any], pipeline: "KPipeline") -> tuple[list[float], int]:
     segments: list[list[float]] = []
     generator = pipeline(
         entry["text"],
@@ -391,8 +409,10 @@ def main() -> int:
             continue
 
         if pipeline is None:
+            from kokoro import KPipeline
+
             pipeline = KPipeline(
-                lang_code=DEFAULT_LANG_CODE,
+                lang_code=load_narration_contract()["default_lang_code"],
                 repo_id="hexgrad/Kokoro-82M",
             )
 

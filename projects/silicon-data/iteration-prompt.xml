@@ -103,12 +103,16 @@
       Use UV-managed Python tooling for narration generation. Keep the audio
       workflow rooted in <path>pyproject.toml</path>, <path>uv.lock</path>, and
       <path>scripts/generate-audio.py</path>. Use <code>uv sync</code> and the
-      repo's <code>pnpm project:audio -- --project silicon-data</code>,
+      repo's <code>pnpm test:shared</code>,
+      <code>pnpm project:audio -- --project silicon-data</code>,
       <code>pnpm project:dev -- --project silicon-data</code>,
       <code>pnpm project:render -- --project silicon-data</code>, and
-      <code>pnpm project:smoke -- --project silicon-data</code> commands as the
-      standard Silicon Data execution path. Project render defaults and staged
-      runtime asset kinds are defined in
+      <code>pnpm project:verify -- --project silicon-data</code> commands as the
+      standard Silicon Data execution path. Run <code>pnpm test:shared</code>
+      first for fast shared regression coverage and treat
+      <code>pnpm project:verify -- --project silicon-data</code> as the final
+      real-project acceptance gate. Project render defaults and staged runtime
+      asset kinds are defined in
       <path>projects/silicon-data/video/project.config.json</path>.
     </principle>
   </coreWorkflow>
@@ -363,10 +367,11 @@
     <command workdir="video">pnpm install</command>
     <command workdir="video">pnpm typecheck</command>
     <command workdir="video">pnpm lint</command>
+    <command workdir="video">pnpm test:shared</command>
     <command workdir="video">pnpm project:audio -- --project silicon-data</command>
     <command workdir="video">pnpm project:dev -- --project silicon-data</command>
     <command workdir="video">pnpm project:render -- --project silicon-data</command>
-    <command workdir="video">pnpm project:smoke -- --project silicon-data</command>
+    <command workdir="video">pnpm project:verify -- --project silicon-data</command>
   </commands>
 
   <finalResponseContract>

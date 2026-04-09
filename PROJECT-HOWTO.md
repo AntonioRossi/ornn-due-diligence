@@ -52,7 +52,7 @@ video/
 scripts/
   generate-audio.py                # shared project-aware audio tool
   project.mjs                      # shared wrapper for stage/audio/dev/render
-  smoke-test.mjs                   # shared smoke-test wrapper
+  project-verify.mjs               # shared verification wrapper
 ```
 
 ## Stage 1: Research Collection
@@ -305,45 +305,57 @@ Use Studio to:
 - confirm staged audio is present
 - catch obvious timing or visual regressions
 
-## Stage 10: Run Automated Checks
+## Stage 10: Run Fast Shared Tests
 
-Run the fast smoke test first:
+Run the shared regression-defense layer before any real-project acceptance run:
 
 ```bash
-pnpm --dir video project:smoke -- --project <slug>
+pnpm --dir video typecheck:test
+pnpm --dir video test:run
+uv run --project . python -m pytest
+pnpm --dir video test:shared
 ```
 
-The smoke test does:
+Use `pnpm --dir video test:shared` as the default fast local gate when you want
+one command that runs test TypeScript checks and both runtimes.
 
-1. `typecheck`
-2. `lint`
-3. audio validation in `--check-only` mode
-4. a render to `projects/<slug>/video/out/smoke-<slug>.mp4`
-5. a final output-file existence check
+These tests cover the shared narration validator, scene-order timeline logic,
+shared `project.config.json` validation, workflow helper behavior, fixture
+project layout contracts, and the import-safe Python narration validation
+helpers.
 
-This is the fastest automated regression check before a real refresh.
+## Stage 11: Run Final Acceptance
 
-For a full end-to-end verification pass, run:
+After the fast shared tests pass, run the end-to-end verification pass for the
+real project you changed:
 
 ```bash
 pnpm --dir video project:verify -- --project <slug>
 ```
 
-`project:verify` does:
+`project:verify` remains the final acceptance gate. It does:
 
 1. `typecheck`
 2. `lint`
-3. real project audio generation
-4. canonical audio artifact checks under `projects/<slug>/video/public/audio/`
-5. a render using the project's default output name from `project.config.json`
-6. a final output-file existence check
+3. project audio generation and staging through `project:audio`
+4. a render using the project's default output name from `project.config.json`
+5. a final output-file existence check
 
 Keep Studio checks manual through `project:dev`; do not treat Studio startup as
 an automated test target.
 
-## Stage 11: Render the Final Video
+If you want one command that runs the layered path for one or more real
+projects, use:
 
-Render the project with:
+```bash
+pnpm --dir video acceptance -- --project <slug>
+pnpm --dir video acceptance -- --all
+```
+
+## Stage 12: Render the Final Video
+
+If you need a render-only pass without rerunning full verification, render the
+project with:
 
 ```bash
 pnpm --dir video project:render -- --project <slug>
@@ -364,7 +376,7 @@ You can override the output name if needed:
 pnpm --dir video project:render -- --project <slug> --output-name custom-name.mp4
 ```
 
-## Stage 12: Review and Iterate
+## Stage 13: Review and Iterate
 
 After the first render:
 
@@ -375,18 +387,23 @@ After the first render:
    - `citations.ts` for evidence changes
    - `narration.json` for audio copy changes
    - composition code only when layout or motion changes are needed
-4. Regenerate audio if narration changed
-5. Re-run smoke test
-6. Re-render the canonical output
+4. Re-run `pnpm --dir video test:shared`
+5. Re-run `pnpm --dir video project:verify -- --project <slug>`
 
 If the primary source documents changed materially, rerun the full chain:
 
 1. update `scenes.ts`
 2. update `citations.ts`
 3. update `narration.json`
-4. regenerate audio
-5. smoke test
-6. final render
+4. run `pnpm --dir video test:shared`
+5. run `pnpm --dir video project:verify -- --project <slug>`
+
+Manual sign-off checklist for shared workflow changes:
+
+- `pnpm --dir video typecheck:test` passed
+- `pnpm --dir video test:run` passed
+- `uv run --project . python -m pytest` passed
+- the required real-project `pnpm --dir video project:verify -- --project <slug>` runs passed
 
 ## Iteration Workflow Contract
 
@@ -431,7 +448,7 @@ Core rules:
   canonical generated artifact locations. Treat `video/public/<asset-kind>/<slug>/`
   as derived staging for runtime use only.
 - Use the shared project wrapper commands for audio generation, staging, Studio,
-  smoke checks, verification, and render. Do not create project-specific
+  verification, and render. Do not create project-specific
   ad hoc execution paths unless the repo workflow itself is changing.
 
 Reference example:

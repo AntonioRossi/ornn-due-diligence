@@ -1,0 +1,6 @@
+{
+  "slug": "bad-scene-order",
+  "defaultCompositionId": "BadSceneOrderComposition",
+  "defaultOutputName": "bad-scene-order.mp4",
+  "runtimeAssetKinds": ["audio"]
+}

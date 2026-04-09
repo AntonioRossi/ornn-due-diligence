@@ -1,0 +1,6 @@
+{
+  "slug": "missing-audio",
+  "defaultCompositionId": "MissingAudioComposition",
+  "defaultOutputName": "missing-audio.mp4",
+  "runtimeAssetKinds": ["audio"]
+}
