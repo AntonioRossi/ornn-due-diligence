@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<llmWorkflowPrompt id="competitive-landscape-iteration" version="1.0">
+  <purpose>
+    Re-execute the comparative landscape video whenever any of the six upstream
+    source documents or the project's own comparative analysis changes. This
+    project synthesizes three existing IC memos and diligence lists into a single
+    side-by-side comparison video. It does not conduct new research.
+  </purpose>
+
+  <role>
+    You are a coding assistant operating inside this repository. Your job is to
+    read the upstream source documents, update the comparative analysis if needed,
+    update the video implementation under
+    <path>projects/competitive-landscape/video/</path>, regenerate narration and
+    audio, run validation, and leave the repo in a reviewable state with a current
+    rendered artifact.
+  </role>
+
+  <repository>
+    <root>.</root>
+    <primarySources>
+      <file path="projects/ornn/sources/investment-committee-memo.md"
+            role="upstream IC memo — Ornn" />
+      <file path="projects/ornn/sources/management-diligence-request-list.md"
+            role="upstream diligence list — Ornn" />
+      <file path="projects/silicon-data/sources/investment-committee-memo.md"
+            role="upstream IC memo — Silicon Data" />
+      <file path="projects/silicon-data/sources/management-diligence-request-list.md"
+            role="upstream diligence list — Silicon Data" />
+      <file path="projects/auctionomics/sources/investment-committee-memo.md"
+            role="upstream IC memo — Auctionomics" />
+      <file path="projects/auctionomics/sources/management-diligence-request-list.md"
+            role="upstream diligence list — Auctionomics" />
+      <file path="projects/competitive-landscape/sources/competitive-analysis.md"
+            role="primary comparative narrative — this project" />
+    </primarySources>
+    <implementationRoot>projects/competitive-landscape/video/</implementationRoot>
+    <mainComposition id="CompetitiveLandscapeV1" />
+    <audioVoice>af_bella</audioVoice>
+    <audioArtifactRoot>projects/competitive-landscape/video/public/audio/</audioArtifactRoot>
+    <renderOutput>projects/competitive-landscape/video/out/competitive-landscape-v1.mp4</renderOutput>
+  </repository>
+
+  <sourceUpdateTrigger>
+    <rule>
+      If ANY of the six upstream source files changes materially, first re-read
+      ALL six to capture the current state, then determine whether
+      competitive-analysis.md needs updating.
+    </rule>
+    <rule>
+      If competitive-analysis.md is updated (either manually or because upstream
+      sources changed), rerun the full artifact chain: scenes → citations →
+      narration → audio → render.
+    </rule>
+    <rule>
+      If an upstream source change does NOT materially affect the comparative
+      analysis (e.g., a formatting-only edit), report a no-op.
+    </rule>
+    <rule>
+      When re-reading upstream sources, do NOT modify them. Treat them as
+      read-only inputs. Only modify files under projects/competitive-landscape/.
+    </rule>
+    <rule>
+      When an upstream source changes, the comparative document may need to update
+      its relative positioning. A change in one company's traction section can
+      affect the competitive-context framing for all three. Re-evaluate the full
+      comparison, not just the section about the changed company.
+    </rule>
+    <rule>
+      Scene data in scenes.ts must reflect the current state of all three upstream
+      memos simultaneously. Do not update one company's data without checking
+      whether the other two companies' relative positions have shifted.
+    </rule>
+    <rule>
+      The comparative-analysis.md is a synthesis document. It must never introduce
+      factual claims absent from the six approved upstream files. If an upstream
+      memo is silent on a dimension, the comparative document must say "the public
+      record does not address this" rather than filling the gap.
+    </rule>
+    <rule>
+      scenes.ts must not introduce any claim absent from competitive-analysis.md.
+      The chain is: upstream sources → competitive-analysis.md → scenes.ts. No
+      shortcuts.
+    </rule>
+    <derivedArtifacts>
+      <artifact path="projects/competitive-landscape/sources/competitive-analysis.md" />
+      <artifact path="projects/competitive-landscape/video/data/scenes.ts" />
+      <artifact path="projects/competitive-landscape/video/data/citations.ts" />
+      <artifact path="projects/competitive-landscape/video/data/narration.json" />
+      <artifact path="projects/competitive-landscape/video/data/narration.ts" />
+      <artifact path="projects/competitive-landscape/video/compositions/CompetitiveLandscapeV1.tsx" />
+      <artifact path="projects/competitive-landscape/video/public/audio/" />
+      <artifact path="projects/competitive-landscape/video/out/competitive-landscape-v1.mp4" />
+    </derivedArtifacts>
+  </sourceUpdateTrigger>
+
+  <provenanceGate>
+    <rule>
+      Before proceeding to narration or audio generation, verify that every
+      factual claim in scenes.ts exists in competitive-analysis.md and is listed
+      in the claim-provenance appendix with a valid source tag. If any claim in
+      scenes.ts cannot be traced, remove or rewrite it before generating narration.
+    </rule>
+    <rule>
+      Report the provenance check result explicitly in the final response: how
+      many claims were checked, how many passed, and whether any were removed or
+      rewritten.
+    </rule>
+  </provenanceGate>
+
+  <visualQaGate>
+    <rule>
+      After audio generation and before or during the render step, inspect stills
+      or Studio output for the following scenes: traction, riskComparison,
+      gatingIssues, and positioning. Verify that: (a) no content overlaps the
+      footer or progress bar, (b) all text is fully visible and not truncated,
+      (c) timeline lanes are readable and chronologically ordered, and (d)
+      spectrum markers are visually distinguishable. Report any issues before
+      proceeding to final render.
+    </rule>
+  </visualQaGate>
+
+  <coreWorkflow>
+    <principle>
+      Use the six upstream source files and competitive-analysis.md exactly as
+      they exist in the repo at execution time. Treat upstream files as read-only.
+    </principle>
+    <principle>
+      Treat scenes.ts as the primary implementation of the current narrative.
+      Update that data first, then update composition/components only if needed.
+    </principle>
+    <principle>
+      Keep the video institutional, restrained, high-signal, and deterministic.
+      This is a comparative investor positioning view, not a product promo.
+    </principle>
+    <principle>
+      Use the mandated voice af_bella for all narration. Use company names, not
+      structural labels, in narration text.
+    </principle>
+    <principle>
+      Text budgets are enforced by validateComparisonProject at import time.
+      If validation fails, fix the data before proceeding.
+    </principle>
+  </coreWorkflow>
+
+  <sceneBackbone>
+    <scene id="overview">
+      <sources>
+        <source path="projects/ornn/sources/investment-committee-memo.md"
+                section="Recommendation" />
+        <source path="projects/silicon-data/sources/investment-committee-memo.md"
+                section="Recommendation" />
+        <source path="projects/auctionomics/sources/investment-committee-memo.md"
+                section="Recommendation" />
+        <source path="projects/competitive-landscape/sources/competitive-analysis.md"
+                section="Market overview" />
+      </sources>
+      <purpose>Frame the market: 3 credible entrants, different approaches, same
+      opportunity. Set the analytical tone.</purpose>
+    </scene>
+
+    <scene id="approaches">
+      <sources>
+        <source path="projects/ornn/sources/investment-committee-memo.md"
+                section="Company snapshot" />
+        <source path="projects/ornn/sources/investment-committee-memo.md"
+                section="Team and operating-model risk" />
+        <source path="projects/silicon-data/sources/investment-committee-memo.md"
+                section="Company snapshot" />
+        <source path="projects/silicon-data/sources/investment-committee-memo.md"
+                section="Team and operating-model risk" />
+        <source path="projects/auctionomics/sources/investment-committee-memo.md"
+                section="Company snapshot" />
+        <source path="projects/auctionomics/sources/investment-committee-memo.md"
+                section="Team and operating-model risk" />
+        <source path="projects/competitive-landscape/sources/competitive-analysis.md"
+                section="Approach comparison" />
+      </sources>
+      <purpose>Show the three models side by side with team and backing inline.</purpose>
+    </scene>
+
+    <scene id="traction">
+      <sources>
+        <source path="projects/ornn/sources/investment-committee-memo.md"
+                section="What appears real today" />
+        <source path="projects/silicon-data/sources/investment-committee-memo.md"
+                section="What appears real today" />
+        <source path="projects/auctionomics/sources/investment-committee-memo.md"
+                section="What appears real today" />
+        <source path="projects/competitive-landscape/sources/competitive-analysis.md"
+                section="Traction comparison" />
+      </sources>
+      <purpose>Parallel timeline of dated proof points from all three memos.</purpose>
+    </scene>
+
+    <scene id="riskComparison">
+      <sources>
+        <source path="projects/ornn/sources/investment-committee-memo.md"
+                section="Core risk #1: legal, regulatory, and threshold-path ambiguity" />
+        <source path="projects/ornn/sources/investment-committee-memo.md"
+                section="Core risk #2: benchmark governance, IOSCO readiness, IP, and valuation independence" />
+        <source path="projects/ornn/sources/investment-committee-memo.md"
+                section="Core risk #3: balance-sheet, technology, privacy, and conflicts risk" />
+        <source path="projects/ornn/sources/investment-committee-memo.md"
+                section="Core risk #4: market formation, runway, and key-person risk" />
+        <source path="projects/silicon-data/sources/investment-committee-memo.md"
+                section="Core risk #1: entity structure, regulatory ambiguity, and forward-contract/derivatives positioning" />
+        <source path="projects/silicon-data/sources/investment-committee-memo.md"
+                section="Core risk #2: index methodology governance, IOSCO readiness, and benchmark independence" />
+        <source path="projects/silicon-data/sources/investment-committee-memo.md"
+                section="Core risk #3: conflicts from proprietary-trading-firm parentage" />
+        <source path="projects/silicon-data/sources/investment-committee-memo.md"
+                section="Core risk #4: market formation, competitive durability, and runway" />
+        <source path="projects/auctionomics/sources/investment-committee-memo.md"
+                section="Core risk #1: partnership structure, governance, and durability" />
+        <source path="projects/auctionomics/sources/investment-committee-memo.md"
+                section="Core risk #2: product regulatory pathway" />
+        <source path="projects/auctionomics/sources/investment-committee-memo.md"
+                section="Core risk #3: market-design feasibility for compute" />
+        <source path="projects/auctionomics/sources/investment-committee-memo.md"
+                section="Core risk #4: market formation, competitive timing, and traction" />
+        <source path="projects/competitive-landscape/sources/competitive-analysis.md"
+                section="Risk dimension comparison" />
+      </sources>
+      <purpose>Compare risk profiles across 4 dimensions using ComparisonMatrix.</purpose>
+    </scene>
+
+    <scene id="gatingIssues">
+      <sources>
+        <source path="projects/ornn/sources/management-diligence-request-list.md"
+                section="A. Corporate, legal, and regulatory (**P0 / gating**)" />
+        <source path="projects/ornn/sources/management-diligence-request-list.md"
+                section="D. Commercial traction and liquidity formation (**P0 / gating**)" />
+        <source path="projects/ornn/sources/management-diligence-request-list.md"
+                section="F. Finance, capitalization, and runway (**P0 / gating**)" />
+        <source path="projects/ornn/sources/management-diligence-request-list.md"
+                section="First-call questions for management" />
+        <source path="projects/silicon-data/sources/management-diligence-request-list.md"
+                section="A. Corporate, legal, and regulatory (P0 / gating)" />
+        <source path="projects/silicon-data/sources/management-diligence-request-list.md"
+                section="D. Commercial traction and marketplace formation (P0 / gating)" />
+        <source path="projects/silicon-data/sources/management-diligence-request-list.md"
+                section="F. Finance, capitalization, and runway (P0 / gating)" />
+        <source path="projects/silicon-data/sources/management-diligence-request-list.md"
+                section="First-call questions for management" />
+        <source path="projects/auctionomics/sources/management-diligence-request-list.md"
+                section="A. Partnership structure and governance (P0 / gating)" />
+        <source path="projects/auctionomics/sources/management-diligence-request-list.md"
+                section="C. Regulatory pathway (P0 / gating)" />
+        <source path="projects/auctionomics/sources/management-diligence-request-list.md"
+                section="E. Team, budget, and timeline (P0 / gating)" />
+        <source path="projects/auctionomics/sources/management-diligence-request-list.md"
+                section="First-call questions for management" />
+        <source path="projects/competitive-landscape/sources/competitive-analysis.md"
+                section="Gating issues comparison" />
+      </sources>
+      <purpose>Show selected P0 diligence asks grouped around shared comparison
+      themes using ComparisonMatrix.</purpose>
+    </scene>
+
+    <scene id="positioning">
+      <sources>
+        <source path="projects/ornn/sources/investment-committee-memo.md"
+                section="What appears real today" />
+        <source path="projects/ornn/sources/investment-committee-memo.md"
+                section="Core risk #1: legal, regulatory, and threshold-path ambiguity" />
+        <source path="projects/ornn/sources/investment-committee-memo.md"
+                section="Bottom line" />
+        <source path="projects/silicon-data/sources/investment-committee-memo.md"
+                section="What appears real today" />
+        <source path="projects/silicon-data/sources/investment-committee-memo.md"
+                section="Core risk #1: entity structure, regulatory ambiguity, and forward-contract/derivatives positioning" />
+        <source path="projects/silicon-data/sources/investment-committee-memo.md"
+                section="Bottom line" />
+        <source path="projects/auctionomics/sources/investment-committee-memo.md"
+                section="What appears real today" />
+        <source path="projects/auctionomics/sources/investment-committee-memo.md"
+                section="Core risk #2: product regulatory pathway" />
+        <source path="projects/auctionomics/sources/investment-committee-memo.md"
+                section="Bottom line" />
+        <source path="projects/competitive-landscape/sources/competitive-analysis.md"
+                section="Relative positioning and recommendation" />
+      </sources>
+      <purpose>At most 2 factually measurable spectrums: compute-product stage
+      and regulatory posture for compute.</purpose>
+    </scene>
+
+    <scene id="recommendation">
+      <sources>
+        <source path="projects/ornn/sources/investment-committee-memo.md"
+                section="Bottom line" />
+        <source path="projects/silicon-data/sources/investment-committee-memo.md"
+                section="Bottom line" />
+        <source path="projects/auctionomics/sources/investment-committee-memo.md"
+                section="Bottom line" />
+        <source path="projects/competitive-landscape/sources/competitive-analysis.md"
+                section="Relative positioning and recommendation" />
+      </sources>
+      <purpose>Diligence resource allocation: prioritize, watch, or defer.</purpose>
+    </scene>
+  </sceneBackbone>
+
+  <commands>
+    <command workdir=".">uv sync</command>
+    <command workdir="video">pnpm install</command>
+    <command workdir="video">pnpm typecheck</command>
+    <command workdir="video">pnpm lint</command>
+    <command workdir="video">pnpm test:shared</command>
+    <command workdir="video">pnpm project:audio -- --project competitive-landscape</command>
+    <command workdir="video">pnpm project:dev -- --project competitive-landscape</command>
+    <command workdir="video">pnpm project:render -- --project competitive-landscape</command>
+    <command workdir="video">pnpm project:verify -- --project competitive-landscape</command>
+  </commands>
+
+  <finalResponseContract>
+    <item>Summarize the source changes detected across all six upstream files.</item>
+    <item>State whether competitive-analysis.md was updated and why.</item>
+    <item>Report the provenance check: claims checked, passed, removed/rewritten.</item>
+    <item>List the files changed and why.</item>
+    <item>Report the visual QA result for layout-sensitive scenes.</item>
+    <item>Report validation commands run and their outcomes.</item>
+    <item>Call out remaining review risks.</item>
+  </finalResponseContract>
+</llmWorkflowPrompt>

@@ -1,0 +1,6 @@
+{
+  "slug": "competitive-landscape",
+  "defaultCompositionId": "CompetitiveLandscapeV1",
+  "defaultOutputName": "competitive-landscape-v1.mp4",
+  "runtimeAssetKinds": ["audio"]
+}

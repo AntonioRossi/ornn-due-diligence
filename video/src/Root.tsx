@@ -2,8 +2,9 @@ import {Composition} from "remotion";
 import {ornnProject} from "@projects/ornn/video/project";
 import {siliconDataProject} from "@projects/silicon-data/video/project";
 import {auctionomicsProject} from "@projects/auctionomics/video/project";
+import {competitiveLandscapeProject} from "@projects/competitive-landscape/video/project";
 
-const projects = [ornnProject, siliconDataProject, auctionomicsProject];
+const projects = [ornnProject, siliconDataProject, auctionomicsProject, competitiveLandscapeProject];
 
 export const RemotionRoot: React.FC = () => {
   return (

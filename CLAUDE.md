@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A project-to-video production workspace. Projects live under `projects/<slug>/` with research, source documents, and video content. A shared Remotion app under `video/` provides the common runtime, components, validation, and scripts used by all managed projects. Audio generation uses Python/Kokoro under `scripts/generate-audio.py`.
 
-Current managed projects: `projects/ornn/`, `projects/silicon-data/`, `projects/auctionomics/`.
+Current managed projects: `projects/ornn/`, `projects/silicon-data/`, `projects/auctionomics/`, `projects/competitive-landscape/`.
 
 ## Commands
 

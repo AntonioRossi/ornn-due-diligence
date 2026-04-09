@@ -1,0 +1,58 @@
+[
+  {
+    "sceneId": "overview",
+    "text": "Three entrants are building GPU-compute market infrastructure. Ornn pursues benchmark and swaps. Silicon Data combines index with marketplace. Auctionomics brings auction design to compute.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.29,
+    "maxDurationFrames": 390
+  },
+  {
+    "sceneId": "approaches",
+    "text": "Each model is structurally different. Ornn owns the benchmark and acts as counterparty. Silicon Data publishes an index while Compute Exchange matches buyers and sellers. Auctionomics applies combinatorial auctions from a proven equities platform to compute resources.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.27,
+    "maxDurationFrames": 540
+  },
+  {
+    "sceneId": "traction",
+    "text": "Ornn shows the most visible compute activity: Bloomberg distribution, Hydra partnership, and Architect futures. Silicon Data has Bloomberg and Refinitiv distribution but no disclosed trade evidence. Auctionomics has a proven equities platform but no visible compute product yet.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.25,
+    "maxDurationFrames": 540
+  },
+  {
+    "sceneId": "riskComparison",
+    "text": "The risk profiles diverge. Ornn faces principal-risk and self-marking questions. Silicon Data faces DRW and Jump conflict governance. Auctionomics faces partnership durability and regulatory uncertainty. All three lack benchmark governance proof and face market formation risk.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.27,
+    "maxDurationFrames": 510
+  },
+  {
+    "sceneId": "gatingIssues",
+    "text": "Some gates are shared: regulatory classification, traction proof, and runway. Others are unique. Ornn must resolve de minimis threshold monitoring. Silicon Data must explain the Silicon Derivatives entity. Auctionomics must formalize the partnership and specify the product.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.29,
+    "maxDurationFrames": 480
+  },
+  {
+    "sceneId": "positioning",
+    "text": "On factually observable dimensions, Ornn is furthest along in compute execution. Silicon Data has distribution but no trade evidence. Auctionomics has the strongest market-design credentials but is pre-product for compute specifically.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.31,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "recommendation",
+    "text": "Prioritize Ornn for diligence depth. Continue diligence on Silicon Data with structural gates. Watch Auctionomics for product and partnership formalization. None is investable on the current public record alone.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 390
+  }
+]

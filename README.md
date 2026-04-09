@@ -16,6 +16,7 @@ managed projects.
 - `projects/ornn/`
 - `projects/silicon-data/`
 - `projects/auctionomics/`
+- `projects/competitive-landscape/`
 
 Each managed project has a `video/` directory with a `project.config.json`,
 typed scene data, narration data, composition code, canonical public assets, and

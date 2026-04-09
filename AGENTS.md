@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This repository is a project-to-video workspace. Project-owned research, source documents, and video content live under `projects/<slug>/`; current managed projects are `projects/ornn/` and `projects/silicon-data/`. Each managed project keeps its video contract in `projects/<slug>/video/`: `project.config.json`, `project.ts`, `compositions/`, `data/`, canonical runtime assets in `public/`, and final renders in `out/`.
+This repository is a project-to-video workspace. Project-owned research, source documents, and video content live under `projects/<slug>/`; current managed projects are `projects/ornn/`, `projects/silicon-data/`, `projects/auctionomics/`, and `projects/competitive-landscape/`. Each managed project keeps its video contract in `projects/<slug>/video/`: `project.config.json`, `project.ts`, `compositions/`, `data/`, canonical runtime assets in `public/`, and final renders in `out/`.
 
 Shared Remotion code lives in `video/src/`; workflow scripts live in `scripts/`. TypeScript/Vitest tests are in `video/src/**/*.test.ts` and `video/tests/`; Python tests are in `tests/python/`; cross-runtime fixtures are in `tests/fixtures/projects/`.
 

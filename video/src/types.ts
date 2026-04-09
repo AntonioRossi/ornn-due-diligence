@@ -34,3 +34,14 @@ export interface ResolvedNarrationEntry<S extends string = string> extends Narra
 }
 
 export type CitationMap<S extends string = string> = Record<S, readonly string[]>
+
+export type CompanySlug = "ornn" | "silicon-data" | "auctionomics"
+
+export type ComparisonSceneId =
+  | "overview"
+  | "approaches"
+  | "traction"
+  | "riskComparison"
+  | "gatingIssues"
+  | "positioning"
+  | "recommendation"
