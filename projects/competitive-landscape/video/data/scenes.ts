@@ -66,7 +66,7 @@ export const competitiveLandscapeV1: ComparisonProject = {
       sectionLabel: "Traction",
       title: "Who has what, as of when.",
       intro:
-        "Ornn and Silicon Data show live product activity. Auctionomics has proven equities infrastructure but no visible compute product.",
+        "Ornn and Silicon Data show live product activity. Auctionomics has proven equities infrastructure but no visible compute transactions or timeline.",
       lanes: [
         {
           slug: "ornn",
@@ -173,9 +173,9 @@ export const competitiveLandscapeV1: ComparisonProject = {
           {
             dimension: "Traction proof",
             values: [
-              "Partners visible; volumes TBD",
+              "Partners visible; KPI proof TBD",
               "No completed trades disclosed",
-              "No participants or product yet",
+              "No participants, trades, or timeline",
             ],
           },
           {

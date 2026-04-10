@@ -14,6 +14,21 @@ export const DimensionSpectrum: React.FC<DimensionSpectrumProps> = (props) => {
   validateDimensionSpectrumData(props);
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
+  const labelLanes = props.placements
+    .map((placement, index) => ({
+      index,
+      pos: clampSpectrumPosition(placement.position),
+    }))
+    .sort((a, b) => a.pos - b.pos)
+    .reduce<Map<number, number>>((lanes, placement, sortedIndex, sortedPlacements) => {
+      const previous = sortedPlacements
+        .slice(0, sortedIndex)
+        .reverse()
+        .find((candidate) => placement.pos - candidate.pos < 0.12);
+      const previousLane = previous === undefined ? -1 : (lanes.get(previous.index) ?? 0);
+      lanes.set(placement.index, previousLane + 1);
+      return lanes;
+    }, new Map());
 
   const barEntrance = spring({
     fps,
@@ -37,7 +52,7 @@ export const DimensionSpectrum: React.FC<DimensionSpectrumProps> = (props) => {
       </div>
 
       {/* Bar container */}
-      <div style={{position: "relative", height: 64}}>
+      <div style={{position: "relative", height: 84}}>
         {/* Track */}
         <div
           style={{
@@ -54,6 +69,7 @@ export const DimensionSpectrum: React.FC<DimensionSpectrumProps> = (props) => {
         {/* Markers */}
         {props.placements.map((placement, index) => {
           const pos = clampSpectrumPosition(placement.position);
+          const labelLane = labelLanes.get(index) ?? 0;
           const markerEntrance = spring({
             fps,
             frame: frame - 10 - index * 6,
@@ -90,7 +106,7 @@ export const DimensionSpectrum: React.FC<DimensionSpectrumProps> = (props) => {
                   fontFamily: theme.fonts.mono,
                   fontSize: 15,
                   letterSpacing: "0.06em",
-                  marginTop: 6,
+                  marginTop: 6 + labelLane * 18,
                   textAlign: "center",
                   whiteSpace: "nowrap",
                 }}

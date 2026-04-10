@@ -19,9 +19,9 @@ GPU-compute market infrastructure is emerging as an investable asset class. Thre
 |---|---|---|---|
 | **Model** | Benchmark + bilateral cash-settled swaps + exchange pathway [Source: ornn/IC memo, Company snapshot] | Index + analytics platform + matching marketplace (spot, reserved, forward, auction) [Source: silicon-data/IC memo, Company snapshot] | Combinatorial auction-based market design + bilateral forwards [Source: auctionomics/IC memo, Company snapshot] |
 | **Core product** | Ornn Compute Price Index (OCPI), added to Bloomberg Terminal Apr 2, 2026 [Source: ornn/IC memo, Company snapshot] | Silicon Index family (H100, A100, B200) on Bloomberg and Refinitiv; Compute Exchange marketplace with 4% commission [Source: silicon-data/IC memo, Company snapshot] | Smart Market technology adapted from equities ATS; standardization framework undisclosed ("magic sauce") [Source: auctionomics/IC memo, Core risk #3] |
-| **Settlement** | Cash-settled swaps; Ornn (via ORNNX LLC) is direct counterparty [Source: ornn/IC memo, Core risk #1] | CX positions as matching platform, not counterparty; forward contracts are bilateral between buyer and seller [Source: silicon-data/IC memo, Core risk #1] | Bilateral forwards with physical or hybrid delivery; auction platform facilitates matching [Source: auctionomics/IC memo, Core risk #2] |
+| **Settlement** | Cash-settled swaps; Ornn (via ORNNX LLC) is direct counterparty [Source: ornn/IC memo, Core risk #1] | CX positions as matching platform, not counterparty; forward contracts are bilateral between buyer and seller [Source: silicon-data/IC memo, Core risk #1] | Bilateral forwards for future compute capacity; public record does not disclose settlement mechanics [Source: auctionomics/IC memo, Core risk #2; auctionomics/DDQ, Section B item 5] |
 | **Team** | Four-person seed-stage organization; no disclosed legal, compliance, risk, or treasury leadership [Source: ornn/IC memo, Team and operating-model risk] | Carmen Li (CEO of both entities) is only publicly named senior leader at Silicon Data; total headcount undisclosed; no disclosed compliance or risk hires [Source: silicon-data/IC memo, Team and operating-model risk] | 25+ Auctionomics members (mostly academic advisors); OneChronos is an operating company with proven equities infrastructure; no disclosed dedicated compute-market team [Source: auctionomics/IC memo, Team and operating-model risk] |
-| **Backing** | $5.7M seed; Link Ventures participated [Source: ornn/IC memo, Company snapshot] | $4.7M seed co-led by DRW and Jump Trading Group [Source: silicon-data/IC memo, Company snapshot] | OneChronos: $80M+ total, including $32M expansion round (Nov 2024) from Addition, DCVC, DST Global; Douglas L. Peterson (fmr. CEO S&P Global) as Executive Chairman (Sep 2025); Auctionomics: self-funded consulting firm; Paul Milgrom (2020 Nobel, Economics) co-founder [Source: auctionomics/IC memo, Company snapshot] |
+| **Backing** | $5.7M seed; Link Ventures participated [Source: ornn/IC memo, Company snapshot] | $4.7M seed co-led by DRW and Jump Trading Group [Source: silicon-data/IC memo, Company snapshot] | OneChronos: $80M+ total, including $32M expansion round led by Addition (Nov 2024); Douglas L. Peterson (fmr. CEO S&P Global) as Executive Chairman (Sep 2025); Auctionomics: self-funded consulting firm; Paul Milgrom (2020 Nobel, Economics) co-founder [Source: auctionomics/IC memo, Company snapshot] |
 | **Regulatory posture** | Operating under CFTC de minimis swap-dealer threshold; stated DCM application path [Source: ornn/IC memo, Core risk #1] | CX explicitly disclaims regulatory licensing; Silicon Data positions index for swaps/futures/structured notes with no disclosed regulatory filing [Source: silicon-data/IC memo, Core risk #1] | Compute market described as "off-exchange" bilateral forwards; OneChronos Markets LLC is SEC/FINRA-regulated for equities only; no disclosed regulatory analysis for compute [Source: auctionomics/IC memo, Core risk #2] |
 
 ---
@@ -89,6 +89,13 @@ All three IC memos flag entity-by-entity, product-by-product legal mapping as P0
 ### Benchmark / index replication
 
 Ornn and Silicon Data both face identical asks for a full methodology document, raw data for independent replication, IOSCO mapping, and contributor concentration analysis [Source: ornn/DDQ, Section C items 15-20; silicon-data/DDQ, Section C items 15-20]. Auctionomics/OneChronos faces the analogous ask in the form of the product specification and standardization framework disclosure [Source: auctionomics/DDQ, Section B items 5-6].
+
+### Traction proof
+
+All three require hard evidence that the compute-market activity is moving beyond public positioning:
+- **Ornn:** named partnerships are visible, but diligence still needs trading and liquidity KPIs, including notional traded, open interest, active counterparties, repeat trade rate, and depth [Source: ornn/DDQ, Section D item 24].
+- **Silicon Data:** the public record still shows no evidence of completed marketplace trades, volumes, or active counterparty counts [Source: silicon-data/IC memo, Core risk #4; silicon-data/DDQ, Section D item 24].
+- **Auctionomics / OneChronos:** the public record shows no named compute-market participants, no completed compute-market transactions, and no visible product launch timeline [Source: auctionomics/IC memo, What appears real today; auctionomics/DDQ, Section F item 16].
 
 ### Conflict governance
 
@@ -159,6 +166,7 @@ If diligence resources are constrained, Ornn and Silicon Data should proceed fir
 | Douglas L. Peterson (fmr. CEO S&P Global) as Executive Chairman, Sep 2025 | auctionomics/IC memo, Company snapshot |
 | Auctionomics: self-funded; Paul Milgrom 2020 Nobel co-founder | auctionomics/IC memo, Company snapshot |
 | Compute market described as "off-exchange" bilateral forwards; equities ATS only | auctionomics/IC memo, Core risk #2 |
+| Auctionomics settlement mechanics are not publicly disclosed | auctionomics/IC memo, Core risk #2; auctionomics/DDQ, Section B item 5 |
 
 ### Section 3: Traction comparison
 | Claim | Source |
@@ -208,6 +216,9 @@ If diligence resources are constrained, Ornn and Silicon Data should proceed fir
 | Ornn: full methodology document, raw data for replication, IOSCO mapping, contributor concentration | ornn/DDQ, Section C items 15-20 |
 | Silicon Data: identical benchmark replication asks | silicon-data/DDQ, Section C items 15-20 |
 | Auctionomics/OneChronos: product specification and standardization framework | auctionomics/DDQ, Section B items 5-6 |
+| Ornn: named partnerships visible, but trading and liquidity KPI proof remains a diligence ask | ornn/DDQ, Section D item 24 |
+| Silicon Data: no completed marketplace trades, volumes, or active counterparty counts disclosed | silicon-data/IC memo, Core risk #4; silicon-data/DDQ, Section D item 24 |
+| Auctionomics/OneChronos: no named compute participants, completed transactions, or visible launch timeline | auctionomics/IC memo, What appears real today; auctionomics/DDQ, Section F item 16 |
 | Ornn: prop trading, information barriers, related-party disclosures | ornn/DDQ, Section E items 36-37; Section H item 56 |
 | Silicon Data: DRW/Jump conflict governance; information barriers; related-party inventory | silicon-data/DDQ, Section C item 19; Section H item 50 |
 | Auctionomics/OneChronos: consulting-client conflicts; investor positions; cross-business information barriers | auctionomics/DDQ, Section I item 24; Section A item 2 |
@@ -222,3 +233,4 @@ If diligence resources are constrained, Ornn and Silicon Data should proceed fir
 | Ornn: furthest in visible execution; highest structural risk from principal exposure on seed balance sheet | ornn/IC memo, Bottom line |
 | Silicon Data: strongest distribution (Bloomberg + Refinitiv); most relevant backer profile; unaddressed conflicts; zero marketplace activity | silicon-data/IC memo, Bottom line |
 | Auctionomics/OneChronos: strongest institutional credibility; lowest conflict profile; furthest from live compute product | auctionomics/IC memo, Bottom line |
+| Diligence allocation: prioritize Ornn, continue Silicon Data diligence, and watch Auctionomics for product and partnership formalization | competitive-analysis.md, Relative positioning and recommendation |
