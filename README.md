@@ -76,10 +76,9 @@ pnpm --dir video acceptance -- --all
 
 ## Adding New Content
 
-Use [PROJECT-HOWTO.md](PROJECT-HOWTO.md) as the authoritative guide for adding
-or changing project content. It explains how to move from research collection to
-source documents, how to promote a project into a managed video project, how to
-structure scene and narration data, and how to run the final verification path.
+Use [PROJECT-HOWTO.md](PROJECT-HOWTO.md) as the entry point for adding or
+changing project content. It routes to the concrete template-specific HOWTOs and
+iteration-prompt templates under `_templates/`.
 
 For shared video infrastructure commands and local Remotion details, see
 [video/README.md](video/README.md).

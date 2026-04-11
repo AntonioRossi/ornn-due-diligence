@@ -10,6 +10,12 @@ import {
 import type {CitationMap, ComparisonSceneId, ResolvedNarrationEntry} from "@shared/types";
 import type {ComparisonProject} from "@shared/types/comparison";
 import {theme} from "@shared/theme";
+import {
+  buildBalancedPages,
+  getComparisonGridColumns,
+  getComparisonPageTiming,
+  MAX_OVERVIEW_CARD_PAGE_SIZE,
+} from "@shared/utils/comparisonLayout";
 import {cardGap} from "@shared/utils/layout";
 import {CitationFooter} from "./CitationFooter";
 import {ComparisonMatrix} from "./ComparisonMatrix";
@@ -74,6 +80,15 @@ export const CompetitiveLandscapeComposition: React.FC<
     const {fps} = useVideoConfig();
     const scene = project.scenes.overview;
     const progress = useSceneProgress(startFrame);
+    const companyPages = buildBalancedPages(scene.companies, MAX_OVERVIEW_CARD_PAGE_SIZE);
+    const {pageFrame, pageIndex: companyPageIndex} = getComparisonPageTiming(
+      frame,
+      scene.durationInFrames,
+      companyPages.length,
+    );
+    const visibleCompanies = companyPages[companyPageIndex] ?? scene.companies;
+    const overviewColumns = getComparisonGridColumns(visibleCompanies.length, 3);
+    const isDenseOverview = visibleCompanies.length >= 5;
 
     const bodyEntrance = spring({
       fps,
@@ -92,6 +107,20 @@ export const CompetitiveLandscapeComposition: React.FC<
         footer={<CitationFooter items={sceneCitations.overview} />}
       >
         <div style={{display: "flex", flexDirection: "column", gap: 28}}>
+          {companyPages.length > 1 ? (
+            <div
+              style={{
+                alignSelf: "flex-end",
+                color: theme.colors.muted,
+                fontFamily: theme.fonts.mono,
+                fontSize: 15,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+              }}
+            >
+              Page {companyPageIndex + 1} / {companyPages.length}
+            </div>
+          ) : null}
           <div
             style={{
               color: theme.colors.muted,
@@ -103,11 +132,17 @@ export const CompetitiveLandscapeComposition: React.FC<
           >
             {scene.body}
           </div>
-          <div style={{display: "grid", gap: cardGap, gridTemplateColumns: "1fr 1fr 1fr"}}>
-            {scene.companies.map((company, index) => {
+          <div
+            style={{
+              display: "grid",
+              gap: cardGap,
+              gridTemplateColumns: `repeat(${overviewColumns}, minmax(0, 1fr))`,
+            }}
+          >
+            {visibleCompanies.map((company, index) => {
               const entrance = spring({
                 fps,
-                frame: frame - 8 - index * 4,
+                frame: pageFrame - 8 - index * 4,
                 config: {damping: 220, mass: 0.75, stiffness: 180},
                 durationInFrames: 28,
               });
@@ -121,8 +156,9 @@ export const CompetitiveLandscapeComposition: React.FC<
                     display: "flex",
                     flexDirection: "column",
                     gap: 10,
+                    minHeight: isDenseOverview ? 170 : 0,
                     opacity: entrance,
-                    padding: 22,
+                    padding: isDenseOverview ? 20 : 22,
                     transform: `translateY(${interpolate(entrance, [0, 1], [20, 0])}px)`,
                   }}
                 >
@@ -130,7 +166,7 @@ export const CompetitiveLandscapeComposition: React.FC<
                     style={{
                       color: theme.colors.accent,
                       fontFamily: theme.fonts.mono,
-                      fontSize: 18,
+                      fontSize: isDenseOverview ? 16 : 18,
                       letterSpacing: "0.14em",
                       textTransform: "uppercase",
                     }}
@@ -140,7 +176,7 @@ export const CompetitiveLandscapeComposition: React.FC<
                   <div
                     style={{
                       color: theme.colors.text,
-                      fontSize: 23,
+                      fontSize: isDenseOverview ? 21 : 23,
                       lineHeight: 1.25,
                     }}
                   >
@@ -167,7 +203,10 @@ export const CompetitiveLandscapeComposition: React.FC<
         progress={progress}
         footer={<CitationFooter items={sceneCitations.approaches} />}
       >
-        <SideBySideCards cards={scene.cards} />
+        <SideBySideCards
+          cards={scene.cards}
+          sceneDurationInFrames={scene.durationInFrames}
+        />
       </Frame>
     );
   };
@@ -205,7 +244,10 @@ export const CompetitiveLandscapeComposition: React.FC<
           >
             {scene.intro}
           </div>
-          <ParallelTimeline lanes={scene.lanes} />
+          <ParallelTimeline
+            lanes={scene.lanes}
+            sceneDurationInFrames={scene.durationInFrames}
+          />
         </div>
       </Frame>
     );
@@ -244,7 +286,11 @@ export const CompetitiveLandscapeComposition: React.FC<
           >
             {scene.intro}
           </div>
-          <ComparisonMatrix headers={scene.matrix.headers} rows={scene.matrix.rows} />
+          <ComparisonMatrix
+            headers={scene.matrix.headers}
+            rows={scene.matrix.rows}
+            sceneDurationInFrames={scene.durationInFrames}
+          />
         </div>
       </Frame>
     );
@@ -283,7 +329,11 @@ export const CompetitiveLandscapeComposition: React.FC<
           >
             {scene.intro}
           </div>
-          <ComparisonMatrix headers={scene.matrix.headers} rows={scene.matrix.rows} />
+          <ComparisonMatrix
+            headers={scene.matrix.headers}
+            rows={scene.matrix.rows}
+            sceneDurationInFrames={scene.durationInFrames}
+          />
         </div>
       </Frame>
     );
@@ -313,7 +363,11 @@ export const CompetitiveLandscapeComposition: React.FC<
       >
         <div style={{display: "flex", flexDirection: "column", gap: 32}}>
           {scene.spectrums.map((spectrum) => (
-            <DimensionSpectrum key={spectrum.dimension} {...spectrum} />
+            <DimensionSpectrum
+              key={spectrum.dimension}
+              companies={project.companies}
+              {...spectrum}
+            />
           ))}
           <div
             style={{
@@ -357,7 +411,10 @@ export const CompetitiveLandscapeComposition: React.FC<
         footer={<CitationFooter items={sceneCitations.recommendation} />}
       >
         <div style={{display: "flex", flexDirection: "column", gap: 22}}>
-          <SideBySideCards cards={scene.cards} />
+          <SideBySideCards
+            cards={scene.cards}
+            sceneDurationInFrames={scene.durationInFrames}
+          />
           <div
             style={{
               color: theme.colors.accent,

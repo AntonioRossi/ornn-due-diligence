@@ -84,4 +84,8 @@ pnpm --dir video acceptance -- --all                   # All projects
 
 ## Adding a New Managed Project
 
-See `PROJECT-HOWTO.md` for the full workflow. Minimum contract: source docs in `projects/<slug>/sources/`, a `video/` directory with `project.config.json`, `project.ts`, composition, scene data files, narration files, and registration in `video/src/Root.tsx`. Copy an existing project shape (ornn or silicon-data) as the structural reference.
+See `PROJECT-HOWTO.md` for the repo-level dispatcher. It links to the concrete
+template HOWTOs and iteration-prompt templates under `_templates/`. Minimum
+contract: the template-required source docs in `projects/<slug>/sources/`, a
+`video/` directory with `project.config.json`, `project.ts`, composition, scene
+data files, narration files, and registration in `video/src/Root.tsx`.

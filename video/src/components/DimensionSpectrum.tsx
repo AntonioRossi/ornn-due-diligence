@@ -1,34 +1,49 @@
 import {interpolate, spring, useCurrentFrame, useVideoConfig} from "remotion";
 import {theme} from "../theme";
-import type {DimensionSpectrumData} from "../types/comparison";
+import type {
+  ComparisonCompany,
+  DimensionSpectrumData,
+} from "../types/comparison";
+import {
+  getDimensionSpectrumLayout,
+  getSpectrumPlacementLabel,
+  spectrumLayout,
+} from "../utils/comparisonLayout";
+import {shellPadding} from "../utils/layout";
 import {
   clampSpectrumPosition,
   validateDimensionSpectrumData,
 } from "../validation/comparison";
 
-type DimensionSpectrumProps = DimensionSpectrumData;
+type DimensionSpectrumProps = DimensionSpectrumData & {
+  readonly companies: readonly ComparisonCompany[];
+};
 
-const companyColors = [theme.colors.accent, "#7a9ec2", theme.colors.warning] as const;
+const companyColors = [
+  theme.colors.accent,
+  "#7a9ec2",
+  theme.colors.warning,
+  "#69b69a",
+  "#d7846d",
+  "#8fb65d",
+  "#c98bc2",
+  "#d2b05e",
+] as const;
 
 export const DimensionSpectrum: React.FC<DimensionSpectrumProps> = (props) => {
-  validateDimensionSpectrumData(props);
+  validateDimensionSpectrumData(props, props.companies);
   const frame = useCurrentFrame();
-  const {fps} = useVideoConfig();
-  const labelLanes = props.placements
-    .map((placement, index) => ({
-      index,
-      pos: clampSpectrumPosition(placement.position),
-    }))
-    .sort((a, b) => a.pos - b.pos)
-    .reduce<Map<number, number>>((lanes, placement, sortedIndex, sortedPlacements) => {
-      const previous = sortedPlacements
-        .slice(0, sortedIndex)
-        .reverse()
-        .find((candidate) => placement.pos - candidate.pos < 0.12);
-      const previousLane = previous === undefined ? -1 : (lanes.get(previous.index) ?? 0);
-      lanes.set(placement.index, previousLane + 1);
-      return lanes;
-    }, new Map());
+  const {fps, width} = useVideoConfig();
+  const companyLabelsBySlug = new Map(
+    props.companies.map(({slug, label}) => [slug, label] as const),
+  );
+  const resolvedPlacements = props.placements.map((placement) => ({
+    label: getSpectrumPlacementLabel(placement, companyLabelsBySlug),
+    ...placement,
+  }));
+  const spectrumWidth = width - shellPadding * 2;
+  const {containerHeight, labelLanes, labelLeftOffsets, labelWidths, markerOffsets} =
+    getDimensionSpectrumLayout(resolvedPlacements, spectrumWidth);
 
   const barEntrance = spring({
     fps,
@@ -52,63 +67,77 @@ export const DimensionSpectrum: React.FC<DimensionSpectrumProps> = (props) => {
       </div>
 
       {/* Bar container */}
-      <div style={{position: "relative", height: 84}}>
+      <div style={{height: containerHeight, position: "relative"}}>
         {/* Track */}
         <div
           style={{
             backgroundColor: theme.colors.track,
             borderRadius: 6,
-            height: 12,
+            height: spectrumLayout.trackHeight,
             left: 0,
             position: "absolute",
-            top: 20,
+            top: spectrumLayout.trackTop,
             width: `${barEntrance * 100}%`,
           }}
         />
 
         {/* Markers */}
-        {props.placements.map((placement, index) => {
-          const pos = clampSpectrumPosition(placement.position);
-          const labelLane = labelLanes.get(index) ?? 0;
+        {resolvedPlacements.map((placement, index) => {
+          const labelLane = labelLanes[index] ?? 0;
           const markerEntrance = spring({
             fps,
             frame: frame - 10 - index * 6,
             config: {damping: 180, mass: 0.7, stiffness: 200},
             durationInFrames: 28,
           });
+          const markerColor = companyColors[index % companyColors.length];
+          const markerOffset = markerOffsets[index] ?? clampSpectrumPosition(placement.position) * spectrumWidth;
+          const labelLeftOffset = labelLeftOffsets[index] ?? 0;
+          const labelWidth = labelWidths[index] ?? spectrumLayout.labelMaxWidth;
 
           return (
             <div
               key={placement.slug}
               style={{
-                left: `${pos * 100}%`,
-                opacity: markerEntrance,
                 position: "absolute",
-                top: 0,
-                transform: `translateX(-50%) translateY(${interpolate(markerEntrance, [0, 1], [-20, 0])}px)`,
+                inset: 0,
               }}
             >
               {/* Circle marker */}
               <div
                 style={{
-                  backgroundColor: companyColors[index],
+                  backgroundColor: markerColor,
                   border: `3px solid ${theme.colors.background}`,
                   borderRadius: "50%",
                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
-                  height: 28,
-                  width: 28,
+                  height: spectrumLayout.markerSize,
+                  left: markerOffset,
+                  opacity: markerEntrance,
+                  position: "absolute",
+                  top: 0,
+                  transform: `translateX(-50%) translateY(${interpolate(markerEntrance, [0, 1], [-20, 0])}px)`,
+                  width: spectrumLayout.markerSize,
                 }}
               />
               {/* Label below */}
               <div
                 style={{
-                  color: companyColors[index],
+                  color: markerColor,
                   fontFamily: theme.fonts.mono,
                   fontSize: 15,
+                  left: labelLeftOffset,
                   letterSpacing: "0.06em",
-                  marginTop: 6 + labelLane * 18,
+                  lineHeight: `${spectrumLayout.labelLineHeight}px`,
+                  overflow: "hidden",
+                  position: "absolute",
                   textAlign: "center",
+                  textOverflow: "ellipsis",
+                  top:
+                    spectrumLayout.markerSize +
+                    spectrumLayout.labelMarginTop +
+                    labelLane * spectrumLayout.labelLaneGap,
                   whiteSpace: "nowrap",
+                  width: labelWidth,
                 }}
               >
                 {placement.label}

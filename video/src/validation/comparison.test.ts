@@ -32,6 +32,12 @@ const validRow: ComparisonRow = {
   values: ["De minimis swaps", "No license claimed", "No filing disclosed"],
 }
 
+const validCompanies = [
+  {slug: "ornn", label: "Ornn"},
+  {slug: "silicon-data", label: "Silicon Data"},
+  {slug: "auctionomics", label: "Auctionomics"},
+] as const
+
 const validCard: CompanyCard = {
   slug: "ornn",
   label: "Ornn",
@@ -50,7 +56,6 @@ const validLane: TimelineLane = {
 
 const validPlacement: SpectrumPlacement = {
   slug: "ornn",
-  label: "Ornn",
   position: 0.6,
   rationale: "Live bilateral swaps [Source: ornn/IC memo § What appears real today]",
 }
@@ -61,8 +66,8 @@ const validSpectrum: DimensionSpectrumData = {
   scaleMax: "Regulated exchange",
   placements: [
     validPlacement,
-    {...validPlacement, slug: "silicon-data", label: "Silicon Data", position: 0.4},
-    {...validPlacement, slug: "auctionomics", label: "Auctionomics", position: 0.1},
+    {...validPlacement, slug: "silicon-data", position: 0.4},
+    {...validPlacement, slug: "auctionomics", position: 0.1},
   ],
 }
 
@@ -92,20 +97,25 @@ describe("validateComparisonRow", () => {
 
 describe("validateComparisonMatrix", () => {
   it("passes with 5 or fewer rows", () => {
-    const matrix = {headers: ["A", "B", "C"] as const, rows: [validRow]}
+    const matrix = {headers: ["A", "B", "C"], rows: [validRow]}
     expect(() => validateComparisonMatrix(matrix)).not.toThrow()
   })
 
   it("throws if rows exceed 5", () => {
     const rows = Array.from({length: 6}, () => validRow)
-    const matrix = {headers: ["A", "B", "C"] as const, rows}
+    const matrix = {headers: ["A", "B", "C"], rows}
     expect(() => validateComparisonMatrix(matrix)).toThrow("rows")
   })
 
   it("delegates per-row validation", () => {
     const badRow = {...validRow, dimension: "X".repeat(41)}
-    const matrix = {headers: ["A", "B", "C"] as const, rows: [badRow]}
+    const matrix = {headers: ["A", "B", "C"], rows: [badRow]}
     expect(() => validateComparisonMatrix(matrix)).toThrow("dimension")
+  })
+
+  it("throws if row value count does not match headers", () => {
+    const matrix = {headers: ["A", "B", "C", "D"], rows: [validRow]}
+    expect(() => validateComparisonMatrix(matrix)).toThrow("value count mismatch")
   })
 })
 
@@ -164,6 +174,11 @@ describe("validateSpectrumPlacement", () => {
     expect(() => validateSpectrumPlacement(validPlacement)).not.toThrow()
   })
 
+  it("passes with a displayLabel override when rationale is present", () => {
+    const p = {...validPlacement, displayLabel: "North Atlantic"}
+    expect(() => validateSpectrumPlacement(p)).not.toThrow()
+  })
+
   it("throws if rationale is empty", () => {
     const p = {...validPlacement, rationale: ""}
     expect(() => validateSpectrumPlacement(p)).toThrow("rationale")
@@ -174,9 +189,9 @@ describe("validateSpectrumPlacement", () => {
     expect(() => validateSpectrumPlacement(p)).toThrow("rationale")
   })
 
-  it("throws if label exceeds 20 chars", () => {
-    const p = {...validPlacement, label: "L".repeat(21)}
-    expect(() => validateSpectrumPlacement(p)).toThrow("company label")
+  it("throws if displayLabel is whitespace only", () => {
+    const p = {...validPlacement, displayLabel: "   "}
+    expect(() => validateSpectrumPlacement(p)).toThrow("displayLabel")
   })
 })
 
@@ -186,28 +201,51 @@ describe("validateSpectrumPlacement", () => {
 
 describe("validateDimensionSpectrumData", () => {
   it("passes with valid input", () => {
-    expect(() => validateDimensionSpectrumData(validSpectrum)).not.toThrow()
+    expect(() => validateDimensionSpectrumData(validSpectrum, validCompanies)).not.toThrow()
   })
 
   it("throws if dimension label exceeds 40 chars", () => {
     const data = {...validSpectrum, dimension: "D".repeat(41)}
-    expect(() => validateDimensionSpectrumData(data)).toThrow("dimension label")
+    expect(() => validateDimensionSpectrumData(data, validCompanies)).toThrow("dimension label")
   })
 
   it("throws if scaleMin exceeds 30 chars", () => {
     const data = {...validSpectrum, scaleMin: "S".repeat(31)}
-    expect(() => validateDimensionSpectrumData(data)).toThrow("scaleMin")
+    expect(() => validateDimensionSpectrumData(data, validCompanies)).toThrow("scaleMin")
   })
 
   it("throws if scaleMax exceeds 30 chars", () => {
     const data = {...validSpectrum, scaleMax: "S".repeat(31)}
-    expect(() => validateDimensionSpectrumData(data)).toThrow("scaleMax")
+    expect(() => validateDimensionSpectrumData(data, validCompanies)).toThrow("scaleMax")
   })
 
   it("delegates to validateSpectrumPlacement per placement", () => {
     const badPlacement = {...validPlacement, rationale: ""}
-    const data = {...validSpectrum, placements: [badPlacement, validPlacement, validPlacement] as const}
-    expect(() => validateDimensionSpectrumData(data as DimensionSpectrumData)).toThrow("rationale")
+    const data = {...validSpectrum, placements: [badPlacement, validPlacement, validPlacement]}
+    expect(() => validateDimensionSpectrumData(data as DimensionSpectrumData, validCompanies)).toThrow("rationale")
+  })
+
+  it("throws if an effective company label exceeds the spectrum budget", () => {
+    const companies = [
+      {slug: "ornn", label: "A Very Long Portfolio Company"},
+      {slug: "silicon-data", label: "Silicon Data"},
+      {slug: "auctionomics", label: "Auctionomics"},
+    ] as const
+
+    expect(() => validateDimensionSpectrumData(validSpectrum, companies)).toThrow("placement label")
+  })
+
+  it("throws if a displayLabel override exceeds the spectrum budget", () => {
+    const data = {
+      ...validSpectrum,
+      placements: [
+        {...validPlacement, displayLabel: "A Very Long Display Label"},
+        {...validPlacement, slug: "silicon-data", position: 0.4},
+        {...validPlacement, slug: "auctionomics", position: 0.1},
+      ],
+    }
+
+    expect(() => validateDimensionSpectrumData(data, validCompanies)).toThrow("placement label")
   })
 })
 
@@ -298,19 +336,31 @@ describe("validateComparisonProject", () => {
 
   const minimalProject: ComparisonProject = {
     meta: {title: "Test", fps: 30},
-    companies: ["Ornn", "Silicon Data", "Auctionomics"],
+    companies: validCompanies,
     scenes: {
       overview: {...minimalScene("Overview"), body: "body", companies: [
         {slug: "ornn", label: "Ornn", approach: "Benchmark"},
         {slug: "silicon-data", label: "Silicon Data", approach: "Index"},
         {slug: "auctionomics", label: "Auctionomics", approach: "Auction"},
       ]},
-      approaches: {...minimalScene("Approaches"), cards: [validCard, {...validCard, slug: "silicon-data"}, {...validCard, slug: "auctionomics"}]},
-      traction: {...minimalScene("Traction"), intro: "intro", lanes: [validLane, {...validLane, slug: "silicon-data"}, {...validLane, slug: "auctionomics"}]},
-      riskComparison: {...minimalScene("Risks"), intro: "intro", matrix: {headers: ["Ornn", "SD", "Auc"], rows: [validRow]}},
-      gatingIssues: {...minimalScene("Gates"), intro: "intro", matrix: {headers: ["Ornn", "SD", "Auc"], rows: [validRow]}},
+      approaches: {...minimalScene("Approaches"), cards: [
+        validCard,
+        {...validCard, slug: "silicon-data", label: "Silicon Data"},
+        {...validCard, slug: "auctionomics", label: "Auctionomics"},
+      ]},
+      traction: {...minimalScene("Traction"), intro: "intro", lanes: [
+        validLane,
+        {...validLane, slug: "silicon-data", label: "Silicon Data"},
+        {...validLane, slug: "auctionomics", label: "Auctionomics"},
+      ]},
+      riskComparison: {...minimalScene("Risks"), intro: "intro", matrix: {headers: ["Ornn", "Silicon Data", "Auctionomics"], rows: [validRow]}},
+      gatingIssues: {...minimalScene("Gates"), intro: "intro", matrix: {headers: ["Ornn", "Silicon Data", "Auctionomics"], rows: [validRow]}},
       positioning: {...minimalScene("Positioning"), spectrums: [validSpectrum], summary: "summary"},
-      recommendation: {...minimalScene("Recommendation"), cards: [validCard, {...validCard, slug: "silicon-data"}, {...validCard, slug: "auctionomics"}], closingNote: "note"},
+      recommendation: {...minimalScene("Recommendation"), cards: [
+        {...validCard, accent: "strong"},
+        {...validCard, slug: "silicon-data", label: "Silicon Data"},
+        {...validCard, slug: "auctionomics", label: "Auctionomics"},
+      ], closingNote: "note"},
     },
   }
 
@@ -354,12 +404,216 @@ describe("validateComparisonProject", () => {
           ...minimalProject.scenes.approaches,
           cards: [
             {...validCard, headline: "H".repeat(61)},
-            validCard,
-            validCard,
-          ] as const,
+            {...validCard, slug: "silicon-data", label: "Silicon Data"},
+            {...validCard, slug: "auctionomics", label: "Auctionomics"},
+          ],
         },
       },
     } as ComparisonProject
     expect(() => validateComparisonProject(bad, validCitations)).toThrow("headline")
+  })
+
+  it("passes for a four-company project", () => {
+    const project: ComparisonProject = {
+      meta: {title: "Test", fps: 30},
+      companies: [
+        ...validCompanies,
+        {slug: "northstar", label: "Northstar"},
+      ],
+      scenes: {
+        overview: {
+          ...minimalScene("Overview"),
+          body: "body",
+          companies: [
+            {slug: "ornn", label: "Ornn", approach: "Benchmark"},
+            {slug: "silicon-data", label: "Silicon Data", approach: "Index"},
+            {slug: "auctionomics", label: "Auctionomics", approach: "Auction"},
+            {slug: "northstar", label: "Northstar", approach: "Clearinghouse"},
+          ],
+        },
+        approaches: {
+          ...minimalScene("Approaches"),
+          cards: [
+            validCard,
+            {...validCard, slug: "silicon-data", label: "Silicon Data"},
+            {...validCard, slug: "auctionomics", label: "Auctionomics"},
+            {...validCard, slug: "northstar", label: "Northstar"},
+          ],
+        },
+        traction: {
+          ...minimalScene("Traction"),
+          intro: "intro",
+          lanes: [
+            validLane,
+            {...validLane, slug: "silicon-data", label: "Silicon Data"},
+            {...validLane, slug: "auctionomics", label: "Auctionomics"},
+            {...validLane, slug: "northstar", label: "Northstar"},
+          ],
+        },
+        riskComparison: {
+          ...minimalScene("Risks"),
+          intro: "intro",
+          matrix: {
+            headers: ["Ornn", "Silicon Data", "Auctionomics", "Northstar"],
+            rows: [{...validRow, values: [...validRow.values, "Clearing path stated"]}],
+          },
+        },
+        gatingIssues: {
+          ...minimalScene("Gates"),
+          intro: "intro",
+          matrix: {
+            headers: ["Ornn", "Silicon Data", "Auctionomics", "Northstar"],
+            rows: [{...validRow, values: [...validRow.values, "Customer pipeline proof"]}],
+          },
+        },
+        positioning: {
+          ...minimalScene("Positioning"),
+          spectrums: [
+            {
+              ...validSpectrum,
+              placements: [
+                ...validSpectrum.placements,
+                {
+                  ...validPlacement,
+                  slug: "northstar",
+                  position: 0.75,
+                },
+              ],
+            },
+          ],
+          summary: "summary",
+        },
+        recommendation: {
+          ...minimalScene("Recommendation"),
+          cards: [
+            {...validCard, accent: "strong"},
+            {...validCard, slug: "silicon-data", label: "Silicon Data"},
+            {...validCard, slug: "auctionomics", label: "Auctionomics"},
+            {...validCard, slug: "northstar", label: "Northstar"},
+          ],
+          closingNote: "note",
+        },
+      },
+    }
+
+    expect(() => validateComparisonProject(project, validCitations)).not.toThrow()
+  })
+
+  it("throws when scene company order diverges from project companies", () => {
+    const bad = {
+      ...minimalProject,
+      scenes: {
+        ...minimalProject.scenes,
+        recommendation: {
+          ...minimalProject.scenes.recommendation,
+          cards: [
+            {...validCard, slug: "silicon-data", label: "Silicon Data"},
+            validCard,
+            {...validCard, slug: "auctionomics", label: "Auctionomics"},
+          ],
+        },
+      },
+    }
+
+    expect(() => validateComparisonProject(bad, validCitations)).toThrow("company mismatch")
+  })
+
+  it("throws when positioning company order diverges from project companies", () => {
+    const bad = {
+      ...minimalProject,
+      scenes: {
+        ...minimalProject.scenes,
+        positioning: {
+          ...minimalProject.scenes.positioning,
+          spectrums: [
+            {
+              ...validSpectrum,
+              placements: [
+                {...validPlacement, slug: "silicon-data", position: 0.4},
+                validPlacement,
+                {...validPlacement, slug: "auctionomics", position: 0.1},
+              ],
+            },
+          ],
+        },
+      },
+    }
+
+    expect(() => validateComparisonProject(bad, validCitations)).toThrow("company mismatch")
+  })
+
+  it("passes when positioning uses a shorter display label than the canonical company label", () => {
+    const longLabel = "North Atlantic Power Exchange"
+    const project: ComparisonProject = {
+      meta: {title: "Test", fps: 30},
+      companies: [
+        {slug: "ornn", label: longLabel},
+        {slug: "silicon-data", label: "Silicon Data"},
+        {slug: "auctionomics", label: "Auctionomics"},
+      ],
+      scenes: {
+        overview: {
+          ...minimalScene("Overview"),
+          body: "body",
+          companies: [
+            {slug: "ornn", label: longLabel, approach: "Benchmark"},
+            {slug: "silicon-data", label: "Silicon Data", approach: "Index"},
+            {slug: "auctionomics", label: "Auctionomics", approach: "Auction"},
+          ],
+        },
+        approaches: {
+          ...minimalScene("Approaches"),
+          cards: [
+            {...validCard, slug: "ornn", label: longLabel},
+            {...validCard, slug: "silicon-data", label: "Silicon Data"},
+            {...validCard, slug: "auctionomics", label: "Auctionomics"},
+          ],
+        },
+        traction: {
+          ...minimalScene("Traction"),
+          intro: "intro",
+          lanes: [
+            {...validLane, slug: "ornn", label: longLabel},
+            {...validLane, slug: "silicon-data", label: "Silicon Data"},
+            {...validLane, slug: "auctionomics", label: "Auctionomics"},
+          ],
+        },
+        riskComparison: {
+          ...minimalScene("Risks"),
+          intro: "intro",
+          matrix: {headers: [longLabel, "Silicon Data", "Auctionomics"], rows: [validRow]},
+        },
+        gatingIssues: {
+          ...minimalScene("Gates"),
+          intro: "intro",
+          matrix: {headers: [longLabel, "Silicon Data", "Auctionomics"], rows: [validRow]},
+        },
+        positioning: {
+          ...minimalScene("Positioning"),
+          spectrums: [
+            {
+              ...validSpectrum,
+              placements: [
+                {...validPlacement, displayLabel: "North Atlantic"},
+                {...validPlacement, slug: "silicon-data", position: 0.4},
+                {...validPlacement, slug: "auctionomics", position: 0.1},
+              ],
+            },
+          ],
+          summary: "summary",
+        },
+        recommendation: {
+          ...minimalScene("Recommendation"),
+          cards: [
+            {...validCard, slug: "ornn", label: longLabel, accent: "strong"},
+            {...validCard, slug: "silicon-data", label: "Silicon Data"},
+            {...validCard, slug: "auctionomics", label: "Auctionomics"},
+          ],
+          closingNote: "note",
+        },
+      },
+    }
+
+    expect(() => validateComparisonProject(project, validCitations)).not.toThrow()
   })
 })

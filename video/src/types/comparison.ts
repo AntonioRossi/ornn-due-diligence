@@ -1,18 +1,19 @@
-import type {CompanySlug} from "../types"
-
 // --- Component data types (single source for all components) ---
 
 export type HighlightLevel = "neutral" | "strong" | "weak"
 
-export type ComparisonRow = {
-  readonly dimension: string
-  readonly values: readonly [string, string, string]
-  readonly highlights?: readonly [HighlightLevel, HighlightLevel, HighlightLevel]
+export type ComparisonCompany = {
+  readonly slug: string
+  readonly label: string
 }
 
-export type CompanyCard = {
-  readonly slug: CompanySlug
-  readonly label: string
+export type ComparisonRow = {
+  readonly dimension: string
+  readonly values: readonly string[]
+  readonly highlights?: readonly HighlightLevel[]
+}
+
+export type CompanyCard = ComparisonCompany & {
   readonly headline: string
   readonly body: string
   readonly accent?: HighlightLevel
@@ -24,15 +25,12 @@ export type TimelineEntry = {
   readonly label: string
 }
 
-export type TimelineLane = {
-  readonly slug: CompanySlug
-  readonly label: string
+export type TimelineLane = ComparisonCompany & {
   readonly events: readonly TimelineEntry[]
 }
 
-export type SpectrumPlacement = {
-  readonly slug: CompanySlug
-  readonly label: string
+export type SpectrumPlacement = Pick<ComparisonCompany, "slug"> & {
+  readonly displayLabel?: string
   readonly position: number
   readonly rationale: string
 }
@@ -41,7 +39,12 @@ export type DimensionSpectrumData = {
   readonly dimension: string
   readonly scaleMin: string
   readonly scaleMax: string
-  readonly placements: readonly [SpectrumPlacement, SpectrumPlacement, SpectrumPlacement]
+  readonly placements: readonly SpectrumPlacement[]
+}
+
+export type ComparisonMatrixData = {
+  readonly headers: readonly string[]
+  readonly rows: readonly ComparisonRow[]
 }
 
 // --- Scene data types ---
@@ -54,36 +57,26 @@ type ComparisonSceneBase = {
 
 export type OverviewScene = ComparisonSceneBase & {
   readonly body: string
-  readonly companies: readonly [
-    { readonly slug: CompanySlug; readonly label: string; readonly approach: string },
-    { readonly slug: CompanySlug; readonly label: string; readonly approach: string },
-    { readonly slug: CompanySlug; readonly label: string; readonly approach: string },
-  ]
+  readonly companies: readonly (ComparisonCompany & { readonly approach: string })[]
 }
 
 export type ApproachesScene = ComparisonSceneBase & {
-  readonly cards: readonly [CompanyCard, CompanyCard, CompanyCard]
+  readonly cards: readonly CompanyCard[]
 }
 
 export type TractionScene = ComparisonSceneBase & {
   readonly intro: string
-  readonly lanes: readonly [TimelineLane, TimelineLane, TimelineLane]
+  readonly lanes: readonly TimelineLane[]
 }
 
 export type RiskComparisonScene = ComparisonSceneBase & {
   readonly intro: string
-  readonly matrix: {
-    readonly headers: readonly [string, string, string]
-    readonly rows: readonly ComparisonRow[]
-  }
+  readonly matrix: ComparisonMatrixData
 }
 
 export type GatingIssuesScene = ComparisonSceneBase & {
   readonly intro: string
-  readonly matrix: {
-    readonly headers: readonly [string, string, string]
-    readonly rows: readonly ComparisonRow[]
-  }
+  readonly matrix: ComparisonMatrixData
 }
 
 export type PositioningScene = ComparisonSceneBase & {
@@ -92,7 +85,7 @@ export type PositioningScene = ComparisonSceneBase & {
 }
 
 export type RecommendationScene = ComparisonSceneBase & {
-  readonly cards: readonly [CompanyCard, CompanyCard, CompanyCard]
+  readonly cards: readonly CompanyCard[]
   readonly closingNote: string
 }
 
@@ -101,7 +94,7 @@ export type ComparisonProject = {
     readonly title: string
     readonly fps: number
   }
-  readonly companies: readonly [string, string, string]
+  readonly companies: readonly ComparisonCompany[]
   readonly scenes: {
     readonly overview: OverviewScene
     readonly approaches: ApproachesScene

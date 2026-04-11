@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copy this file to:
+    projects/{{PROJECT_SLUG}}/iteration-prompt.xml
+
+  Replace the project-specific placeholders:
+    {{PROJECT_SLUG}}
+    {{PROJECT_LABEL}}
+    {{COMPOSITION_ID}}
+    {{COMPOSITION_FILE}}
+    {{OUTPUT_FILE}}
+    {{UPSTREAM_PRIMARY_SOURCES_BLOCK}}
+    {{LAYOUT_SENSITIVE_SCENES}}
+    {{OVERVIEW_UPSTREAM_SOURCES_BLOCK}}
+    {{APPROACHES_UPSTREAM_SOURCES_BLOCK}}
+    {{TRACTION_UPSTREAM_SOURCES_BLOCK}}
+    {{RISK_COMPARISON_UPSTREAM_SOURCES_BLOCK}}
+    {{GATING_ISSUES_UPSTREAM_SOURCES_BLOCK}}
+    {{POSITIONING_UPSTREAM_SOURCES_BLOCK}}
+    {{RECOMMENDATION_UPSTREAM_SOURCES_BLOCK}}
+
+  This template stays intentionally close to
+  projects/competitive-landscape/iteration-prompt.xml.
+
+  The shared comparison runtime now supports arbitrary company counts using
+  array-based scene data plus adaptive layouts. When the covered field expands
+  enough to trigger paged cards, timelines, or matrices, update scene
+  durationInFrames and narration pacing accordingly.
+
+  Example format for {{UPSTREAM_PRIMARY_SOURCES_BLOCK}}:
+    <file path="projects/company-a/sources/investment-committee-memo.md"
+          role="upstream IC memo — Company A" />
+    <file path="projects/company-a/sources/management-diligence-request-list.md"
+          role="upstream diligence list — Company A" />
+    <file path="projects/company-b/sources/investment-committee-memo.md"
+          role="upstream IC memo — Company B" />
+    <file path="projects/company-b/sources/management-diligence-request-list.md"
+          role="upstream diligence list — Company B" />
+
+  The scene-backbone source sections below should be adapted to the actual
+  upstream IC memos and diligence lists used by the comparison.
+-->
+<llmWorkflowPrompt id="competitive-landscape-iteration" version="1.0">
+  <purpose>
+    Re-execute the comparative landscape video whenever any upstream source
+    document or the project's own comparative analysis changes. This project
+    synthesizes multiple existing IC memos and diligence lists into a single
+    side-by-side comparison video. It does not conduct new research.
+  </purpose>
+
+  <role>
+    You are a coding assistant operating inside this repository. Your job is to
+    read the upstream source documents, update the comparative analysis if needed,
+    update the video implementation under
+    <path>projects/{{PROJECT_SLUG}}/video/</path>, regenerate narration and
+    audio, run validation, and leave the repo in a reviewable state with a current
+    rendered artifact.
+  </role>
+
+  <repository>
+    <root>.</root>
+    <primarySources>
+      <!-- Add one memo+diligence pair per upstream project. -->
+      {{UPSTREAM_PRIMARY_SOURCES_BLOCK}}
+      <file path="projects/{{PROJECT_SLUG}}/sources/competitive-analysis.md"
+            role="primary comparative narrative — this project" />
+    </primarySources>
+    <implementationRoot>projects/{{PROJECT_SLUG}}/video/</implementationRoot>
+    <mainComposition id="{{COMPOSITION_ID}}" />
+    <audioVoice>af_bella</audioVoice>
+    <audioArtifactRoot>projects/{{PROJECT_SLUG}}/video/public/audio/</audioArtifactRoot>
+    <renderOutput>projects/{{PROJECT_SLUG}}/video/out/{{OUTPUT_FILE}}</renderOutput>
+  </repository>
+
+  <sourceUpdateTrigger>
+    <rule>
+      If ANY upstream source file changes materially, first re-read the full
+      upstream set to capture the current state, then determine whether
+      competitive-analysis.md needs updating.
+    </rule>
+    <rule>
+      If competitive-analysis.md is updated (either manually or because upstream
+      sources changed), rerun the full artifact chain: scenes → citations →
+      narration → audio → render.
+    </rule>
+    <rule>
+      If an upstream source change does NOT materially affect the comparative
+      analysis (e.g., a formatting-only edit), report a no-op.
+    </rule>
+    <rule>
+      When re-reading upstream sources, do NOT modify them. Treat them as
+      read-only inputs. Only modify files under projects/{{PROJECT_SLUG}}/.
+    </rule>
+    <rule>
+      When an upstream source changes, the comparative document may need to update
+      its relative positioning. A change in one company's traction section can
+      affect the competitive-context framing for the rest of the field.
+      Re-evaluate the full comparison, not just the section about the changed
+      company.
+    </rule>
+    <rule>
+      Scene data in scenes.ts must reflect the current state of the covered
+      upstream set simultaneously. Do not update one company's data without
+      checking whether the rest of the field has shifted.
+    </rule>
+    <rule>
+      The comparative-analysis.md is a synthesis document. It must never introduce
+      factual claims absent from the approved upstream files. If an upstream
+      memo is silent on a dimension, the comparative document must say "the public
+      record does not address this" rather than filling the gap.
+    </rule>
+    <rule>
+      scenes.ts must not introduce any claim absent from competitive-analysis.md.
+      The chain is: upstream sources → competitive-analysis.md → scenes.ts. No
+      shortcuts.
+    </rule>
+    <derivedArtifacts>
+      <artifact path="projects/{{PROJECT_SLUG}}/sources/competitive-analysis.md" />
+      <artifact path="projects/{{PROJECT_SLUG}}/video/data/scenes.ts" />
+      <artifact path="projects/{{PROJECT_SLUG}}/video/data/citations.ts" />
+      <artifact path="projects/{{PROJECT_SLUG}}/video/data/narration.json" />
+      <artifact path="projects/{{PROJECT_SLUG}}/video/data/narration.ts" />
+      <artifact path="projects/{{PROJECT_SLUG}}/video/compositions/{{COMPOSITION_FILE}}" />
+      <artifact path="projects/{{PROJECT_SLUG}}/video/public/audio/" />
+      <artifact path="projects/{{PROJECT_SLUG}}/video/out/{{OUTPUT_FILE}}" />
+    </derivedArtifacts>
+  </sourceUpdateTrigger>
+
+  <provenanceGate>
+    <rule>
+      Before proceeding to narration or audio generation, verify that every
+      factual claim in scenes.ts exists in competitive-analysis.md and is listed
+      in the claim-provenance appendix with a valid source tag. If any claim in
+      scenes.ts cannot be traced, remove or rewrite it before generating narration.
+    </rule>
+    <rule>
+      Report the provenance check result explicitly in the final response: how
+      many claims were checked, how many passed, and whether any were removed or
+      rewritten.
+    </rule>
+  </provenanceGate>
+
+  <visualQaGate>
+    <rule>
+      After audio generation and before or during the render step, inspect stills
+      or Studio output for the following scenes:
+      {{LAYOUT_SENSITIVE_SCENES}}. Verify that: (a) no content overlaps the
+      footer or progress bar, (b) all text is fully visible and not truncated,
+      (c) paged cards, timelines, and matrices remain on screen long enough to
+      read, (d) timeline lanes are readable and chronologically ordered, and
+      (e) spectrum markers are visually distinguishable. Report any issues before
+      proceeding to final render.
+    </rule>
+  </visualQaGate>
+
+  <coreWorkflow>
+    <principle>
+      Use the upstream source files and competitive-analysis.md exactly as they
+      exist in the repo at execution time. Treat upstream files as read-only.
+    </principle>
+    <principle>
+      Treat scenes.ts as the primary implementation of the current narrative.
+      Update that data first, then update composition/components only if needed.
+    </principle>
+    <principle>
+      Keep the video institutional, restrained, high-signal, and deterministic.
+      This is a comparative investor positioning view, not a product promo.
+    </principle>
+    <principle>
+      Use the mandated voice af_bella for all narration. Use company names, not
+      structural labels, in narration text.
+    </principle>
+    <principle>
+      Text budgets are enforced by validateComparisonProject at import time.
+      If validation fails, fix the data before proceeding.
+    </principle>
+    <principle>
+      If the covered field exceeds the first-page layout budgets, adjust scene
+      durations so every automatically paged view has readable dwell time.
+    </principle>
+  </coreWorkflow>
+
+  <sceneBackbone>
+    <scene id="overview">
+      <sources>
+        <!-- Add one top-line source per upstream project. -->
+        {{OVERVIEW_UPSTREAM_SOURCES_BLOCK}}
+        <source path="projects/{{PROJECT_SLUG}}/sources/competitive-analysis.md"
+                section="Market overview" />
+      </sources>
+      <purpose>Frame the market, the covered field, and the analytical tone.</purpose>
+    </scene>
+
+    <scene id="approaches">
+      <sources>
+        <!-- Add the company-snapshot or operating-model sources for each upstream project. -->
+        {{APPROACHES_UPSTREAM_SOURCES_BLOCK}}
+        <source path="projects/{{PROJECT_SLUG}}/sources/competitive-analysis.md"
+                section="Approach comparison" />
+      </sources>
+      <purpose>Show the covered models side by side with team and backing inline.</purpose>
+    </scene>
+
+    <scene id="traction">
+      <sources>
+        <!-- Add one traction source per upstream project. -->
+        {{TRACTION_UPSTREAM_SOURCES_BLOCK}}
+        <source path="projects/{{PROJECT_SLUG}}/sources/competitive-analysis.md"
+                section="Traction comparison" />
+      </sources>
+      <purpose>Parallel timeline of dated proof points across the covered field.</purpose>
+    </scene>
+
+    <scene id="riskComparison">
+      <sources>
+        <!-- Add the relevant risk sections for each upstream project. -->
+        {{RISK_COMPARISON_UPSTREAM_SOURCES_BLOCK}}
+        <source path="projects/{{PROJECT_SLUG}}/sources/competitive-analysis.md"
+                section="Risk dimension comparison" />
+      </sources>
+      <purpose>Compare risk profiles across 4 dimensions using ComparisonMatrix.</purpose>
+    </scene>
+
+    <scene id="gatingIssues">
+      <sources>
+        <!-- Add the relevant P0 diligence sections for each upstream project. -->
+        {{GATING_ISSUES_UPSTREAM_SOURCES_BLOCK}}
+        <source path="projects/{{PROJECT_SLUG}}/sources/competitive-analysis.md"
+                section="Gating issues comparison" />
+      </sources>
+      <purpose>Show selected P0 diligence asks grouped around shared comparison
+      themes using ComparisonMatrix.</purpose>
+    </scene>
+
+    <scene id="positioning">
+      <sources>
+        <!-- Add traction, regulatory, and bottom-line sources for each upstream project. -->
+        {{POSITIONING_UPSTREAM_SOURCES_BLOCK}}
+        <source path="projects/{{PROJECT_SLUG}}/sources/competitive-analysis.md"
+                section="Relative positioning and recommendation" />
+      </sources>
+      <purpose>At most 2 factually measurable spectrums: compute-product stage
+      and regulatory posture for compute.</purpose>
+    </scene>
+
+    <scene id="recommendation">
+      <sources>
+        <!-- Add one bottom-line source per upstream project. -->
+        {{RECOMMENDATION_UPSTREAM_SOURCES_BLOCK}}
+        <source path="projects/{{PROJECT_SLUG}}/sources/competitive-analysis.md"
+                section="Relative positioning and recommendation" />
+      </sources>
+      <purpose>Diligence resource allocation: prioritize, watch, or defer.</purpose>
+    </scene>
+  </sceneBackbone>
+
+  <commands>
+    <command workdir=".">uv sync</command>
+    <command workdir="video">pnpm install</command>
+    <command workdir="video">pnpm typecheck</command>
+    <command workdir="video">pnpm lint</command>
+    <command workdir="video">pnpm test:shared</command>
+    <command workdir="video">pnpm project:audio -- --project {{PROJECT_SLUG}}</command>
+    <command workdir="video">pnpm project:dev -- --project {{PROJECT_SLUG}}</command>
+    <command workdir="video">pnpm project:render -- --project {{PROJECT_SLUG}}</command>
+    <command workdir="video">pnpm project:verify -- --project {{PROJECT_SLUG}}</command>
+  </commands>
+
+  <finalResponseContract>
+    <item>Summarize the source changes detected across all upstream files.</item>
+    <item>State whether competitive-analysis.md was updated and why.</item>
+    <item>Report the provenance check: claims checked, passed, removed/rewritten.</item>
+    <item>List the files changed and why.</item>
+    <item>Report the visual QA result for layout-sensitive scenes.</item>
+    <item>Report validation commands run and their outcomes.</item>
+    <item>Call out remaining review risks.</item>
+  </finalResponseContract>
+</llmWorkflowPrompt>
