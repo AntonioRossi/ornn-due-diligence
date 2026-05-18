@@ -9,6 +9,7 @@ import type {
   TimelineEntry,
   TimelineLane,
 } from "../types/comparison"
+import {getSpectrumPlacementLabel, spectrumLayout} from "../utils/comparisonLayout"
 
 // ---------------------------------------------------------------------------
 // Pure helpers
@@ -182,15 +183,23 @@ export function validateComparisonMatrix(matrix: {
   }
 }
 
-export function validateDimensionSpectrumData(data: DimensionSpectrumData): void {
+export function validateDimensionSpectrumData(
+  data: DimensionSpectrumData,
+  companies: readonly ComparisonCompany[],
+): void {
   if (data.dimension.length > 40) fail("DimensionSpectrum", "dimension label", 40, data.dimension)
   if (data.scaleMin.length > 30) fail("DimensionSpectrum", "scaleMin", 30, data.scaleMin)
   if (data.scaleMax.length > 30) fail("DimensionSpectrum", "scaleMax", 30, data.scaleMax)
   if (data.placements.length < 2) {
     failShape("DimensionSpectrum", "at least 2 placements are required")
   }
+  const companyLabelsBySlug = new Map(companies.map(({slug, label}) => [slug, label] as const))
   for (const p of data.placements) {
     validateSpectrumPlacement(p)
+    const label = getSpectrumPlacementLabel(p, companyLabelsBySlug)
+    if (label.length > spectrumLayout.labelCharacterLimit) {
+      fail("DimensionSpectrum", "placement label", spectrumLayout.labelCharacterLimit, label)
+    }
   }
 }
 
@@ -273,7 +282,7 @@ export function validateComparisonProject(
       expectedSlugs,
       spectrum.placements.map(({slug}) => slug),
     )
-    validateDimensionSpectrumData(spectrum)
+    validateDimensionSpectrumData(spectrum, expectedCompanies)
   }
 
   // recommendation

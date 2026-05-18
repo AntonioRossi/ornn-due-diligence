@@ -2,7 +2,11 @@ import {createElement} from "react";
 import {renderToStaticMarkup} from "react-dom/server";
 import {describe, expect, it, vi} from "vitest";
 import type {DimensionSpectrumData} from "../types/comparison";
-import {getDimensionSpectrumLayout} from "../utils/comparisonLayout";
+import {
+  getDimensionSpectrumLayout,
+  getSpectrumPlacementLabel,
+} from "../utils/comparisonLayout";
+import {shellPadding} from "../utils/layout";
 
 let currentFrame = 0;
 
@@ -70,7 +74,14 @@ const denseSpectrum: DimensionSpectrumData = {
 describe("DimensionSpectrum", () => {
   it("expands the bar container to fit stacked labels", () => {
     currentFrame = 0;
-    const expectedHeight = getDimensionSpectrumLayout(denseSpectrum.placements).containerHeight;
+    const companyLabelsBySlug = new Map(companies.map(({slug, label}) => [slug, label] as const));
+    const expectedHeight = getDimensionSpectrumLayout(
+      denseSpectrum.placements.map((placement) => ({
+        label: getSpectrumPlacementLabel(placement, companyLabelsBySlug),
+        ...placement,
+      })),
+      1920 - shellPadding * 2,
+    ).containerHeight;
     const markup = renderToStaticMarkup(
       createElement(DimensionSpectrum, {...denseSpectrum, companies}),
     );
@@ -78,5 +89,6 @@ describe("DimensionSpectrum", () => {
     expect(markup).toContain(`height:${expectedHeight}px`);
     expect(markup).toContain("Northstar");
     expect(markup).toContain("Silicon");
+    expect(markup).toContain("text-overflow:ellipsis");
   });
 });

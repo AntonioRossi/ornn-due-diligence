@@ -2,6 +2,7 @@ import {describe, expect, it} from "vitest";
 import {
   buildBalancedIndexPages,
   buildBalancedPages,
+  getSpectrumPlacementLabel,
   getDimensionSpectrumLayout,
   getComparisonGridColumns,
   getComparisonPageTiming,
@@ -65,40 +66,95 @@ describe("getComparisonPageTiming", () => {
       pageIndex: 1,
     });
   });
+
+  it("resets to frame zero when uneven two-page scenes cross the boundary", () => {
+    expect(getComparisonPageTiming(49, 101, 2)).toEqual({
+      pageFrame: 49,
+      pageIndex: 0,
+    });
+    expect(getComparisonPageTiming(50, 101, 2)).toEqual({
+      pageFrame: 0,
+      pageIndex: 1,
+    });
+  });
+
+  it("resets to frame zero for later pages in uneven multi-page scenes", () => {
+    expect(getComparisonPageTiming(33, 100, 3)).toEqual({
+      pageFrame: 0,
+      pageIndex: 1,
+    });
+    expect(getComparisonPageTiming(66, 100, 3)).toEqual({
+      pageFrame: 0,
+      pageIndex: 2,
+    });
+  });
 });
 
 describe("getDimensionSpectrumLayout", () => {
   it("keeps separated markers on one lane at the minimum height", () => {
-    expect(
-      getDimensionSpectrumLayout([{position: 0.1}, {position: 0.35}, {position: 0.9}]),
-    ).toEqual({
+    expect(getDimensionSpectrumLayout(
+      [
+        {label: "Ornn", position: 0.1},
+        {label: "Silicon", position: 0.35},
+        {label: "Auctionomics", position: 0.9},
+      ],
+      1000,
+    )).toMatchObject({
       containerHeight: spectrumLayout.minHeight,
       labelLanes: [0, 0, 0],
+      markerOffsets: [100, 350, 900],
     });
   });
 
   it("stacks clustered markers and grows the container", () => {
-    expect(
-      getDimensionSpectrumLayout([
-        {position: 0.1},
-        {position: 0.15},
-        {position: 0.2},
-        {position: 0.25},
-      ]),
-    ).toEqual({
+    expect(getDimensionSpectrumLayout([
+        {label: "Northstar", position: 0.1},
+        {label: "Silicon", position: 0.15},
+        {label: "Auctionomics", position: 0.2},
+        {label: "Long Horizon", position: 0.25},
+      ], 1000)).toMatchObject({
       containerHeight: 114,
       labelLanes: [0, 1, 2, 3],
+      markerOffsets: [100, 150, 200, 250],
     });
   });
 
   it("assigns lanes from sorted positions while preserving input order", () => {
     expect(
       getDimensionSpectrumLayout([
-        {position: 0.25},
-        {position: 0.1},
-        {position: 0.2},
-        {position: 0.15},
-      ]).labelLanes,
+        {label: "Long Horizon", position: 0.25},
+        {label: "Northstar", position: 0.1},
+        {label: "Auctionomics", position: 0.2},
+        {label: "Silicon", position: 0.15},
+      ], 1000).labelLanes,
     ).toEqual([3, 0, 2, 1]);
+  });
+
+  it("keeps labels within the container near the spectrum edges", () => {
+    const layout = getDimensionSpectrumLayout(
+      [
+        {label: "Left Edge Label", position: 0},
+        {label: "Right Edge Label", position: 1},
+      ],
+      1000,
+    );
+
+    expect(layout.labelLeftOffsets[0]).toBe(spectrumLayout.edgePadding);
+    expect(layout.labelLeftOffsets[1]! + layout.labelWidths[1]!).toBe(1000 - spectrumLayout.edgePadding);
+  });
+});
+
+describe("getSpectrumPlacementLabel", () => {
+  it("prefers displayLabel over the company label", () => {
+    const labels = new Map([["ornn", "Ornn"]]);
+
+    expect(getSpectrumPlacementLabel({displayLabel: "North Atlantic", slug: "ornn"}, labels)).toBe(
+      "North Atlantic",
+    );
+  });
+
+  it("falls back to the company label and then slug", () => {
+    expect(getSpectrumPlacementLabel({slug: "ornn"}, new Map([["ornn", "Ornn"]]))).toBe("Ornn");
+    expect(getSpectrumPlacementLabel({slug: "ornn"}, new Map())).toBe("ornn");
   });
 });

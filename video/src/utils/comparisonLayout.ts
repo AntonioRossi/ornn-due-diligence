@@ -9,9 +9,13 @@ export type ComparisonPageTiming = {
 
 export const spectrumLayout = {
   bottomPadding: 8,
-  collisionThreshold: 0.12,
+  edgePadding: 12,
+  horizontalGap: 16,
+  labelCharacterLimit: 24,
+  labelHorizontalPadding: 8,
   labelLaneGap: 18,
   labelLineHeight: 18,
+  labelMaxWidth: 220,
   labelMarginTop: 6,
   markerSize: 28,
   minHeight: 84,
@@ -75,41 +79,107 @@ export const getComparisonPageTiming = (
   }
 
   const safeDuration = Math.max(sceneDurationInFrames, pageCount);
-  const pageIndex = Math.min(pageCount - 1, Math.floor((frame / safeDuration) * pageCount));
-  const pageStartFrame = Math.floor((safeDuration * pageIndex) / pageCount);
+  const pageStartFrames = Array.from(
+    {length: pageCount},
+    (_, index) => Math.floor((safeDuration * index) / pageCount),
+  );
+  const clampedFrame = Math.max(0, Math.min(frame, safeDuration - 1));
+  const pageIndex =
+    pageStartFrames.findIndex((pageStartFrame, index) => {
+      const nextPageStartFrame = pageStartFrames[index + 1] ?? safeDuration;
+      return clampedFrame >= pageStartFrame && clampedFrame < nextPageStartFrame;
+    }) ?? pageCount - 1;
+  const pageStartFrame = pageStartFrames[pageIndex] ?? 0;
 
   return {
-    pageFrame: Math.max(0, frame - pageStartFrame),
+    pageFrame: clampedFrame - pageStartFrame,
     pageIndex,
   };
 };
 
+export const getSpectrumPlacementLabel = (
+  placement: {readonly slug: string; readonly displayLabel?: string},
+  companyLabelsBySlug: ReadonlyMap<string, string>,
+): string => placement.displayLabel ?? companyLabelsBySlug.get(placement.slug) ?? placement.slug;
+
+export const estimateSpectrumLabelWidth = (label: string): number =>
+  Math.min(
+    spectrumLayout.labelMaxWidth,
+    Math.ceil(
+      label.length * 10.5 +
+        Math.max(0, label.length - 1) * 0.9 +
+        spectrumLayout.labelHorizontalPadding * 2,
+    ),
+  );
+
 export const getDimensionSpectrumLayout = (
-  placements: readonly {readonly position: number}[],
+  placements: readonly {readonly label: string; readonly position: number}[],
+  containerWidth: number,
 ): {
   readonly containerHeight: number;
   readonly labelLanes: readonly number[];
+  readonly labelLeftOffsets: readonly number[];
+  readonly labelWidths: readonly number[];
+  readonly markerOffsets: readonly number[];
 } => {
   const labelLanes = Array.from({length: placements.length}, () => 0);
+  const labelLeftOffsets = Array.from({length: placements.length}, () => 0);
+  const labelWidths = Array.from({length: placements.length}, () => 0);
+  const markerOffsets = Array.from({length: placements.length}, () => 0);
+  const safeContainerWidth = Math.max(containerWidth, spectrumLayout.labelMaxWidth);
+  const markerHalfSize = spectrumLayout.markerSize / 2;
   const sortedPlacements = placements
     .map((placement, index) => ({
       index,
+      labelWidth: estimateSpectrumLabelWidth(placement.label),
       position: Math.max(0, Math.min(1, placement.position)),
+      markerOffset: Math.min(
+        safeContainerWidth - markerHalfSize,
+        Math.max(
+          markerHalfSize,
+          Math.max(0, Math.min(1, placement.position)) * safeContainerWidth,
+        ),
+      ),
     }))
-    .sort((a, b) => a.position - b.position);
+    .map((placement) => {
+      const maxLeft = Math.max(
+        spectrumLayout.edgePadding,
+        safeContainerWidth - spectrumLayout.edgePadding - placement.labelWidth,
+      );
+
+      return {
+        ...placement,
+        labelLeft: Math.min(
+          maxLeft,
+          Math.max(
+            spectrumLayout.edgePadding,
+            placement.markerOffset - placement.labelWidth / 2,
+          ),
+        ),
+      };
+    })
+    .sort((a, b) => a.markerOffset - b.markerOffset);
 
   sortedPlacements.forEach((placement, sortedIndex) => {
     let lane = 0;
 
     for (let candidateIndex = sortedIndex - 1; candidateIndex >= 0; candidateIndex -= 1) {
       const candidate = sortedPlacements[candidateIndex]!;
-      if (placement.position - candidate.position >= spectrumLayout.collisionThreshold) {
-        break;
+      const overlapsHorizontally =
+        placement.labelLeft <
+          candidate.labelLeft + candidate.labelWidth + spectrumLayout.horizontalGap &&
+        placement.labelLeft + placement.labelWidth + spectrumLayout.horizontalGap >
+          candidate.labelLeft;
+
+      if (overlapsHorizontally) {
+        lane = Math.max(lane, labelLanes[candidate.index]! + 1);
       }
-      lane = Math.max(lane, labelLanes[candidate.index]! + 1);
     }
 
     labelLanes[placement.index] = lane;
+    labelLeftOffsets[placement.index] = placement.labelLeft;
+    labelWidths[placement.index] = placement.labelWidth;
+    markerOffsets[placement.index] = placement.markerOffset;
   });
 
   const maxLane = labelLanes.reduce((currentMax, lane) => Math.max(currentMax, lane), 0);
@@ -122,6 +192,9 @@ export const getDimensionSpectrumLayout = (
 
   return {
     containerHeight: Math.max(spectrumLayout.minHeight, contentHeight),
+    labelLeftOffsets,
     labelLanes,
+    labelWidths,
+    markerOffsets,
   };
 };

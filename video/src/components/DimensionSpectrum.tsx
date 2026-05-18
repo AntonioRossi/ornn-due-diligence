@@ -6,8 +6,10 @@ import type {
 } from "../types/comparison";
 import {
   getDimensionSpectrumLayout,
+  getSpectrumPlacementLabel,
   spectrumLayout,
 } from "../utils/comparisonLayout";
+import {shellPadding} from "../utils/layout";
 import {
   clampSpectrumPosition,
   validateDimensionSpectrumData,
@@ -29,13 +31,19 @@ const companyColors = [
 ] as const;
 
 export const DimensionSpectrum: React.FC<DimensionSpectrumProps> = (props) => {
-  validateDimensionSpectrumData(props);
+  validateDimensionSpectrumData(props, props.companies);
   const frame = useCurrentFrame();
-  const {fps} = useVideoConfig();
-  const {containerHeight, labelLanes} = getDimensionSpectrumLayout(props.placements);
+  const {fps, width} = useVideoConfig();
   const companyLabelsBySlug = new Map(
     props.companies.map(({slug, label}) => [slug, label] as const),
   );
+  const resolvedPlacements = props.placements.map((placement) => ({
+    label: getSpectrumPlacementLabel(placement, companyLabelsBySlug),
+    ...placement,
+  }));
+  const spectrumWidth = width - shellPadding * 2;
+  const {containerHeight, labelLanes, labelLeftOffsets, labelWidths, markerOffsets} =
+    getDimensionSpectrumLayout(resolvedPlacements, spectrumWidth);
 
   const barEntrance = spring({
     fps,
@@ -74,11 +82,8 @@ export const DimensionSpectrum: React.FC<DimensionSpectrumProps> = (props) => {
         />
 
         {/* Markers */}
-        {props.placements.map((placement, index) => {
-          const pos = clampSpectrumPosition(placement.position);
+        {resolvedPlacements.map((placement, index) => {
           const labelLane = labelLanes[index] ?? 0;
-          const label =
-            placement.displayLabel ?? companyLabelsBySlug.get(placement.slug) ?? placement.slug;
           const markerEntrance = spring({
             fps,
             frame: frame - 10 - index * 6,
@@ -86,16 +91,16 @@ export const DimensionSpectrum: React.FC<DimensionSpectrumProps> = (props) => {
             durationInFrames: 28,
           });
           const markerColor = companyColors[index % companyColors.length];
+          const markerOffset = markerOffsets[index] ?? clampSpectrumPosition(placement.position) * spectrumWidth;
+          const labelLeftOffset = labelLeftOffsets[index] ?? 0;
+          const labelWidth = labelWidths[index] ?? spectrumLayout.labelMaxWidth;
 
           return (
             <div
               key={placement.slug}
               style={{
-                left: `${pos * 100}%`,
-                opacity: markerEntrance,
                 position: "absolute",
-                top: 0,
-                transform: `translateX(-50%) translateY(${interpolate(markerEntrance, [0, 1], [-20, 0])}px)`,
+                inset: 0,
               }}
             >
               {/* Circle marker */}
@@ -106,6 +111,11 @@ export const DimensionSpectrum: React.FC<DimensionSpectrumProps> = (props) => {
                   borderRadius: "50%",
                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
                   height: spectrumLayout.markerSize,
+                  left: markerOffset,
+                  opacity: markerEntrance,
+                  position: "absolute",
+                  top: 0,
+                  transform: `translateX(-50%) translateY(${interpolate(markerEntrance, [0, 1], [-20, 0])}px)`,
                   width: spectrumLayout.markerSize,
                 }}
               />
@@ -115,15 +125,22 @@ export const DimensionSpectrum: React.FC<DimensionSpectrumProps> = (props) => {
                   color: markerColor,
                   fontFamily: theme.fonts.mono,
                   fontSize: 15,
+                  left: labelLeftOffset,
                   letterSpacing: "0.06em",
                   lineHeight: `${spectrumLayout.labelLineHeight}px`,
-                  marginTop:
-                    spectrumLayout.labelMarginTop + labelLane * spectrumLayout.labelLaneGap,
+                  overflow: "hidden",
+                  position: "absolute",
                   textAlign: "center",
+                  textOverflow: "ellipsis",
+                  top:
+                    spectrumLayout.markerSize +
+                    spectrumLayout.labelMarginTop +
+                    labelLane * spectrumLayout.labelLaneGap,
                   whiteSpace: "nowrap",
+                  width: labelWidth,
                 }}
               >
-                {label}
+                {placement.label}
               </div>
             </div>
           );

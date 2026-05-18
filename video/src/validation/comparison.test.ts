@@ -201,28 +201,51 @@ describe("validateSpectrumPlacement", () => {
 
 describe("validateDimensionSpectrumData", () => {
   it("passes with valid input", () => {
-    expect(() => validateDimensionSpectrumData(validSpectrum)).not.toThrow()
+    expect(() => validateDimensionSpectrumData(validSpectrum, validCompanies)).not.toThrow()
   })
 
   it("throws if dimension label exceeds 40 chars", () => {
     const data = {...validSpectrum, dimension: "D".repeat(41)}
-    expect(() => validateDimensionSpectrumData(data)).toThrow("dimension label")
+    expect(() => validateDimensionSpectrumData(data, validCompanies)).toThrow("dimension label")
   })
 
   it("throws if scaleMin exceeds 30 chars", () => {
     const data = {...validSpectrum, scaleMin: "S".repeat(31)}
-    expect(() => validateDimensionSpectrumData(data)).toThrow("scaleMin")
+    expect(() => validateDimensionSpectrumData(data, validCompanies)).toThrow("scaleMin")
   })
 
   it("throws if scaleMax exceeds 30 chars", () => {
     const data = {...validSpectrum, scaleMax: "S".repeat(31)}
-    expect(() => validateDimensionSpectrumData(data)).toThrow("scaleMax")
+    expect(() => validateDimensionSpectrumData(data, validCompanies)).toThrow("scaleMax")
   })
 
   it("delegates to validateSpectrumPlacement per placement", () => {
     const badPlacement = {...validPlacement, rationale: ""}
     const data = {...validSpectrum, placements: [badPlacement, validPlacement, validPlacement]}
-    expect(() => validateDimensionSpectrumData(data as DimensionSpectrumData)).toThrow("rationale")
+    expect(() => validateDimensionSpectrumData(data as DimensionSpectrumData, validCompanies)).toThrow("rationale")
+  })
+
+  it("throws if an effective company label exceeds the spectrum budget", () => {
+    const companies = [
+      {slug: "ornn", label: "A Very Long Portfolio Company"},
+      {slug: "silicon-data", label: "Silicon Data"},
+      {slug: "auctionomics", label: "Auctionomics"},
+    ] as const
+
+    expect(() => validateDimensionSpectrumData(validSpectrum, companies)).toThrow("placement label")
+  })
+
+  it("throws if a displayLabel override exceeds the spectrum budget", () => {
+    const data = {
+      ...validSpectrum,
+      placements: [
+        {...validPlacement, displayLabel: "A Very Long Display Label"},
+        {...validPlacement, slug: "silicon-data", position: 0.4},
+        {...validPlacement, slug: "auctionomics", position: 0.1},
+      ],
+    }
+
+    expect(() => validateDimensionSpectrumData(data, validCompanies)).toThrow("placement label")
   })
 })
 
