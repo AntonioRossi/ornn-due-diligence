@@ -1,34 +1,41 @@
 import {interpolate, spring, useCurrentFrame, useVideoConfig} from "remotion";
 import {theme} from "../theme";
-import type {DimensionSpectrumData} from "../types/comparison";
+import type {
+  ComparisonCompany,
+  DimensionSpectrumData,
+} from "../types/comparison";
+import {
+  getDimensionSpectrumLayout,
+  spectrumLayout,
+} from "../utils/comparisonLayout";
 import {
   clampSpectrumPosition,
   validateDimensionSpectrumData,
 } from "../validation/comparison";
 
-type DimensionSpectrumProps = DimensionSpectrumData;
+type DimensionSpectrumProps = DimensionSpectrumData & {
+  readonly companies: readonly ComparisonCompany[];
+};
 
-const companyColors = [theme.colors.accent, "#7a9ec2", theme.colors.warning] as const;
+const companyColors = [
+  theme.colors.accent,
+  "#7a9ec2",
+  theme.colors.warning,
+  "#69b69a",
+  "#d7846d",
+  "#8fb65d",
+  "#c98bc2",
+  "#d2b05e",
+] as const;
 
 export const DimensionSpectrum: React.FC<DimensionSpectrumProps> = (props) => {
   validateDimensionSpectrumData(props);
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const labelLanes = props.placements
-    .map((placement, index) => ({
-      index,
-      pos: clampSpectrumPosition(placement.position),
-    }))
-    .sort((a, b) => a.pos - b.pos)
-    .reduce<Map<number, number>>((lanes, placement, sortedIndex, sortedPlacements) => {
-      const previous = sortedPlacements
-        .slice(0, sortedIndex)
-        .reverse()
-        .find((candidate) => placement.pos - candidate.pos < 0.12);
-      const previousLane = previous === undefined ? -1 : (lanes.get(previous.index) ?? 0);
-      lanes.set(placement.index, previousLane + 1);
-      return lanes;
-    }, new Map());
+  const {containerHeight, labelLanes} = getDimensionSpectrumLayout(props.placements);
+  const companyLabelsBySlug = new Map(
+    props.companies.map(({slug, label}) => [slug, label] as const),
+  );
 
   const barEntrance = spring({
     fps,
@@ -52,16 +59,16 @@ export const DimensionSpectrum: React.FC<DimensionSpectrumProps> = (props) => {
       </div>
 
       {/* Bar container */}
-      <div style={{position: "relative", height: 84}}>
+      <div style={{height: containerHeight, position: "relative"}}>
         {/* Track */}
         <div
           style={{
             backgroundColor: theme.colors.track,
             borderRadius: 6,
-            height: 12,
+            height: spectrumLayout.trackHeight,
             left: 0,
             position: "absolute",
-            top: 20,
+            top: spectrumLayout.trackTop,
             width: `${barEntrance * 100}%`,
           }}
         />
@@ -69,13 +76,16 @@ export const DimensionSpectrum: React.FC<DimensionSpectrumProps> = (props) => {
         {/* Markers */}
         {props.placements.map((placement, index) => {
           const pos = clampSpectrumPosition(placement.position);
-          const labelLane = labelLanes.get(index) ?? 0;
+          const labelLane = labelLanes[index] ?? 0;
+          const label =
+            placement.displayLabel ?? companyLabelsBySlug.get(placement.slug) ?? placement.slug;
           const markerEntrance = spring({
             fps,
             frame: frame - 10 - index * 6,
             config: {damping: 180, mass: 0.7, stiffness: 200},
             durationInFrames: 28,
           });
+          const markerColor = companyColors[index % companyColors.length];
 
           return (
             <div
@@ -91,27 +101,29 @@ export const DimensionSpectrum: React.FC<DimensionSpectrumProps> = (props) => {
               {/* Circle marker */}
               <div
                 style={{
-                  backgroundColor: companyColors[index],
+                  backgroundColor: markerColor,
                   border: `3px solid ${theme.colors.background}`,
                   borderRadius: "50%",
                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
-                  height: 28,
-                  width: 28,
+                  height: spectrumLayout.markerSize,
+                  width: spectrumLayout.markerSize,
                 }}
               />
               {/* Label below */}
               <div
                 style={{
-                  color: companyColors[index],
+                  color: markerColor,
                   fontFamily: theme.fonts.mono,
                   fontSize: 15,
                   letterSpacing: "0.06em",
-                  marginTop: 6 + labelLane * 18,
+                  lineHeight: `${spectrumLayout.labelLineHeight}px`,
+                  marginTop:
+                    spectrumLayout.labelMarginTop + labelLane * spectrumLayout.labelLaneGap,
                   textAlign: "center",
                   whiteSpace: "nowrap",
                 }}
               >
-                {placement.label}
+                {label}
               </div>
             </div>
           );

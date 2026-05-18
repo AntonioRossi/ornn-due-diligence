@@ -10,7 +10,11 @@ export const competitiveLandscapeV1: ComparisonProject = {
     title: "GPU Compute Market — Competitive Landscape v1",
     fps: 30,
   },
-  companies: ["Ornn", "Silicon Data", "Auctionomics"],
+  companies: [
+    {slug: "ornn", label: "Ornn"},
+    {slug: "silicon-data", label: "Silicon Data"},
+    {slug: "auctionomics", label: "Auctionomics"},
+  ],
   scenes: {
     overview: {
       durationInFrames: 390,
@@ -201,19 +205,16 @@ export const competitiveLandscapeV1: ComparisonProject = {
           placements: [
             {
               slug: "ornn",
-              label: "Ornn",
               position: 0.55,
               rationale: "Live bilateral swaps and partner integrations visible [Source: ornn/IC memo § What appears real today]",
             },
             {
               slug: "silicon-data",
-              label: "Silicon Data",
               position: 0.4,
               rationale: "Index published, marketplace pages visible, no trade evidence [Source: silicon-data/IC memo § What appears real today]",
             },
             {
               slug: "auctionomics",
-              label: "Auctionomics",
               position: 0.15,
               rationale: "Partnership announced Jul 2025, no compute product visible [Source: auctionomics/IC memo § What appears real today]",
             },
@@ -226,19 +227,16 @@ export const competitiveLandscapeV1: ComparisonProject = {
           placements: [
             {
               slug: "ornn",
-              label: "Ornn",
               position: 0.4,
               rationale: "Operating under de minimis with stated DCM path [Source: ornn/IC memo § Core risk #1]",
             },
             {
               slug: "silicon-data",
-              label: "Silicon Data",
               position: 0.1,
               rationale: "CX explicitly disclaims regulatory license [Source: silicon-data/IC memo § Core risk #1]",
             },
             {
               slug: "auctionomics",
-              label: "Auctionomics",
               position: 0.05,
               rationale: "No compute regulatory filing or analysis disclosed [Source: auctionomics/IC memo § Core risk #2]",
             },
