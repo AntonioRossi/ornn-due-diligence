@@ -1,0 +1,66 @@
+[
+  {
+    "sceneId": "opening",
+    "text": "Authorize gated phase-two diligence. Akash has the strongest credibility-adjusted profile in AI-DePIN. But the December 2026 migration, Starbonds SEC framework, corporate opacity, and listing gap remain.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.31,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "whyMatters",
+    "text": "Akash is the most mature AI-DePIN. 5.5 years of mainnet. Founder Greg Osuri carries IBM, Kaiser, and congressional credibility. Customer base includes ai16z, Venice.ai, Envision, Morpheus, Codex. BME is live since March 2026.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.27,
+    "maxDurationFrames": 555
+  },
+  {
+    "sceneId": "traction",
+    "text": "Mainnet since September 2020. Mainnet 14 in October 2025 eliminated eight years of technical debt. BME went live March 23 2026. AkashML on OpenRouter processes 1.7 billion tokens daily, outpacing Cloudflare. The AEP-79 migration off Cosmos targets December 2026.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.27,
+    "maxDurationFrames": 645
+  },
+  {
+    "sceneId": "attractive",
+    "text": "Strongest founder credibility, Grayscale recognition, deepest customer list in the cohort. But Bittensor pulls institutional capital. Four parallel initiatives in 2026 means real execution load.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.31,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskLegal",
+    "text": "AEP-79 migration off Cosmos is the largest pivot in network history. Starbonds is the first DePIN SEC-regulated bond program. Both introduce regulatory and execution risk.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskCounterparty",
+    "text": "Overclock Labs jurisdiction, board, and financials are not publicly disclosed. AKT token page promotes only XT and Bithumb as primary CEX listings. No comprehensive tier-1 smart-contract audit history in the public record.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskGovernance",
+    "text": "AKT is 89 percent below its April 2021 ATH, never retested in the AI cycle. Overclock Labs faces simultaneous load on migration, Starbonds, BME, and listings.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "closing",
+    "text": "Strongest credibility-adjusted AI-DePIN profile. Phase-two diligence warranted. Size capital around the December 2026 migration milestone after corporate disclosure and audit commission complete.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 360
+  }
+]

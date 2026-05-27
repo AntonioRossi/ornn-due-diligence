@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<llmWorkflowPrompt id="remotion-video-iteration" version="1.0">
+  <purpose>
+    Re-execute the repo's current workflow for producing the Gonka
+    Remotion video whenever the source research documents change. Follow the
+    existing architecture, keep the work deterministic, and regenerate the full
+    Remotion artifact chain, including audio commentary, when the authoritative
+    source documents are updated.
+  </purpose>
+
+  <role>
+    You are a coding assistant operating inside this repository. Your job is to
+    read the current source documents, update the Gonka project
+    implementation under <path>projects/gonka/video/</path> plus the
+    shared Remotion app under <path>video/</path> when needed, update or
+    regenerate the narration assets, run validation, and leave the repo in a
+    reviewable state with a current rendered artifact.
+  </role>
+
+  <repository>
+    <root>.</root>
+    <primarySources>
+      <file
+        path="projects/gonka/sources/investment-committee-memo.md"
+        role="primary narrative source"
+      />
+      <file
+        path="projects/gonka/sources/management-diligence-request-list.md"
+        role="selective source for closing asks, gating questions, and management-call framing"
+      />
+    </primarySources>
+    <supportingDocs>
+      <!-- Keep this file when the project uses the response-evaluation guide. Delete if absent. -->
+      <file
+        path="projects/gonka/sources/management-response-evaluation-guide.md"
+        role="optional companion input for evaluating management responses against the diligence framework"
+      />
+      <file path="video/README.md" role="project commands and layout" />
+      <!-- Delete this line if the project does not use review notes yet. -->
+      <file path="projects/gonka/v1-review-notes.md" role="scope choices and review focus" />
+    </supportingDocs>
+    <implementationRoot>projects/gonka/video/</implementationRoot>
+    <mainComposition id="GonkaIcV1" />
+    <audioVoice>af_bella</audioVoice>
+    <audioArtifactRoot>projects/gonka/video/public/audio/</audioArtifactRoot>
+    <renderOutput>projects/gonka/video/out/gonka-ic-v1.mp4</renderOutput>
+  </repository>
+
+  <sourceUpdateTrigger>
+    <rule>
+      Treat <path>projects/gonka/sources/investment-committee-memo.md</path>
+      and <path>projects/gonka/sources/management-diligence-request-list.md</path>
+      as the two root inputs that govern the entire derived artifact chain.
+    </rule>
+    <rule>
+      If either file changes materially, rerun the complete workflow end to end
+      rather than only patching isolated files.
+    </rule>
+    <derivedArtifacts>
+      <artifact path="projects/gonka/video/data/scenes.ts" />
+      <artifact path="projects/gonka/video/data/citations.ts" />
+      <artifact path="projects/gonka/video/data/narration.json" />
+      <artifact path="projects/gonka/video/data/narration.ts" />
+      <artifact path="projects/gonka/video/compositions/GonkaIcV1.tsx" />
+      <artifact path="projects/gonka/video/public/audio/" />
+      <artifact path="projects/gonka/video/out/gonka-ic-v1.mp4" />
+    </derivedArtifacts>
+  </sourceUpdateTrigger>
+
+  <coreWorkflow>
+    <principle>
+      Use <path>projects/gonka/sources/investment-committee-memo.md</path>
+      and <path>projects/gonka/sources/management-diligence-request-list.md</path>
+      exactly as they exist in the repo at the time of execution. Treat them as
+      the authoritative inputs. Do not rewrite them or supplement them with
+      outside research unless the user explicitly asks.
+    </principle>
+    <principle>
+      Do not build or maintain a generic Markdown-to-slides system for this
+      repo. The workflow is manual editorial curation from prose into typed
+      scene data.
+    </principle>
+    <principle>
+      Treat <path>projects/gonka/video/data/scenes.ts</path> as the
+      primary implementation of the current narrative. Update that data first,
+      then update composition/components only if the new content requires it.
+    </principle>
+    <principle>
+      Keep the video institutional, restrained, high-signal, and deterministic.
+      This is an investor memo in motion, not a product promo.
+    </principle>
+    <principle>
+      Preserve the established visual direction unless the project contract
+      changed. Prefer investor-research tone over startup-marketing tone.
+    </principle>
+    <principle>
+      Preserve the shared Remotion app under <path>video/</path> and the
+      project code under <path>projects/gonka/video/</path>. Update
+      in place; do not rebuild the app from scratch.
+    </principle>
+    <principle>
+      This workflow includes audio commentary. Use Kokoro on CPU, keep
+      narration scene-based, store narration inputs in
+      <path>projects/gonka/video/data/narration.json</path>,
+      generate one WAV per scene under
+      <path>projects/gonka/video/public/audio/</path>, and use the
+      mandated voice <code>af_bella</code>.
+    </principle>
+    <principle>
+      Use UV-managed Python tooling for narration generation. Use
+      <code>uv sync</code> and the repo's
+      <code>pnpm --dir video test:shared</code>,
+      <code>pnpm --dir video project:audio -- --project gonka</code>,
+      <code>pnpm --dir video project:dev -- --project gonka</code>,
+      <code>pnpm --dir video project:render -- --project gonka</code>,
+      and
+      <code>pnpm --dir video project:verify -- --project gonka</code>
+      commands as the standard execution path. Run
+      <code>pnpm --dir video test:shared</code> first for fast shared
+      regression coverage and treat
+      <code>pnpm --dir video project:verify -- --project gonka</code>
+      as the final real-project acceptance gate.
+    </principle>
+  </coreWorkflow>
+
+  <idempotenceRules>
+    <rule>
+      Start by inspecting the current repo state, including uncommitted changes.
+      Never revert unrelated user edits.
+    </rule>
+    <rule>
+      Compare the latest source documents against the current scene data and
+      update only the scenes, citations, and layout details that are materially
+      affected.
+    </rule>
+    <rule>
+      If the current implementation already reflects the source documents
+      closely enough and the generated audio files plus final MP4 are current
+      and present, make no source edits. Report a no-op result rather than
+      churning formatting, copy, audio, or renders.
+    </rule>
+    <rule>
+      Keep stable file names, scene identifiers, component names, and
+      composition IDs unless a change is genuinely required by the updated
+      narrative.
+    </rule>
+    <rule>
+      Prefer editing existing files over creating new abstractions. Add new
+      files or components only when the current structure cannot cleanly
+      support the revised content.
+    </rule>
+    <rule>
+      Do not modify the source memo or diligence list unless the user
+      explicitly asks you to rewrite those documents.
+    </rule>
+    <rule>
+      If either primary source document changed materially, regenerate the
+      entire artifact chain after updating code: narration data, scene WAV
+      files, and the final rendered MP4. Do not limit the run to partial asset
+      refreshes in that case.
+    </rule>
+    <rule>
+      For source-driven reruns, completion requires all derived artifacts to be
+      brought back into sync with the updated sources.
+    </rule>
+    <rule>
+      If the primary source documents did not change materially but the audio
+      artifacts or rendered MP4 are missing, stale, or inconsistent with the
+      current implementation, regenerate the missing or stale artifacts without
+      unnecessary source edits.
+    </rule>
+  </idempotenceRules>
+
+  <sceneBackbone>
+    <scene id="opening">
+      <sources>
+        <source path="projects/gonka/sources/investment-committee-memo.md" section="Recommendation" />
+      </sources>
+      <purpose>Establish company, date, recommendation, and the gating issues immediately.</purpose>
+      <preferredDataFields>
+        <field>sectionLabel</field>
+        <field>title</field>
+        <field>subtitle</field>
+        <field>date</field>
+        <field>recommendation</field>
+        <field>body</field>
+        <field>gatingIssues</field>
+      </preferredDataFields>
+    </scene>
+
+    <scene id="whyMatters">
+      <sources>
+        <source path="projects/gonka/sources/investment-committee-memo.md" section="Company snapshot" />
+        <!-- Add or remove memo sources here as needed for the project. -->
+        <source path="projects/gonka/sources/investment-committee-memo.md" section="Competitive context" />
+      </sources>
+      <purpose>Explain what Gonka is in one slide: Bitcoin-style PoW thesis for AI inference, native GNK token, Liberman founders, Bitfury backing, distribution via OpenAI-compatible API and nine open-weight models.</purpose>
+      <delivery>Three short thesis points plus an accent block on the Bitfury investment. Keep the founders and product-suite mention concise.</delivery>
+    </scene>
+
+    <scene id="traction">
+      <sources>
+        <source path="projects/gonka/sources/investment-committee-memo.md" section="What appears real today" />
+      </sources>
+      <purpose>Show what is dated, sourced, and triangulated: mainnet launch, CertiK audit, compute trajectory, ongoing protocol upgrades. Distinguish self-reported figures from independently verified ones.</purpose>
+      <delivery>Timeline of four events plus three stats. Each stat caption must flag whether the figure is self-attributed or independent.</delivery>
+    </scene>
+
+    <scene id="attractive">
+      <sources>
+        <source path="projects/gonka/sources/investment-committee-memo.md" section="Competitive context" />
+        <source path="projects/gonka/sources/investment-committee-memo.md" section="Team and operating-model risk" />
+      </sources>
+      <purpose>Frame the investment as market-formation in a crowded category. Bittensor and at least seven other funded competitors. PoW differentiation is design-philosophical. Host unit economics depend on token-price recovery.</purpose>
+      <delivery>Three layers (strategic edge / competitive field / operating burden) plus a single-sentence current read and a why-it-is-harder note.</delivery>
+    </scene>
+
+    <scene id="riskLegal">
+      <sources>
+        <source path="projects/gonka/sources/investment-committee-memo.md" section="Core risk 1 and Core risk 2" />
+      </sources>
+      <purpose>Surface the legal-entity gap and the five-mechanism securities-classification problem. Note the whitepaper signed by a single individual with a gmx.com email and no entity.</purpose>
+      <delivery>Three items (entity ambiguity / hybrid token / non-US exposure) with framing label and an ask. Keep ask diligence-focused not adversarial.</delivery>
+    </scene>
+
+    <scene id="riskCounterparty">
+      <sources>
+        <source path="projects/gonka/sources/investment-committee-memo.md" section="Core risk 3 and Core risk 4" />
+      </sources>
+      <purpose>Surface the concentrated founders allocation and the liquidity gap. 200M GNK with no vesting; $0 24h volume; ~90% drawdown from ATH.</purpose>
+      <delivery>Three items (founder concentration / price discovery / drawdown) with underwriting framing.</delivery>
+    </scene>
+
+    <scene id="riskGovernance">
+      <sources>
+        <source path="projects/gonka/sources/investment-committee-memo.md" section="Core risk 5" />
+        <!-- Add or remove memo sources here as needed for the project. -->
+        <source path="projects/gonka/sources/investment-committee-memo.md" section="Core risk 6" />
+      </sources>
+      <purpose>Surface traction-verification gaps, control-function staffing gaps, and the unreconciled no-foundation claim.</purpose>
+      <delivery>Three items (traction verification / control functions / decentralization claim) framed as remediable disclosure gaps.</delivery>
+    </scene>
+
+    <scene id="closing">
+      <sources>
+        <source path="projects/gonka/sources/investment-committee-memo.md" section="Bottom line" />
+        <source path="projects/gonka/sources/management-diligence-request-list.md" section="First-call questions" />
+      </sources>
+      <purpose>Restate the gated recommendation and the six remediation conditions that would change the call.</purpose>
+      <delivery>Summary plus six diligence asks tied to the six gating issues.</delivery>
+    </scene>
+  </sceneBackbone>
+
+  <executionPlan>
+    <step order="1" name="Inspect current state">
+      Read the two source documents, the project prompt, the relevant review
+      notes if they exist, and the existing files under
+      <path>projects/gonka/video/</path> plus shared files under
+      <path>video/src/</path>. Also inspect the canonical audio artifacts under
+      <path>projects/gonka/video/public/audio/</path>, staged audio
+      under <path>video/public/audio/gonka/</path>, and the current
+      rendered output. Inspect git status before editing so you do not
+      overwrite unrelated work.
+    </step>
+
+    <step order="2" name="Compute the narrative delta">
+      Compare the latest memo and diligence list against the current
+      implementation. Identify which scene claims, dates, figures, questions,
+      citations, narration lines, and output artifacts changed. Do not assume
+      every scene needs rewriting, but do determine whether a full artifact
+      regeneration is required.
+    </step>
+
+    <step order="3" name="Update typed scene data">
+      Edit <path>projects/gonka/video/data/scenes.ts</path> first.
+      Keep the narrative concise and investor-facing. Preserve existing scene
+      IDs where possible so downstream code stays stable.
+    </step>
+
+    <step order="4" name="Update citations">
+      Edit <path>projects/gonka/video/data/citations.ts</path> to
+      keep each scene's citation footer aligned with the revised claims and
+      sources.
+    </step>
+
+    <step order="5" name="Update narration data">
+      Update the narration source and any typed narration wrapper so the audio
+      commentary matches the latest source documents, scene boundaries, and the
+      mandated <code>af_bella</code> voice policy.
+    </step>
+
+    <step order="6" name="Adjust rendering and audio wiring only if needed">
+      Update <path>projects/gonka/video/compositions/GonkaIcV1.tsx</path>,
+      <path>video/src/components/</path>, <path>video/src/theme.ts</path>,
+      <path>video/src/utils/</path>, and the audio wiring only when the revised
+      copy no longer fits, the visual hierarchy needs to change, or the scene
+      structure genuinely changed.
+    </step>
+
+    <step order="7" name="Protect the editorial shape">
+      Keep the video text-led and diagram-led. Do not introduce live data
+      visualization, generic slide generation, or unrelated product features.
+      Continue using citations, restrained motion, and one narration file per
+      scene.
+    </step>
+
+    <step order="8" name="Manage duration intentionally">
+      Target roughly 105 to 120 seconds at 30 fps. Prefer tightening copy
+      before changing scene durations. Change durations only when the updated
+      narrative or narration cannot fit cleanly, and explain any timing
+      changes.
+    </step>
+
+    <step order="9" name="Regenerate audio commentary">
+      Use the repo's UV-managed Python workflow to sync dependencies and
+      regenerate the scene narration WAV files under
+      <path>projects/gonka/video/public/audio/</path>. The shared
+      wrapper should then restage those assets into
+      <path>video/public/audio/gonka/</path>. When the primary
+      source documents changed materially, regenerate all scene audio files, not
+      just a subset.
+    </step>
+
+    <step order="10" name="Validate and render">
+      Run the project checks and render the main composition after edits and
+      audio regeneration. If a check fails, fix the issue or report the blocker
+      clearly.
+    </step>
+
+    <step order="11" name="Confirm artifact freshness">
+      For source-driven reruns, confirm that the updated source documents, typed
+      scene data, narration data, generated scene audio files, and final MP4
+      all correspond to the same current repo state before concluding the task.
+    </step>
+  </executionPlan>
+
+  <filePolicy>
+    <file path="projects/gonka/video/data/scenes.ts" expectation="Primary typed scene content. Update first." />
+    <file path="projects/gonka/video/data/citations.ts" expectation="Scene-level citation labels. Keep aligned with source claims." />
+    <file path="projects/gonka/video/data/narration.json" expectation="Primary narration source. Keep aligned with current scenes and af_bella voice policy." />
+    <file path="projects/gonka/video/data/narration.ts" expectation="Typed narration wrapper for Remotion. Keep aligned with current scene ids." />
+    <file path="projects/gonka/video/compositions/GonkaIcV1.tsx" expectation="Main composition sequencing and scene selection." />
+    <file path="video/src/components/" expectation="Reusable scene building blocks. Touch only if content/layout requires it." />
+    <file path="video/src/theme.ts" expectation="Visual system. Keep institutional tone and low churn." />
+    <file path="video/src/Root.tsx" expectation="Composition registration. Keep stable unless composition contract changes." />
+    <file path="scripts/generate-audio.py" expectation="CPU Kokoro narration generator. Keep runnable through UV and default to af_bella." />
+    <file path="pyproject.toml" expectation="Repo-root Python dependency definition for the audio tooling." />
+    <file path="uv.lock" expectation="Committed Python lockfile for reproducible audio generation." />
+    <file path="projects/gonka/video/public/audio/" expectation="Canonical generated scene WAV artifacts. Regenerate when sources change materially." />
+    <file path="video/public/audio/gonka/" expectation="Derived staged audio for Remotion runtime. Rebuild through the shared wrapper." />
+    <file path="video/README.md" expectation="Commands and workflow notes. Update only if workflow changes." />
+    <file path="projects/gonka/v1-review-notes.md" expectation="Optional scope and review notes. Delete this line if unused." />
+  </filePolicy>
+
+  <qualityBar>
+    <item>Recommendation framing must remain clear in the opening and closing.</item>
+    <item>Claims, dates, figures, and partner references must match the latest source documents.</item>
+    <item>The three core risks must remain legible and ordered by investment importance.</item>
+    <item>The closing scene must reflect the most relevant diligence asks for the next management call.</item>
+    <item>The visual result must feel institutional and reviewable, not promotional.</item>
+    <item>The narration must track the current source documents, fit scene timing, and use af_bella consistently.</item>
+    <item>The generated scene WAV files and the final MP4 must be refreshed when the primary sources change materially.</item>
+    <item>A material change to either root source file must trigger a complete workflow rerun from editorial data through final render.</item>
+    <item>The final code should stay simple, typed, and easy to revise on the next iteration.</item>
+  </qualityBar>
+
+  <commands>
+    <command workdir=".">uv sync</command>
+    <command workdir="video">pnpm install</command>
+    <command workdir="video">pnpm typecheck</command>
+    <command workdir="video">pnpm lint</command>
+    <command workdir="video">pnpm test:shared</command>
+    <command workdir="video">pnpm project:audio -- --project gonka</command>
+    <command workdir="video">pnpm project:dev -- --project gonka</command>
+    <command workdir="video">pnpm project:render -- --project gonka</command>
+    <command workdir="video">pnpm project:verify -- --project gonka</command>
+  </commands>
+
+  <finalResponseContract>
+    <item>Summarize the source changes you detected.</item>
+    <item>State explicitly whether either root source file changed materially and whether that triggered a full workflow rerun.</item>
+    <item>List the files you changed and why.</item>
+    <item>Report whether the run was a true update or an intentional no-op.</item>
+    <item>Report whether you regenerated the full artifact chain or only refreshed missing or stale artifacts, and why.</item>
+    <item>Report the narration and audio outputs you generated.</item>
+    <item>Report the validation commands you ran and their outcomes.</item>
+    <item>Call out any remaining review risks, especially around editorial judgment or timing.</item>
+  </finalResponseContract>
+</llmWorkflowPrompt>

@@ -1,0 +1,66 @@
+[
+  {
+    "sceneId": "opening",
+    "text": "Pause. Do not authorize phase-two diligence. The founder overhang, the Q2 2026 IDE timing, the GPU-count discrepancy, and the missing legal entity justify pausing capital.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.31,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "whyMatters",
+    "text": "io.net is a Solana-native decentralized GPU cloud. It aggregates GPUs from data centers, miners, and consumer devices. 800 million IO supply, listed on Coinbase since April 2024. The new Incentive Dynamic Engine targets Q2 2026.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.27,
+    "maxDurationFrames": 555
+  },
+  {
+    "sceneId": "traction",
+    "text": "Mainnet has run since April 2024. The Series A closed at 30 million dollars. Shadid resigned days before token launch with severance to distance the company. The IDE litepaper landed in December 2025. Five named customers report meaningful AWS savings. The token has fallen 97 percent from ATH.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.23,
+    "maxDurationFrames": 645
+  },
+  {
+    "sceneId": "attractive",
+    "text": "io.net has the deepest customer references in AI-DePIN. But Bittensor pulls institutional flows io.net cannot match. The founder overhang and unfinished IDE require remediation before capital engages.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.29,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskLegal",
+    "text": "Founder history is the dominant risk. Shadid resigned days before token launch with severance to distance the company. Investigations.org rates him HIGH RISK with explicit citation of inflated GPU supply claims.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskCounterparty",
+    "text": "The IDE redesign is sophisticated but not yet live. The 30,000-plus homepage GPU claim versus 2,752 verified mirrors the historical inflated-supply allegation.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskGovernance",
+    "text": "No legal entity is publicly disclosed for IO Research. No board, no audited financials. The current CEO is unresolved. No comprehensive smart-contract audit is in the public record.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "closing",
+    "text": "Pause. Reassess after the IDE is live with a full quarter of observability, current management documents the Shadid-era reset, and IO Research discloses its entity, board, and financials.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.34,
+    "maxDurationFrames": 360
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "slug": "kaspa",
+  "defaultCompositionId": "KaspaIcV1",
+  "defaultOutputName": "kaspa-ic-v1.mp4",
+  "runtimeAssetKinds": ["audio"]
+}

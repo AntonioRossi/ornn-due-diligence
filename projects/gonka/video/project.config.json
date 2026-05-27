@@ -1,0 +1,6 @@
+{
+  "slug": "gonka",
+  "defaultCompositionId": "GonkaIcV1",
+  "defaultOutputName": "gonka-ic-v1.mp4",
+  "runtimeAssetKinds": ["audio"]
+}

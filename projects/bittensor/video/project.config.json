@@ -1,0 +1,6 @@
+{
+  "slug": "bittensor",
+  "defaultCompositionId": "BittensorIcV1",
+  "defaultOutputName": "bittensor-ic-v1.mp4",
+  "runtimeAssetKinds": ["audio"]
+}

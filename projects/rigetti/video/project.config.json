@@ -1,0 +1,6 @@
+{
+  "slug": "rigetti",
+  "defaultCompositionId": "RigettiIcV1",
+  "defaultOutputName": "rigetti-ic-v1.mp4",
+  "runtimeAssetKinds": ["audio"]
+}

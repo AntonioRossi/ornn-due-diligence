@@ -1,0 +1,6 @@
+{
+  "slug": "io-net",
+  "defaultCompositionId": "IoNetIcV1",
+  "defaultOutputName": "io-net-ic-v1.mp4",
+  "runtimeAssetKinds": ["audio"]
+}

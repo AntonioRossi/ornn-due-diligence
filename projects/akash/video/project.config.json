@@ -1,0 +1,6 @@
+{
+  "slug": "akash",
+  "defaultCompositionId": "AkashIcV1",
+  "defaultOutputName": "akash-ic-v1.mp4",
+  "runtimeAssetKinds": ["audio"]
+}

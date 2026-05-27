@@ -1,0 +1,66 @@
+[
+  {
+    "sceneId": "opening",
+    "text": "Authorize gated phase-two diligence only. No TAO position yet. The core gates are validator concentration, US securities posture, Foundation transparency, the audit gap, mechanism stress-testing, and founder-dispute resolution.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.31,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "whyMatters",
+    "text": "Bittensor is the incumbent decentralized AI-compute token at three billion market cap. A Substrate marketplace with 64 subnets and 65% staked supply. Coinbase listed, Grayscale OTCQX exposure, pending Spot ETF. Swiss Foundation; founders Steeves and Shaabana.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.27,
+    "maxDurationFrames": 555
+  },
+  {
+    "sceneId": "traction",
+    "text": "Mainnet has run since March 2023. Coinbase listed TAO in February 2025. The first halving completed December 2025. Grayscale filed for a Spot Bittensor ETF at year-end 2025. Corcel API has routed 50 million inference calls. Macrocosmos publishes downloadable LLM weights.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.23,
+    "maxDurationFrames": 645
+  },
+  {
+    "sceneId": "attractive",
+    "text": "Incumbency is real. Coinbase, Grayscale, and the pending Spot ETF make Bittensor the only AI-DePIN exposure through US brokerage. Competitive risk: verifiable-compute alternatives.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.29,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskLegal",
+    "text": "The Grayscale Spot ETF is the biggest near-term regulatory catalyst. TAO's delegation-and-reward structure mirrors arrangements the SEC has called securities. Five distribution paths each need a legal theory.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskCounterparty",
+    "text": "Validator concentration is structurally embedded. Top 64 validators control 100% of subnet emissions. Top 10 form supermajority blocs. The 18% subnet-owner cut creates insider alignment. The Triumvirate retains exclusive proposal control.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.34,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskGovernance",
+    "text": "The audit gap and Foundation opacity remain. No comprehensive Subtensor or Yuma audit is in the public record. The 2024 PyPi breach cost roughly 32,000 TAO. The Foundation has no published board or financials.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.34,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "closing",
+    "text": "Proceed only when the gates resolve. Advance when the Spot ETF resolves, the Foundation publishes governance and financials, audits complete, and named consumers triangulate the traction.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.35,
+    "maxDurationFrames": 360
+  }
+]

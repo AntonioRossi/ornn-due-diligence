@@ -1,0 +1,66 @@
+[
+  {
+    "sceneId": "opening",
+    "text": "Authorize gated phase-two diligence only. No token purchase yet. The core gates are the legal-entity map, securities classification, founders' vesting, market liquidity, traction verification, and control-function disclosure.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.31,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "whyMatters",
+    "text": "Gonka is a Bitcoin-style Proof of Work bet on decentralizing AI inference. The Liberman siblings, fresh from a Snap acquisition, built a Cosmos chain so that almost all compute goes to productive inference rather than consensus work. The thesis is that token incentives can break the centralized hyperscaler grip on inference.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.27,
+    "maxDurationFrames": 555
+  },
+  {
+    "sceneId": "traction",
+    "text": "Mainnet shipped in September 2025. CertiK audited three modules with no Critical findings. The project reports about eleven thousand H100-equivalent compute and one hundred million daily inference tokens. Bitfury validated the model with a fifty million dollar commitment. Independent third-party verification of throughput, node count, and developer count is still missing.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.23,
+    "maxDurationFrames": 645
+  },
+  {
+    "sceneId": "attractive",
+    "text": "Differentiation is real, but the category is crowded with funded competitors. The Proof of Work alignment claim is design-philosophical. Host economics depend on token-price recovery. This is a market-formation bet, not a cash-flow asset.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.29,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskLegal",
+    "text": "The first gating issue is legal. The whitepaper is signed by a single individual with a personal email and names no entity. Five GNK distribution mechanisms each need their own legal theory. Only one is cleanly inside the SEC Proof of Work safe harbor.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.35,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskCounterparty",
+    "text": "The second gating issue is concentration. Twenty percent of supply sits in a founders' allocation with no public vesting. The token shows zero twenty-four-hour volume. The January high has fallen ninety percent.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskGovernance",
+    "text": "The third gating issue is disclosure. Every traction figure is self-attributed. No general counsel, compliance officer, or head of security is publicly named. One CertiK centralization finding remains unresolved.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.34,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "closing",
+    "text": "Proceed only when the structural gaps are closed. Real engineering and backing exist. Advance only if management delivers the entity map, counsel opinions, vesting schedule, named references, and control-function hires. Otherwise, pass.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.35,
+    "maxDurationFrames": 360
+  }
+]

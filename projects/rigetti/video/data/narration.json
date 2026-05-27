@@ -1,0 +1,66 @@
+[
+  {
+    "sceneId": "opening",
+    "text": "Initiate speculative sleeve post-Commerce LOI. Rigetti has Fab-1, 108-qubit GA, and a $100M federal LOI. Revenue declined four years. Stock at 189 times forward sales.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.31,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "whyMatters",
+    "text": "Rigetti is the only superconducting pure-play with an in-house chiplet fab, the 108-qubit Cepheus-1 system live across AWS, Azure, and qBraid, and a $100M Department of Commerce letter of intent. CEO Kulkarni led CyberOptics to a $390M Nordson exit in 2022.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.27,
+    "maxDurationFrames": 555
+  },
+  {
+    "sceneId": "traction",
+    "text": "Q1 2026 revenue $4.4 million, up 199 percent. Cash $569 million, no debt. Cepheus-1-108Q deployed April 7. $350 million ATM done June 2025. Quanta $35 million strategic investment. DoC LOI signed May 21.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.27,
+    "maxDurationFrames": 645
+  },
+  {
+    "sceneId": "attractive",
+    "text": "Top four quantum company per IQT Research, alongside IBM, Quantinuum, and IonQ. Chiplet vs trapped-ion architecture. IonQ is 18 times larger. IBM targets quantum advantage in 2026.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.31,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskLegal",
+    "text": "Stock trades at 189 times forward 2027 revenue. Revenue declined four years, from 13.1 million in 2022 to 7.1 million in 2025. Motley Fool predicts stagnation or decline.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskCounterparty",
+    "text": "80 percent share dilution in 18 months, from 184 to 332 million. The DoC LOI adds federal equity. The ATM remains active. Q1 GAAP income is non-cash from warrant changes.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskGovernance",
+    "text": "Quantum advantage 3 to 4 years away per Kulkarni. 108Q at 99.1 percent fidelity vs 99.5 percent target. IBM, Google, and IonQ ahead on revenue or technical milestones.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "closing",
+    "text": "Initiate speculative sleeve post-Commerce LOI. Size to 1.5 percent. Layer in post-Q2 2026 if revenue confirms inflection. Barbell with IBM and Alphabet.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 360
+  }
+]

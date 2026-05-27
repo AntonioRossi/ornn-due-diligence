@@ -1,0 +1,66 @@
+[
+  {
+    "sceneId": "opening",
+    "text": "Authorize gated phase-two diligence. Kaspa is the cleanest PoW L1 plus EVM rollup pair in the cohort, with Toccata in June and the 95 percent mined supply cliff in July as dated catalysts.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.31,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "whyMatters",
+    "text": "Kaspa is a fair-launched proof-of-work blockDAG at ten blocks per second. The Toccata hard fork in June brings covenants and zero-knowledge verification to layer one. Igra Network is the live Swiss-anchored EVM layer two with a Sigma Prime audit clean.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.27,
+    "maxDurationFrames": 555
+  },
+  {
+    "sceneId": "traction",
+    "text": "Mainnet since November 2021. Crescendo activated ten blocks per second in May 2025. Over six hundred million cumulative transactions and one hundred fifty-eight million in a single day. Igra mainnet launched March 19 2026 with seven hundred thirty thousand testnet transactions and zero state divergence.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.27,
+    "maxDurationFrames": 645
+  },
+  {
+    "sceneId": "attractive",
+    "text": "Cleanest fair-launch credentials in cohort. DAGLabs and Polychain formally waived all Kaspa IP rights. Bitcoin-like tokenomics. But network-effects bears argue Bitcoin will prevail regardless of technical superiority.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.31,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskLegal",
+    "text": "Kaspa layer one has no central legal entity. DAGLabs dissolved at the 2021 launch. KEF and Kii foundations exist, but jurisdiction, board, and financials are undisclosed. Core devs have no formal employer.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskCounterparty",
+    "text": "Igra bridge worst case is full theft of locked Kaspa. Only community multisig is live at mainnet launch. MPC and zero-knowledge tiers are roadmapped. Sigma Prime audit covered smart contracts, not full node infrastructure.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "riskGovernance",
+    "text": "KAS is 84 percent below August 2024 ATH and never retested in the post-Crescendo cycle. Binance and Coinbase have not listed. Kraken status is contradictory. Daily volume of 12 million is thin for institutional size.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 420
+  },
+  {
+    "sceneId": "closing",
+    "text": "Cleanest PoW L1 plus L2 pair. Phase-two diligence warranted. Size capital around Toccata in June and the 95 percent mined milestone in July, after audit close-out and Foundation disclosures.",
+    "voice": "af_bella",
+    "langCode": "a",
+    "speed": 1.33,
+    "maxDurationFrames": 360
+  }
+]
